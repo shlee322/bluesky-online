@@ -71,4 +71,10 @@ public static class UIManager
     this.focusControl.getFocusControl().callMouseReleased(x - this.focusControl.getX(), y - this.focusControl.getY());
     return true;
   }
+    
+  public boolean inputMethodTextChanged(String committedText, String composedText) {
+    if(this.focusControl == null) return false;
+    this.focusControl.getFocusControl().callInputMethodTextChanged(committedText, composedText);
+    return true;
+  }
 }

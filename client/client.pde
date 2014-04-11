@@ -42,3 +42,8 @@ void mouseReleased() {
   if(UIManager.getInstance().mouseReleased(mouseX, mouseY)) return;
   if(scene.mouseReleased(mouseX, mouseY)) return;
 }
+
+void inputMethodTextChanged() {
+  if(UIManager.getInstance().inputMethodTextChanged(committedText, composedText)) return;
+    if(scene.inputMethodTextChanged(committedText, composedText)) return;
+}

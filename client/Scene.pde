@@ -29,4 +29,8 @@ class Scene {
   public boolean mouseReleased(int x, int y) {
     return false;
   }
+  
+  public boolean inputMethodTextChanged(String committedText, String composedText) {
+    return false;
+  }
 }

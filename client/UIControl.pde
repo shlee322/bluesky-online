@@ -96,4 +96,8 @@ public class UIControl
   public boolean callMouseReleased(int x, int y) {
     return false;
   }
+  
+  public boolean callInputMethodTextChanged(String committedText, String composedText) {
+    return false;
+  }
 }
