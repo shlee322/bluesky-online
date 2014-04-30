@@ -1,5 +1,5 @@
 public class UIControl
-{
+{ 
   private UIControl parent;
   private ArrayList<UIControl> children;
   

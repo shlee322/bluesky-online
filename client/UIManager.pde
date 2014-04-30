@@ -14,6 +14,11 @@ public static class UIManager
     return window;
   }
   
+  public void clearWindow() {
+    this.windows.clear();
+    this.focusControl = null;
+  }
+  
   protected void draw() {
     for(UIWindow window : this.windows) {
       window.callDraw();
@@ -50,7 +55,7 @@ public static class UIManager
   public boolean mousePressed(int x, int y) {
     UIXYFocusControl control = this.getXYFocusControl(x, y);
     if(control==null) {
-      print("not exist control - " + x + ", " + y + "\n");
+      this.focusControl = null;
       return false;
     }
     this.focusControl = control;

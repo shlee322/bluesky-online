@@ -1,9 +1,10 @@
 public class UIButton extends UIControl
-{
+{ 
   public PFont textFont;
   public int textColor;
   public String text;
   private boolean click;
+  private OnClickListener clickListener;
   
   public UIButton() {
     this.textFont = createFont("Arial",16,true);
@@ -18,6 +19,10 @@ public class UIButton extends UIControl
     this.uiText(0, 0, this.width, this.height, this.text, this.textFont, 16, this.textColor);
   }
   
+  public void setOnClickListener(OnClickListener listener) {
+    clickListener = listener; 
+  }
+  
   public boolean callMousePressed(int x, int y) {
     this.click = true;
     return true;
@@ -25,6 +30,7 @@ public class UIButton extends UIControl
   
   public boolean callMouseReleased(int x, int y) {
     this.click = false;
+    clickListener.onClick();
     return true;
   }
 }

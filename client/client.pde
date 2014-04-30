@@ -1,15 +1,22 @@
 Scene scene;
+final int ScreenSizeWidth = 800;
+final int ScreenSizeHeight = 600;
 
 void setup() {
-  size(800, 600);
+  size(ScreenSizeWidth, ScreenSizeHeight);
   frameRate(60);
   
-  scene = new MapScene();
+  scene = new LoginScene();
   scene.setup();
 }
 
+void changeScene(Scene s) {
+  scene = s;
+  s.setup();
+}
+
 void draw() {
-  background(0);
+  background(0);  
   
   if(scene != null) {
     scene.draw();
@@ -45,5 +52,5 @@ void mouseReleased() {
 
 void inputMethodTextChanged() {
   if(UIManager.getInstance().inputMethodTextChanged(committedText, composedText)) return;
-    if(scene.inputMethodTextChanged(committedText, composedText)) return;
+  if(scene.inputMethodTextChanged(committedText, composedText)) return;
 }

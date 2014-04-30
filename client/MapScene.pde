@@ -1,65 +1,119 @@
 class MapScene extends Scene {
-  private ArrayList<GameObject> objects; //not exist linkedlist......
+  public class MapPosition {
+    public static final int CENTER = 0;
+    public static final int LEFT = 1;
+    public static final int UP = 2;
+    public static final int RIGHT = 3;
+    public static final int DOWN = 4;
+    public static final int UP_LEFT = 5;
+    public static final int UP_RIGHT = 6;
+    public static final int DOWN_LEFT = 7;
+    public static final int DOWN_RIGHT = 8;
+  }
   
+  private MapData[] mapData;  
   private UserObject userObject;
   
   public void setup() {
     super.setup();
     
-    this.objects = new ArrayList<GameObject>();
+    this.mapData = new MapData[9];
+    //Loading Scene
     
-    ////////////////??Test
+    //Network MapLoad call
+    
     this.userObject = new UserObject();
-    this.addObject(this.userObject);
-    UIWindow window = new UIWindow();
-    window.x = 30;
-    window.y = 30;
+    loadMap();
     
-    UIWindow testWindow = UIManager.getInstance().regWindow(window);
+    for(int i=0; i<9; i++) {
+      print(i + " " + this.mapData[i].getX() + " " + this.mapData[i].getY() + "\n");
+    }
+  }
+  
+  public void loadMap() {
+    //test
+    for(int i=0; i<9; i++) {
+      this.mapData[i] = new MapData(this);
+      this.mapData[i].setMapPosition(i);
+    }
+  
+    for(int x=0; x<20; x++) {
+      for(int y=12; y<20; y++) {
+        this.mapData[MapPosition.CENTER].setTile(x, y, 0);
+        this.mapData[MapPosition.LEFT].setTile(x, y, 0);
+        this.mapData[MapPosition.RIGHT].setTile(x, y, 0);
+      }
+    }
+    for(int x=0; x<20; x++) {
+      for(int y=0; y<20; y++) {
+        this.mapData[MapPosition.DOWN].setTile(x, y, 0);
+        this.mapData[MapPosition.DOWN_LEFT].setTile(x, y, 0);
+        this.mapData[MapPosition.DOWN_RIGHT].setTile(x, y, 0);
+      }
+    }
     
-    UIText testText = new UIText();
-    testText.text = "UI Text Test";
-    testText.x = 5;
-    testText.y = 5;
+    this.mapData[MapPosition.CENTER].setTile(8, 11, 0);
+    this.mapData[MapPosition.CENTER].addObject(this.userObject);
     
-    UIButton testButton = new UIButton();
-    testButton.text = "Button";
-    testButton.x = 60;
-    testButton.y = 60;
-    
-    UIEditbox testEditbox = new UIEditbox();
-    testEditbox.x = 60;
-    testEditbox.y = 110;
-    
-    testWindow.addChild(testText);
-    testWindow.addChild(testButton);
-    testWindow.addChild(testEditbox);
+    this.userObject.setPosition(this.mapData[MapPosition.CENTER], 10*32, 12*32);
+  }
+  
+  public int getCenterX() {
+    return this.userObject.getX();
+  }
+  
+  public int getCenterY() {
+    return this.userObject.getY();
   }
   
   public void draw() {
     super.draw();
     
-    for(GameObject obj : this.objects) {
-      obj.draw();
+    fill(0, 0, 200);
+    rect(0, 0, 800, 400);
+    
+    for(int i=0; i<9; i++) {
+      this.mapData[i].drawTiles();
+    }
+    for(int i=0; i<9; i++) {
+      this.mapData[i].drawObjects();
+    }
+    
+    fill(255);
+    text("Score : " + this.userObject.getScore(), 5, 15);
+    
+    //map move
+    if(this.getCenterX()<0 || this.getCenterX() >= 32*20 || this.getCenterY()<0 || this.getCenterY() >= 32*20) {
+      scene = new GameOverScene(this.userObject.getScore());
     }
   }
   
-  public void addObject(GameObject c) {
-    this.objects.add(c);
-  }
-  
   public boolean keyPressed(int key, int code) {
+    if(userObject == null)
+      return false;
+    
+    if(keyCode == DOWN) {
+      userObject.stateDownControl(true);
+    }
+    
+    if(keyCode == CONTROL) {
+      userObject.callControl();
+    }
+      
     if(keyCode == LEFT) {
-      userObject.move(1);
-      return true;
-    } else if(keyCode == UP) {
-      userObject.move(3);
+      userObject.move(0);
       return true;
     } else if(keyCode == RIGHT) {
-      userObject.move(2);
+      userObject.move(1);
       return true;
-    } else if(keyCode == DOWN) {
-      userObject.move(0);
+    }
+    
+    return false;
+  }
+  
+  public boolean keyReleased(int key, int code) {
+    if(keyCode == DOWN) {
+      userObject.stateDownControl(false);
       return true;
     }
     return false;
