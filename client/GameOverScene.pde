@@ -4,11 +4,12 @@ class GameOverScene extends Scene {
   
   public GameOverScene(int score) {
     this.score = score;
-    String[] lines = loadStrings("score.dat");
+    int[] lines = int(loadStrings("score.dat"));
     if(lines.length>0) {
-      best = int(lines[0]);
+      best = lines[0];
     }
     if(best<score) {
+      best = score;
       saveStrings("score.dat", new String[]{String.valueOf(score)});
     }
   }
