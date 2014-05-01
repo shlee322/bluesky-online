@@ -5,7 +5,7 @@ class GameOverScene extends Scene {
   public GameOverScene(int score) {
     this.score = score;
     int[] lines = int(loadStrings("score.dat"));
-    if(lines.length>0) {
+    if(lines != null && lines.length>0) {
       best = lines[0];
     }
     if(best<score) {
