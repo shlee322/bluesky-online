@@ -7,7 +7,8 @@ public interface IMap {
     int getY();
     IMap getAroundMap(int position);
     void setAroundMap(int position, IMap map);
-    int[] getTilesData();
+    ITile getTile(int x, int y);
+    void setTile(int x, int y, ITile tile);
 
     class AroundPosition {
         public static final int UP=0;

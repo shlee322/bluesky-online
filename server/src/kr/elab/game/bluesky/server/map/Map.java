@@ -5,7 +5,9 @@ public class Map implements IMap {
     private int world;
     private int x;
     private int y;
-    private int[] tiles = new int[100];
+
+    private IMap[] aroundMaps = new IMap[8];
+    private ITile[] tiles = new ITile[100];
 
     public Map(int id, int world, int x, int y) {
         this.id = id;
@@ -36,20 +38,27 @@ public class Map implements IMap {
 
     @Override
     public IMap getAroundMap(int position) {
-        return null;
+        return this.aroundMaps[position];
     }
 
     @Override
     public void setAroundMap(int position, IMap map) {
-        if(map == null) {
-
-        } else {
-
-        }
+        this.aroundMaps[position] = map;
     }
 
     @Override
-    public int[] getTilesData() {
-        return this.tiles;
+    public ITile getTile(int x, int y) {
+        ITile tile = this.tiles[10*y+x];
+        if(tile == null) {
+            tile = PrimitiveTile.getPrimitiveTile(0);
+            this.tiles[10*y+x] = tile;
+        }
+
+        return tile;
+    }
+
+    @Override
+    public void setTile(int x, int y, ITile tile) {
+        this.tiles[10*y+x] = tile;
     }
 }

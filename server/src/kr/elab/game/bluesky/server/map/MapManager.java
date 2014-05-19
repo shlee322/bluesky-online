@@ -75,7 +75,7 @@ public class MapManager {
         }
 
         int x = getRelativeX(position);
-        int y = getRelativeX(position);
+        int y = getRelativeY(position);
 
         IMap aroundMap = getMap(map.getWorld(), map.getX() + x, map.getY() + y);
 

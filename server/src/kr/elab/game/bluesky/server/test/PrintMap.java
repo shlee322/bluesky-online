@@ -1,6 +1,8 @@
 package kr.elab.game.bluesky.server.test;
 
 import kr.elab.game.bluesky.server.map.IMap;
+import kr.elab.game.bluesky.server.map.ITile;
+import kr.elab.game.bluesky.server.map.PrimitiveTile;
 
 public class PrintMap {
     public static void print(IMap map) {
@@ -34,13 +36,13 @@ public class PrintMap {
 
         for(int y=0; y<10; y++) {
             for(int x=0; x<10; x++) {
-                System.out.printf("%d ", left.getTilesData()[y*10+x]);
+                System.out.printf("%d ", left.getTile(x, y).getResId());
             }
             for(int x=0; x<10; x++) {
-                System.out.printf("%d ", center.getTilesData()[y*10+x]);
+                System.out.printf("%d ", center.getTile(x, y).getResId());
             }
             for(int x=0; x<10; x++) {
-                System.out.printf("%d ", right.getTilesData()[y*10+x]);
+                System.out.printf("%d ", right.getTile(x, y).getResId());
             }
             System.out.println();
         }
@@ -48,7 +50,8 @@ public class PrintMap {
     }
 
     private static class NoneMap implements IMap {
-        private int []tiles = new int[100];
+        private PrimitiveTile noneTile = PrimitiveTile.getPrimitiveTile(0);
+
         @Override
         public int getId() {
             return 0;
@@ -79,8 +82,12 @@ public class PrintMap {
         }
 
         @Override
-        public int[] getTilesData() {
-            return tiles;
+        public ITile getTile(int x, int y) {
+            return this.noneTile;
+        }
+
+        @Override
+        public void setTile(int x, int y, ITile tile) {
         }
     }
 }
