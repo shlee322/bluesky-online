@@ -1,5 +1,3 @@
-package kr.elab.game.bluesky.server.test;
-
 import kr.elab.game.bluesky.server.map.IMap;
 import kr.elab.game.bluesky.server.map.ITile;
 import kr.elab.game.bluesky.server.map.PrimitiveTile;

@@ -1,19 +1,19 @@
 package kr.elab.game.bluesky.server.map;
 
+import java.io.File;
 import java.util.*;
 import java.util.Map;
 
 public class MapManager {
     private static MapManager instance = new MapManager();
-    public static MapManager getInstance() { return instance; }
-
+    private File directory;
     //차후 스래드 별로 별도처리
     private HashMap<Integer, IMap> maps = new HashMap<Integer, IMap>();
-
     //맵 생성 스래드에서만 접근 (큐를 이용해서 맵 순차 생성)
     private LinkedList<IMap> mapList = new LinkedList<IMap>();
-
     private int mapCount = 0;
+
+    public static MapManager getInstance() { return instance; }
 
     public IMap getMap(int id) {
         return null;
@@ -93,7 +93,20 @@ public class MapManager {
              */
             aroundMap.setAroundMap(position<4 ? position+4 : position-4, map);
         }
+    }
 
+    public void setDirectory(File directory) {
+        if(directory == null || !directory.isDirectory()) {
+            return;
+        }
 
+        this.directory = directory;
+    }
+
+    private File getDirectory() {
+        return directory;
+    }
+
+    public void start() {
     }
 }
