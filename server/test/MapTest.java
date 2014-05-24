@@ -7,14 +7,13 @@ public class MapTest {
         IMapTilesGenerator generator = new IMapTilesGenerator() {
             @Override
             public void generate(IMap map) {
-                IMap leftMap = map.getAroundMap(IMap.AroundPosition.LEFT);
                 //map.getTile(x, y);
                 //map.setTile(x, y, new PrimitiveTile(code));
                 System.out.println("타일 생성 요청됨!");
 
-                if(leftMap != null) {
+                if(map.getAroundMap(IMap.AroundPosition.LEFT) != null) {
                     System.out.println("왼쪽에 맵이 있네?");
-                    //leftMap.getTile(x, y); //왼쪽맵 타일
+                    //map.getAroundMap(IMap.AroundPosition.LEFT).getTile(x, y); //왼쪽맵 타일
                 }
             }
         };

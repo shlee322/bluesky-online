@@ -7,7 +7,7 @@ public class Map implements IMap {
     private int y;
 
     private IMap[] aroundMaps = new IMap[8];
-    private ITile[] tiles = new ITile[100];
+    private ITile[] tiles = new ITile[400];
 
     public Map(int id, int world, int x, int y) {
         this.id = id;
@@ -48,10 +48,10 @@ public class Map implements IMap {
 
     @Override
     public ITile getTile(int x, int y) {
-        ITile tile = this.tiles[10*y+x];
+        ITile tile = this.tiles[20*y+x];
         if(tile == null) {
             tile = PrimitiveTile.getPrimitiveTile(0);
-            this.tiles[10*y+x] = tile;
+            this.tiles[20*y+x] = tile;
         }
 
         return tile;
@@ -59,6 +59,6 @@ public class Map implements IMap {
 
     @Override
     public void setTile(int x, int y, ITile tile) {
-        this.tiles[10*y+x] = tile;
+        this.tiles[20*y+x] = tile;
     }
 }
