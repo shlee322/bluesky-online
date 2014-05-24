@@ -1,4 +1,4 @@
-package bluesky.client;
+package bluesky.client.ui;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public class UIManager {
         this.focusControl = null;
     }
 
-    protected void draw() {
+    public void draw() {
         for (UIWindow window : this.windows) {
             window.callDraw();
         }

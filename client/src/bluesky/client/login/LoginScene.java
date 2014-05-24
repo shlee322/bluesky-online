@@ -1,5 +1,9 @@
-package bluesky.client;
+package bluesky.client.login;
 
+import bluesky.client.Client;
+import bluesky.client.Scene;
+import bluesky.client.map.MapScene;
+import bluesky.client.ui.*;
 import processing.core.PImage;
 
 public class LoginScene extends Scene {

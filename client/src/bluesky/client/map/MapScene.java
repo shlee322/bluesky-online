@@ -1,4 +1,7 @@
-package bluesky.client;
+package bluesky.client.map;
+
+import bluesky.client.Client;
+import bluesky.client.Scene;
 
 public class MapScene extends Scene {
     public class MapPosition {
@@ -86,7 +89,6 @@ public class MapScene extends Scene {
 
         //map move
         if (this.getCenterX() < 0 || this.getCenterX() >= 32 * 20 || this.getCenterY() < 0 || this.getCenterY() >= 32 * 20) {
-            Client.getInstance().scene = new GameOverScene(this.userObject.getScore());
         }
     }
 

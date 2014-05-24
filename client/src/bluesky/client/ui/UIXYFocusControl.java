@@ -1,4 +1,4 @@
-package bluesky.client;
+package bluesky.client.ui;
 
 public class UIXYFocusControl {
     private UIControl focusControl;

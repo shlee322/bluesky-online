@@ -1,16 +1,19 @@
 package bluesky.client;
 
+import bluesky.client.login.LoginScene;
+import bluesky.client.ui.InputMethodSystem;
+import bluesky.client.ui.UIManager;
 import processing.core.*;
 
 public class Client extends PApplet {
     private static Client instance;
-    Scene scene;
+    public Scene scene;
     final int ScreenSizeWidth = 960;
     final int ScreenSizeHeight = 640;
 
-    String committedText = "";
-    String composedText = "";
-    InputMethodSystem inputMethodSystem = new InputMethodSystem(this);
+    public String committedText = "";
+    public String composedText = "";
+    private InputMethodSystem inputMethodSystem = new InputMethodSystem(this);
 
     public static void main(String args[]) {
         PApplet.main(new String[]{"--present", Client.class.getName()});

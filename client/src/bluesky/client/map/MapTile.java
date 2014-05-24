@@ -1,5 +1,6 @@
-package bluesky.client;
+package bluesky.client.map;
 
+import bluesky.client.Client;
 import processing.core.PImage;
 import processing.core.PShape;
 

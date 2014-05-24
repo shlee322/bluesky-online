@@ -1,4 +1,4 @@
-package bluesky.client;
+package bluesky.client.map;
 
 import java.util.ArrayList;
 

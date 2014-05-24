@@ -1,4 +1,4 @@
-package bluesky.client;
+package bluesky.client.ui;
 
 import processing.core.PFont;
 

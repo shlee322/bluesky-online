@@ -1,5 +1,6 @@
-package bluesky.client;
+package bluesky.client.ui;
 
+import bluesky.client.Client;
 import processing.core.PFont;
 
 public class UIText extends UIControl {

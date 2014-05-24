@@ -2,7 +2,9 @@
 // Input Method System
 // Lee Sanghyuck (shlee322@elab.kr)
 // https://github.com/shlee322/processing-inputmethod
-package bluesky.client;
+package bluesky.client.ui;
+
+import bluesky.client.Client;
 
 public class InputMethodSystem<T>
         implements java.awt.event.InputMethodListener, java.awt.im.InputMethodRequests {

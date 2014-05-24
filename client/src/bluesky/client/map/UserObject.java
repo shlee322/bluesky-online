@@ -1,4 +1,7 @@
-package bluesky.client;
+package bluesky.client.map;
+
+import bluesky.client.map.GameObject;
+import bluesky.client.map.MapTile;
 
 public class UserObject extends GameObject {
     private boolean down;
