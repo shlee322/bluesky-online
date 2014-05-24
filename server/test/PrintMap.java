@@ -34,13 +34,16 @@ public class PrintMap {
 
         for(int y=0; y<20; y++) {
             for(int x=0; x<20; x++) {
-                System.out.printf("%d ", left.getTile(x, y).getResId());
+                int tile = left.getTile(x, y).getResId();
+                System.out.printf("%s ", tile == 0 ? " " : String.valueOf(tile));
             }
             for(int x=0; x<20; x++) {
-                System.out.printf("%d ", center.getTile(x, y).getResId());
+                int tile = center.getTile(x, y).getResId();
+                System.out.printf("%s ", tile == 0 ? " " : String.valueOf(tile));
             }
             for(int x=0; x<20; x++) {
-                System.out.printf("%d ", right.getTile(x, y).getResId());
+                int tile = right.getTile(x, y).getResId();
+                System.out.printf("%s ", tile == 0 ? " " : String.valueOf(tile));
             }
             System.out.println();
         }
