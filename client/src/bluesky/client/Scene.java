@@ -1,4 +1,6 @@
-class Scene {
+package bluesky.client;
+
+public class Scene {
   public void setup() {
   }
   

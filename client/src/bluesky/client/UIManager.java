@@ -1,4 +1,8 @@
-public static class UIManager 
+package bluesky.client;
+
+import java.util.ArrayList;
+
+public class UIManager
 {
   private static UIManager instance = new UIManager();
   

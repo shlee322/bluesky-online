@@ -1,4 +1,8 @@
-class MapData {
+package bluesky.client;
+
+import java.util.ArrayList;
+
+public class MapData {
   //size : 25 * 25 (32*)
   private final int WIDTH_CENTER = 800/2;
   private final int HEIGHT_CENTER = 400/2;

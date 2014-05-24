@@ -1,3 +1,7 @@
+package bluesky.client;
+
+import processing.core.PFont;
+
 public class UIEditbox extends UIControl
 {
   public PFont textFont;
@@ -7,7 +11,7 @@ public class UIEditbox extends UIControl
   public String composedText;
 
   public UIEditbox() {
-    this.textFont = createFont("Arial",16,true);
+    this.textFont = Client.getInstance().createFont("Arial",16,true);
     this.textColor = 0;
     this.text = "";
     this.composedText = "";
@@ -34,7 +38,7 @@ public class UIEditbox extends UIControl
   }
   
   public boolean callKeyPressed(int key, int code) {
-    if(keyCode == BACKSPACE) {
+    if(Client.getInstance().keyCode == Client.getInstance().BACKSPACE) {
       if(this.text.length() < 1) {
         return true;
       }

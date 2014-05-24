@@ -1,4 +1,8 @@
-class GameObject {
+package bluesky.client;
+
+import processing.core.PImage;
+
+public class GameObject {
   private MapData map;
   protected int x;
   protected int y;
@@ -40,7 +44,7 @@ class GameObject {
   }
   
   public void changeImg(String path) {
-    this.img[0] = loadImage("characters/1.png");
+    this.img[0] = Client.getInstance().loadImage("characters/1.png");
     this.img[1] = getReversePImage(this.img[0]);
     
     this.w = this.img[0].width / 4;
@@ -93,7 +97,7 @@ class GameObject {
     }
     
     PImage drawImg = this.img[this.dir%2].get(this.movingId%4 * this.w, (this.dir < 2 ? 0 : 1) * this.h, this.w, this.h);
-    image(drawImg, this.map.getX() + this.x - (this.w/2), this.map.getY() + this.y - this.h);
+      Client.getInstance().image(drawImg, this.map.getX() + this.x - (this.w/2), this.map.getY() + this.y - this.h);
   }
   
   public void move(int direction) { //0, 1, 2, 3
@@ -109,7 +113,7 @@ class GameObject {
   }
   
   private PImage getReversePImage(PImage image) {
-    PImage reverse = createImage(image.width, image.height, ARGB);
+    PImage reverse = Client.getInstance().createImage(image.width, image.height, Client.getInstance().ARGB);
     for( int i=0; i < image.width; i++ ){
       for(int j=0; j < image.height; j++){
         reverse.set( image.width - 1 - i, j, image.get(i, j) );

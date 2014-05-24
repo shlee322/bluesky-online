@@ -1,4 +1,6 @@
-class UserObject extends GameObject {
+package bluesky.client;
+
+public class UserObject extends GameObject {
   private boolean down;
   private int score;
   

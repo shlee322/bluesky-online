@@ -1,3 +1,7 @@
+package bluesky.client;
+
+import processing.core.PFont;
+
 public class UIWindow extends UIControl
 {
   private boolean titleLook;
@@ -35,17 +39,17 @@ public class UIWindow extends UIControl
       this.titleLook = true;
       this.moveX = x;
       this.moveY = y;
-      print("Window Title " + x + ", " + y + "\n");
+      System.out.println("Window Title " + x + ", " + y);
     }
-    
-    print("Window Focus " + x + ", " + y + "\n");
+
+      System.out.println("Window Focus " + x + ", " + y);
     return true;
   }
   
   public boolean callMouseDragged(int x, int y) {
-    print("callMouseDragged " + x + ", " + y + "\n");
+      System.out.println("callMouseDragged " + x + ", " + y);
     if(this.titleLook) {
-      print("test - " + (x-this.moveX) + ", " + (y-this.moveY) + "\n");
+        System.out.println("test - " + (x-this.moveX) + ", " + (y-this.moveY));
       this.x += (x-this.moveX);
       this.y += (y-this.moveY);
       
@@ -61,7 +65,7 @@ public class UIWindow extends UIControl
     this.titleLook = false;
     this.moveX = 0;
     this.moveY = 0;
-    print("callMouseReleased " + x + ", " + y + "\n");
+      System.out.println("callMouseReleased " + x + ", " + y);
     return false;
   }
 }

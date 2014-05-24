@@ -1,3 +1,7 @@
+package bluesky.client;
+
+import processing.core.PFont;
+
 public class UIButton extends UIControl
 { 
   public PFont textFont;
@@ -7,7 +11,7 @@ public class UIButton extends UIControl
   private OnClickListener clickListener;
   
   public UIButton() {
-    this.textFont = createFont("Arial",16,true);
+    this.textFont = Client.getInstance().createFont("Arial", 16, true);
     this.textColor = 0;
     this.text = "";
     this.width = 60;

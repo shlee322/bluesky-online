@@ -1,4 +1,6 @@
-class MapScene extends Scene {
+package bluesky.client;
+
+public class MapScene extends Scene {
   public class MapPosition {
     public static final int CENTER = 0;
     public static final int LEFT = 1;
@@ -26,7 +28,7 @@ class MapScene extends Scene {
     loadMap();
     
     for(int i=0; i<9; i++) {
-      print(i + " " + this.mapData[i].getX() + " " + this.mapData[i].getY() + "\n");
+      System.out.println(i + " " + this.mapData[i].getX() + " " + this.mapData[i].getY());
     }
   }
   
@@ -68,9 +70,9 @@ class MapScene extends Scene {
   
   public void draw() {
     super.draw();
-    
-    fill(0, 0, 200);
-    rect(0, 0, 800, 400);
+
+    Client.getInstance().fill(0, 0, 200);
+      Client.getInstance().rect(0, 0, 800, 400);
     
     for(int i=0; i<9; i++) {
       this.mapData[i].drawTiles();
@@ -78,13 +80,13 @@ class MapScene extends Scene {
     for(int i=0; i<9; i++) {
       this.mapData[i].drawObjects();
     }
-    
-    fill(255);
-    text("Score : " + this.userObject.getScore(), 5, 15);
+
+      Client.getInstance().fill(255);
+      Client.getInstance().text("Score : " + this.userObject.getScore(), 5, 15);
     
     //map move
     if(this.getCenterX()<0 || this.getCenterX() >= 32*20 || this.getCenterY()<0 || this.getCenterY() >= 32*20) {
-      scene = new GameOverScene(this.userObject.getScore());
+        Client.getInstance().scene = new GameOverScene(this.userObject.getScore());
     }
   }
   
@@ -92,18 +94,18 @@ class MapScene extends Scene {
     if(userObject == null)
       return false;
     
-    if(keyCode == DOWN) {
+    if(Client.getInstance().keyCode == Client.getInstance().DOWN) {
       userObject.stateDownControl(true);
     }
     
-    if(keyCode == CONTROL) {
+    if(Client.getInstance().keyCode == Client.getInstance().CONTROL) {
       userObject.callControl();
     }
       
-    if(keyCode == LEFT) {
+    if(Client.getInstance().keyCode == Client.getInstance().LEFT) {
       userObject.move(0);
       return true;
-    } else if(keyCode == RIGHT) {
+    } else if(Client.getInstance().keyCode == Client.getInstance().RIGHT) {
       userObject.move(1);
       return true;
     }
@@ -112,7 +114,7 @@ class MapScene extends Scene {
   }
   
   public boolean keyReleased(int key, int code) {
-    if(keyCode == DOWN) {
+    if(Client.getInstance().keyCode == Client.getInstance().DOWN) {
       userObject.stateDownControl(false);
       return true;
     }

@@ -1,3 +1,9 @@
+package bluesky.client;
+
+import processing.core.PFont;
+
+import java.util.ArrayList;
+
 public class UIControl
 { 
   private UIControl parent;
@@ -50,14 +56,14 @@ public class UIControl
   }
   
   public void uiRect(int x, int y, int w, int h, int c) {
-    fill(c);
-    rect(this.getParentX() + x, this.getParentY() + y, w, h);
+    Client.getInstance().fill(c);
+      Client.getInstance().rect(this.getParentX() + x, this.getParentY() + y, w, h);
   }
   
   public void uiText(int x, int y, int w, int h, String text, PFont font, int size, int c) {
-    textFont(font, 16);
-    fill(c);
-    text(text, this.getParentX()+x, this.getParentY()+y, w, h);
+    Client.getInstance().textFont(font, 16);
+    Client.getInstance().fill(c);
+    Client.getInstance().text(text, this.getParentX()+x, this.getParentY()+y, w, h);
   }
   
   public UIXYFocusControl getXYFocusControl(int x, int y) {

@@ -32,14 +32,14 @@ public class PrintMap {
         if(right == null)
             right = noneMap;
 
-        for(int y=0; y<10; y++) {
-            for(int x=0; x<10; x++) {
+        for(int y=0; y<20; y++) {
+            for(int x=0; x<20; x++) {
                 System.out.printf("%d ", left.getTile(x, y).getResId());
             }
-            for(int x=0; x<10; x++) {
+            for(int x=0; x<20; x++) {
                 System.out.printf("%d ", center.getTile(x, y).getResId());
             }
-            for(int x=0; x<10; x++) {
+            for(int x=0; x<20; x++) {
                 System.out.printf("%d ", right.getTile(x, y).getResId());
             }
             System.out.println();

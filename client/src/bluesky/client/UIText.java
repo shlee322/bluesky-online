@@ -1,3 +1,7 @@
+package bluesky.client;
+
+import processing.core.PFont;
+
 public class UIText extends UIControl
 {
   public PFont textFont;
@@ -5,7 +9,7 @@ public class UIText extends UIControl
   public String text;
   
   public UIText() {
-    this.textFont = createFont("Arial",16,true);
+    this.textFont = Client.getInstance().createFont("Arial",16,true);
     this.textColor = 0;
     this.text = "";
   }

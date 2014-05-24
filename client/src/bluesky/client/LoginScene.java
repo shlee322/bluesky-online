@@ -1,10 +1,14 @@
-class LoginScene extends Scene {
+package bluesky.client;
+
+import processing.core.PImage;
+
+public class LoginScene extends Scene {
   private PImage bg;
     
   public void setup() {
     super.setup();
     
-    this.bg = loadImage("bg/village.png");
+    this.bg = Client.getInstance().loadImage("bg/village.png");
     
     UIWindow window = new UIWindow();
     window.x = 300;
@@ -41,8 +45,8 @@ class LoginScene extends Scene {
     
     loginButton.setOnClickListener(new OnClickListener() {
       public void onClick() {
-        UIManager.getInstance().clearWindow(); 
-        changeScene(new MapScene());
+        UIManager.getInstance().clearWindow();
+          Client.getInstance().changeScene(new MapScene());
       }
     });
 
@@ -54,6 +58,6 @@ class LoginScene extends Scene {
   }
   
   public void draw() {
-    image(this.bg, 0, 0, 800, 600);
+      Client.getInstance().image(this.bg, 0, 0, 800, 600);
   }
 }

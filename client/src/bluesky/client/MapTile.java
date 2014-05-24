@@ -1,4 +1,9 @@
-class MapTile {
+package bluesky.client;
+
+import processing.core.PImage;
+import processing.core.PShape;
+
+public class MapTile {
   private MapData md;
   private int x;
   private int y;
@@ -10,8 +15,8 @@ class MapTile {
     this.md = md;
     this.x = x;
     this.y = y;
-    this.img = loadImage("tiles/1.png");
-    shape = createShape();
+    this.img = Client.getInstance().loadImage("tiles/1.png");
+    shape = Client.getInstance().createShape();
     shape.beginShape();
     //testShape.beginShape();
     //testShape.textureWrap(REPEAT);
@@ -32,10 +37,10 @@ class MapTile {
   }
   
   public void draw() {
-    pushMatrix();
-    translate(this.md.getX() + (this.x * 32), this.md.getY() + (this.y * 32));
-    shape(shape);
-    popMatrix();
+      Client.getInstance().pushMatrix();
+      Client.getInstance().translate(this.md.getX() + (this.x * 32), this.md.getY() + (this.y * 32));
+      Client.getInstance().shape(shape);
+      Client.getInstance().popMatrix();
 
     //image(this.img, this.md.getX() + (this.x * 32), this.md.getY() + (this.y * 32));
   }

@@ -2,6 +2,7 @@
 // Input Method System
 // Lee Sanghyuck (shlee322@elab.kr)
 // https://github.com/shlee322/processing-inputmethod
+package bluesky.client;
 
 public class InputMethodSystem<T>
  implements java.awt.event.InputMethodListener, java.awt.im.InputMethodRequests
@@ -30,11 +31,11 @@ public class InputMethodSystem<T>
         committedTextBuilder.append(c);
         c = text.next();
       }
-      committedText = committedTextBuilder.toString();
-      composedText = String.valueOf(c);
+        Client.getInstance().committedText = committedTextBuilder.toString();
+        Client.getInstance().composedText = String.valueOf(c);
     }
     if(event.getCaret() == null) {
-      composedText = "";
+        Client.getInstance().composedText = "";
     }
     event.consume();
 
@@ -77,24 +78,4 @@ public class InputMethodSystem<T>
   public java.text.AttributedCharacterIterator getSelectedText(java.text.AttributedCharacterIterator.Attribute[] attributes) {
     return null;
   }
-}
-
-String committedText="";
-String composedText="";
-InputMethodSystem inputMethodSystem = new InputMethodSystem(this);
-
-void addListeners(java.awt.Component comp) {
-  super.addListeners(comp);
-  comp.enableInputMethods(true);
-  comp.addInputMethodListener(inputMethodSystem);
-}
-
-void removeListeners(java.awt.Component comp) {
-  super.removeListeners(comp);
-  comp.enableInputMethods(false);
-  comp.removeInputMethodListener(inputMethodSystem);
-}
-
-java.awt.im.InputMethodRequests getInputMethodRequests() {
-  return inputMethodSystem;
 }
