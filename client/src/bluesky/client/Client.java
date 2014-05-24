@@ -7,9 +7,9 @@ import processing.core.*;
 
 public class Client extends PApplet {
     private static Client instance;
-    public Scene scene;
-    final int ScreenSizeWidth = 960;
-    final int ScreenSizeHeight = 640;
+    private Scene scene;
+    public final int ScreenSizeWidth = 960;
+    public final int ScreenSizeHeight = 640;
 
     public String committedText = "";
     public String composedText = "";
@@ -28,8 +28,14 @@ public class Client extends PApplet {
 
         instance = this;
 
-        displayWidth = ScreenSizeWidth;
-        displayHeight = ScreenSizeHeight;
+        sketchPath = "/data/projects/hobby/game/bluesky-online/client";
+
+        /*displayWidth = ScreenSizeWidth;
+        displayHeight = ScreenSizeHeight;       */
+    }
+
+    public String sketchRenderer() {
+        return P3D;
     }
 
     public void setup() {

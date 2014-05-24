@@ -2,6 +2,7 @@ package bluesky.client.map;
 
 import bluesky.client.Client;
 import bluesky.client.Scene;
+import bluesky.client.ui.UIManager;
 
 public class MapScene extends Scene {
     public class MapPosition {
@@ -33,6 +34,8 @@ public class MapScene extends Scene {
         for (int i = 0; i < 9; i++) {
             System.out.println(i + " " + this.mapData[i].getX() + " " + this.mapData[i].getY());
         }
+
+        UIManager.getInstance().regWindow(new MapWindow());
     }
 
     public void loadMap() {
@@ -75,7 +78,7 @@ public class MapScene extends Scene {
         super.draw();
 
         Client.getInstance().fill(0, 0, 200);
-        Client.getInstance().rect(0, 0, 800, 400);
+        Client.getInstance().rect(0, 0, Client.getInstance().ScreenSizeWidth, Client.getInstance().ScreenSizeHeight);
 
         for (int i = 0; i < 9; i++) {
             this.mapData[i].drawTiles();

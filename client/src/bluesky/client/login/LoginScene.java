@@ -5,63 +5,32 @@ import bluesky.client.Scene;
 import bluesky.client.map.MapScene;
 import bluesky.client.ui.*;
 import processing.core.PImage;
+import processing.core.PShape;
 
 public class LoginScene extends Scene {
     private PImage bg;
+    private PShape bgShape;
 
     public void setup() {
         super.setup();
 
         this.bg = Client.getInstance().loadImage("bg/village.png");
+        this.bgShape = Client.getInstance().createShape();
+        this.bgShape.beginShape();
+        this.bgShape.texture(this.bg);
+        this.bgShape.vertex(0, 0, 0, 0);
+        this.bgShape.vertex(Client.getInstance().ScreenSizeWidth, 0, this.bg.width, 0);
+        this.bgShape.vertex(Client.getInstance().ScreenSizeWidth, Client.getInstance().ScreenSizeHeight, this.bg.width, this.bg.height);
+        this.bgShape.vertex(0, Client.getInstance().ScreenSizeHeight, 0, this.bg.height);
+        this.bgShape.endShape();
 
-        UIWindow window = new UIWindow();
-        window.x = 300;
-        window.y = 300;
-        window.width = 200;
-        window.height = 200;
-
-        UIManager.getInstance().regWindow(window);
-
-        UIText idText = new UIText();
-        idText.text = "ID";
-        idText.x = 10;
-        idText.y = 5;
-
-        UIEditbox idEditbox = new UIEditbox();
-        idEditbox.x = 40;
-        idEditbox.y = 5;
-        idEditbox.width = 100;
-
-        UIText pwText = new UIText();
-        pwText.text = "PW";
-        pwText.x = 10;
-        pwText.y = 45;
-
-        UIEditbox pwEditbox = new UIEditbox();
-        pwEditbox.x = 40;
-        pwEditbox.y = 45;
-        pwEditbox.width = 100;
-
-        UIButton loginButton = new UIButton();
-        loginButton.text = "Login";
-        loginButton.x = 60;
-        loginButton.y = 80;
-
-        loginButton.setOnClickListener(new OnClickListener() {
-            public void onClick() {
-                UIManager.getInstance().clearWindow();
-                Client.getInstance().changeScene(new MapScene());
-            }
-        });
-
-        window.addChild(idText);
-        window.addChild(idEditbox);
-        window.addChild(pwText);
-        window.addChild(pwEditbox);
-        window.addChild(loginButton);
+        UIManager.getInstance().regWindow(new LoginWindow());
     }
 
     public void draw() {
-        Client.getInstance().image(this.bg, 0, 0, 800, 600);
+        Client.getInstance().pushMatrix();
+        Client.getInstance().translate(0, 0);
+        Client.getInstance().shape(this.bgShape);
+        Client.getInstance().popMatrix();
     }
 }
