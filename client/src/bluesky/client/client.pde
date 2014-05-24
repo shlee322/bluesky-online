@@ -1,9 +1,10 @@
 Scene scene;
-final int ScreenSizeWidth = 800;
-final int ScreenSizeHeight = 600;
+final int ScreenSizeWidth = 960;
+final int ScreenSizeHeight = 640;
 
 void setup() {
-  size(ScreenSizeWidth, ScreenSizeHeight);
+  size(ScreenSizeWidth, ScreenSizeHeight, P3D);
+  noStroke();
   frameRate(60);
   
   scene = new LoginScene();

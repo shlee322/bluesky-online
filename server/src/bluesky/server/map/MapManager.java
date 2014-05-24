@@ -1,8 +1,7 @@
-package kr.elab.game.bluesky.server.map;
+package bluesky.server.map;
 
 import java.io.File;
 import java.util.*;
-import java.util.Map;
 
 public class MapManager {
     private static MapManager instance = new MapManager();
@@ -35,7 +34,7 @@ public class MapManager {
             return;
         }
 
-        IMap map = new kr.elab.game.bluesky.server.map.Map(mapCount++, world, x, y);
+        IMap map = new bluesky.server.map.Map(mapCount++, world, x, y);
         for(int i=0; i<8; i++) {
             setAroundMap(map, i);
         }

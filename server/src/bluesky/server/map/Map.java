@@ -1,4 +1,4 @@
-package kr.elab.game.bluesky.server.map;
+package bluesky.server.map;
 
 public class Map implements IMap {
     private int id;

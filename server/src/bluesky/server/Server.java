@@ -1,7 +1,7 @@
-package kr.elab.game.bluesky.server;
+package bluesky.server;
 
-import kr.elab.game.bluesky.server.map.MapManager;
-import kr.elab.game.bluesky.server.network.NetworkManager;
+import bluesky.server.map.MapManager;
+import bluesky.server.network.NetworkManager;
 
 import java.io.File;
 

@@ -1,6 +1,6 @@
-import kr.elab.game.bluesky.server.map.IMap;
-import kr.elab.game.bluesky.server.map.ITile;
-import kr.elab.game.bluesky.server.map.PrimitiveTile;
+import bluesky.server.map.IMap;
+import bluesky.server.map.ITile;
+import bluesky.server.map.PrimitiveTile;
 
 public class PrintMap {
     public static void print(IMap map) {

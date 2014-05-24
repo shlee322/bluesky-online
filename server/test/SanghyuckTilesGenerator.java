@@ -1,6 +1,6 @@
-import kr.elab.game.bluesky.server.map.IMap;
-import kr.elab.game.bluesky.server.map.IMapTilesGenerator;
-import kr.elab.game.bluesky.server.map.PrimitiveTile;
+import bluesky.server.map.IMap;
+import bluesky.server.map.IMapTilesGenerator;
+import bluesky.server.map.PrimitiveTile;
 
 public class SanghyuckTilesGenerator implements IMapTilesGenerator {
     @Override

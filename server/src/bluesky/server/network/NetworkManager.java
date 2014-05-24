@@ -1,4 +1,4 @@
-package kr.elab.game.bluesky.server.network;
+package bluesky.server.network;
 
 public class NetworkManager {
     private static NetworkManager instance = new NetworkManager();

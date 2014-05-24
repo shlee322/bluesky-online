@@ -1,4 +1,4 @@
-package kr.elab.game.bluesky.server.map;
+package bluesky.server.map;
 
 public class PrimitiveTile implements ITile {
     private static PrimitiveTile[] tiles = new PrimitiveTile[20];
