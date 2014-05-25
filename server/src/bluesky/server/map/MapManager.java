@@ -60,11 +60,11 @@ public class MapManager {
             return 0;
             //throw new Exception("상대 범위 초과");
         }
-        if(position<2) return -1;
+        if(position<2) return 1;
         if(position==2) return 0;
-        if(position<6) return +1;
+        if(position<6) return -1;
         if(position==6) return 0;
-        return -1;
+        return 1;
     }
 
     private void setAroundMap(IMap map, int position) {
