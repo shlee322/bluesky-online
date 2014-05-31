@@ -1,7 +1,6 @@
-package bluesky.client;
+package bluesky.client.processing2;
 
 import bluesky.client.login.LoginScene;
-import bluesky.client.ui.InputMethodSystem;
 import bluesky.client.ui.UIManager;
 import processing.core.*;
 
