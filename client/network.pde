@@ -49,6 +49,7 @@ public static class Network implements Model {
 
         try {
             b.connect(new InetSocketAddress("183.96.22.222", 7001)).sync();
+            Engine.getInstance().setScene(new LoginScene());
         } catch (Exception e) {
             Engine.getInstance().showNotify("서버 접속 실패", -1);
         }
