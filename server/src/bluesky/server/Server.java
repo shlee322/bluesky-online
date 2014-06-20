@@ -1,14 +1,20 @@
 package bluesky.server;
 
-import bluesky.server.map.MapManager;
-import bluesky.server.network.NetworkManager;
-
-import java.io.File;
+import bluesky.server.usersevice.UserService;
 
 public class Server {
     public static void main(String[] args) {
-        MapManager.getInstance().setDirectory(new File("./maps/"));
-        MapManager.getInstance().start();
-        NetworkManager.getInstance().start();
+        if(args.length < 3) {
+            System.err.println("args : [Service] [Id] [IP]");
+            return;
+        }
+/*
+        if("user".equals(args[0].toLowerCase())) {
+            new UserService(Short.decode(args[1]), args[1]).start();
+        }*/
+
+        new UserService((short)1, "183.96.22.222").start();
+        //new UserService((short)2, "127.0.0.1").start();
+        //new UserService((short)3, "127.0.0.1").start();
     }
 }
