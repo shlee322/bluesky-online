@@ -26,8 +26,8 @@ public static class Engine {
 		return getEngineAdapter().getWidth();
 	}
 
-	public int getHeigth() {
-		return getEngineAdapter().getHeigth();
+	public int getHeight() {
+		return getEngineAdapter().getHeight();
 	}
 
 	public UIManager getUIManager() {

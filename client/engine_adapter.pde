@@ -1,6 +1,6 @@
 interface EngineAdapter {
 	int getWidth();
-	int getHeigth();
+	int getHeight();
 	int getFrameRate();
 	void drawFrameRate();
 	void drawText(String text, int x, int y);
@@ -12,4 +12,8 @@ interface EngineAdapter {
 
 interface EImage {
 	void draw();
+	int getWidth();
+	int getHeight();
+	void setWidth(int width);
+	void setHeight(int height);
 }

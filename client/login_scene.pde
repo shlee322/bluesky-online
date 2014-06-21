@@ -4,6 +4,8 @@ public static class LoginScene implements Scene {
     @Override
     public void init() {
         this.bg = Engine.getInstance().getEngineAdapter().loadImage("images/intro.png");
+        this.bg.setWidth(Engine.getInstance().getWidth());
+        this.bg.setHeight(Engine.getInstance().getHeight());
     }
 
     @Override

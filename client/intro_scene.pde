@@ -4,6 +4,8 @@ public static class IntroScene implements Scene {
     @Override
     public void init() {
         this.bg = Engine.getInstance().getEngineAdapter().loadImage("images/intro.png");
+        this.bg.setWidth(Engine.getInstance().getWidth());
+        this.bg.setHeight(Engine.getInstance().getHeight());
 
         Engine.getInstance().showNotify("서버에 접속중입니다...", -1);
 

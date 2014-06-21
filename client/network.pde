@@ -61,7 +61,11 @@ public static class UserHandler extends SimpleChannelUpstreamHandler {
     }
 
     public void channelConnected(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ChannelStateEvent e) {
-    	Engine.getInstance().showNotify("서버 접속 성공", 20);
+    	Engine.getInstance().showNotify("서버 접속 성공", 120);
+    }
+
+    public void channelDisconnected(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ChannelStateEvent e) {
+        Engine.getInstance().showNotify("서버와의 연결이 끊어졌습니다.", -1);
     }
 }
 

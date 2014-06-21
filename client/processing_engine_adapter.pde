@@ -17,7 +17,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		return 800;
 	}
 
-	public int getHeigth() {
+	public int getHeight() {
 		return 600;
 	}
 
@@ -60,9 +60,9 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		if(text == null || text.equals("")) return;
 
 		this.getProcessing().fill(0, 0, 0, 160);
-		rect(0, getHeigth() / 2 - 25, this.getWidth(), 50);
+		rect(0, getHeight() / 2 - 25, this.getWidth(), 50);
 		this.getProcessing().fill(255);
-		this.drawText(text, getWidth() / 2, getHeigth() / 2, 18, true);
+		this.drawText(text, getWidth() / 2, getHeight() / 2, 18, true);
 	}
 
 	public EImage loadImage(String path) {
@@ -71,13 +71,49 @@ class ProcessingEngineAdapter implements EngineAdapter {
 }
 
 class ProcessingEImage implements EImage {
-	private PImage img;
+	protected PImage img;
+	protected PShape shape;
+	private int width;
+	private int height;
 
 	public ProcessingEImage(PImage img) {
 		this.img = img;
+		this.width = this.img.width;
+		this.height = this.img.height;
+		this.updateShape();
 	}
 
-	void draw() {
-		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().image(this.img, 0, 0);
+	private void updateShape() {
+		this.shape = ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().createShape();
+		this.shape.beginShape();
+		this.shape.texture(this.img);
+		this.shape.vertex(0, 0, 0, 0, 0);
+		this.shape.vertex(this.width, 0, 0, this.img.width, 0);
+		this.shape.vertex(this.width, this.height, 0, this.img.width, this.img.height);
+		this.shape.vertex(0,  this.height, 0, 0, this.img.height);
+		this.shape.endShape();
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+		this.updateShape();
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+		this.updateShape();
+	}
+
+	public void draw() {
+		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().shape(this.shape);
+		//((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().image(this.img, 0, 0);
 	}
 }

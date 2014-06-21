@@ -1,5 +1,5 @@
 void setup() {
-	Engine.getInstance().setEngineAdapter(new ProcessingEngineAdapter(this));
+	Engine.getInstance().setEngineAdapter(new ProcessingEngineAdapter(client.this));
 	Engine.getInstance().init();
 }
 
