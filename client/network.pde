@@ -18,6 +18,8 @@ import org.msgpack.annotation.Message;
 
 public static class Network implements Model {
 	private ClientPacketList packetList = new ClientPacketList();
+    private Channel channel;
+
 	public void init(Scene scene) {
 	}
 
@@ -43,7 +45,7 @@ public static class Network implements Model {
                 ChannelPipeline pipeline = Channels.pipeline();
                 pipeline.addLast("decoder", new NetworkDecoder(packetList));
                 pipeline.addLast("encoder", new NetworkEncoder(packetList));
-                pipeline.addLast("handler", new UserHandler());
+                pipeline.addLast("handler", new UserHandler(Network.this));
                 return pipeline;
             }
         });
@@ -55,13 +57,29 @@ public static class Network implements Model {
             Engine.getInstance().showNotify("서버 접속 실패", -1);
         }
     }
+
+    public Channel getChannel() {
+        return this.channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+
+    public void write(Packet packet) {
+        this.channel.write(packet);
+    }
 }
 
 public static class UserHandler extends SimpleChannelUpstreamHandler {
-    public UserHandler() {
+    private Network network;
+
+    public UserHandler(Network network) {
+        this.network = network;
     }
 
     public void channelConnected(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ChannelStateEvent e) {
+        this.network.setChannel(ctx.getChannel());
     	Engine.getInstance().showNotify("서버 접속 성공", 120);
     }
 
@@ -85,13 +103,87 @@ public static class UserHandler extends SimpleChannelUpstreamHandler {
 public static class ClientPacketList extends PacketList {
     private static final Class<?>[] PacketList = new Class<?>[] {
             null,
-            SC_Notify.class
+            SC_Notify.class,
+            CS_Join.class,
+            CS_Login.class,
+            SC_MoveMap.class,
+            CS_GetMapInfo.class,
+            SC_MapInfo.class,
+            CS_GetObjectInfo.class,
+            SC_ObjectInfo.class,
+            MoveObject.class
     };
 
     @Override
     public Class<?>[] getPacketList() {
         return PacketList;
     }
+}
+
+@Message
+public static class CS_GetMapInfo implements Packet {
+    public int map_id;
+
+    @Override
+    public byte getPacketId() { return 5; }
+}
+
+@Message
+public static class CS_GetObjectInfo implements Packet {
+    public int map_id;
+    public long object_id;
+
+    @Override
+    public byte getPacketId() { return 7; }
+}
+
+@Message
+public static class CS_Join implements Packet {
+    public String id;
+    public String pw;
+    public String name;
+
+    @Override
+    public byte getPacketId() { return 2; }
+}
+
+@Message
+public static class CS_Login implements Packet {
+    public String id;
+    public String pw;
+
+    @Override
+    public byte getPacketId() { return 3; }
+}
+
+@Message
+public static class MoveObject implements Packet {
+    public long object_id;
+    public int src_map;
+    public int src_x;
+    public int src_y;
+    public int dest_map;
+    public int dest_x;
+    public int dest_y;
+
+    @Override
+    public byte getPacketId() { return 9; }
+}
+
+public static class SC_MapInfo implements Packet {
+    public int map_id;
+
+    @Override
+    public byte getPacketId() { return 6; }
+}
+
+@Message
+public static class SC_MoveMap implements Packet {
+    public long object_id;
+    public int map_id;
+
+    @Override
+    public byte getPacketId() { return 4; }
 }
 
 @Message
@@ -109,6 +201,14 @@ public static class SC_Notify implements Packet {
     }
 }
 
+@Message
+public static class SC_ObjectInfo implements Packet {
+    public int map_id;
+    public long object_id;
+
+    @Override
+    public byte getPacketId() { return 8; }
+}
 
 public interface Packet {
     public byte getPacketId();

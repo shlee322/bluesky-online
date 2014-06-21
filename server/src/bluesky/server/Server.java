@@ -1,5 +1,6 @@
 package bluesky.server;
 
+import bluesky.server.mapservice.MapService;
 import bluesky.server.usersevice.UserService;
 
 public class Server {
@@ -14,6 +15,7 @@ public class Server {
         }*/
 
         new UserService((short)1, "183.96.22.222").start();
+        new MapService((short)2, "183.96.22.222").start();
         //new UserService((short)2, "127.0.0.1").start();
         //new UserService((short)3, "127.0.0.1").start();
     }

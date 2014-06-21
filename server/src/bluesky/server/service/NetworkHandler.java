@@ -30,14 +30,17 @@ public class NetworkHandler extends SimpleChannelUpstreamHandler {
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
         Packet msg = (Packet)e.getMessage();
-        System.out.println("test");
+
         if(msg instanceof ServiceInfo) { //Client -> Server
             ServiceInfo info = (ServiceInfo)msg;
             if(this.service instanceof Service) {
                 ((Service)service).setRemoteService(info.serviceId, ctx);
-                System.out.println("패킷수신!");
             }
             return;
+        } else {
+            if(this.service instanceof RemoteService) {
+                ((RemoteService)service).getService().receiveServiceMessage(service, msg);
+            }
         }
     }
 

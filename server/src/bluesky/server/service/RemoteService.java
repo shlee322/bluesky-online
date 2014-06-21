@@ -2,6 +2,7 @@ package bluesky.server.service;
 
 import bluesky.protocol.NetworkDecoder;
 import bluesky.protocol.NetworkEncoder;
+import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.PacketList;
 import bluesky.protocol.packet.service.ServicePacketList;
 import org.apache.logging.log4j.LogManager;
@@ -16,10 +17,13 @@ public class RemoteService implements ServiceImpl {
     private static Logger logger = LogManager.getLogger("RemoteService");
     private static PacketList servicePacketList = new ServicePacketList();
 
+    private Service service;
+
     private short id;
     private Channel channel;
 
     public RemoteService(Service service, short id, String host) {
+        this.service = service;
         this.id = id;
         String[] h = host.split(":");
 
@@ -46,8 +50,13 @@ public class RemoteService implements ServiceImpl {
     }
 
     public RemoteService(Service service, short serviceId, Channel ctx) {
+        this.service = service;
         this.id = serviceId;
         this.setChannel(ctx);
+    }
+
+    public Service getService() {
+        return this.service;
     }
 
     @Override
@@ -62,5 +71,9 @@ public class RemoteService implements ServiceImpl {
 
     public void setChannel(Channel ctx) {
         this.channel = ctx;
+    }
+
+    public void sendServiceMessage(ServiceImpl sender, final Packet packet) {
+        this.channel.write(packet);
     }
 }

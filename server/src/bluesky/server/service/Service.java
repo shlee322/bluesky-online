@@ -2,6 +2,7 @@ package bluesky.server.service;
 
 import bluesky.protocol.NetworkDecoder;
 import bluesky.protocol.NetworkEncoder;
+import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.PacketList;
 import bluesky.protocol.packet.service.ServicePacketList;
 import com.netflix.curator.framework.CuratorFramework;
@@ -76,6 +77,10 @@ public class Service implements ServiceImpl{
         return String.valueOf(this.getServiceId());
     }
 
+    public CuratorFramework getZooKeeperClient() {
+        return this.zooKeeperClient;
+    }
+
     protected void init() {
         initWorker(4);
         initNetwork();
@@ -84,10 +89,15 @@ public class Service implements ServiceImpl{
         syncSerivce();
     }
 
+    protected int getWorkerCount() {
+        return this.worker.length;
+    }
+
     private void initWorker(int num) {
         this.worker = new Thread[num];
         this.workQueue = new ConcurrentLinkedQueue[num];
         this.serviceMap = new HashMap[num];
+        this.serviceMap[getWorkerIndex(this.getServiceId())].put(this.getServiceId(), this);
 
         for(int i=0; i<num; i++) {
             this.workQueue[i] = new ConcurrentLinkedQueue<Runnable>();
@@ -171,6 +181,9 @@ public class Service implements ServiceImpl{
             if(this.zooKeeperClient.checkExists().forPath("/service") == null) {
                 this.zooKeeperClient.create().withMode(CreateMode.PERSISTENT).forPath("/service");
             }
+            if(this.zooKeeperClient.checkExists().forPath("/maps") == null) {
+                this.zooKeeperClient.create().withMode(CreateMode.PERSISTENT).forPath("/maps");
+            }
 
             this.zooKeeperClient.create()
                     .withMode(CreateMode.EPHEMERAL)
@@ -220,7 +233,7 @@ public class Service implements ServiceImpl{
         }
     }
 
-    protected void subscribeMQTT(String topic) {
+    public void subscribeMQTT(String topic) {
         try {
             this.mqttClient.subscribe(topic);
         } catch (MqttException e) {
@@ -228,7 +241,7 @@ public class Service implements ServiceImpl{
         }
     }
 
-    protected void publishMQTT(String topic, byte[] data) {
+    public void publishMQTT(String topic, byte[] data) {
         MqttMessage message = new MqttMessage(data);
         message.setQos(2);
         try {
@@ -248,5 +261,22 @@ public class Service implements ServiceImpl{
                 serviceMap[getWorkerIndex(serviceId)].put(serviceId, new RemoteService(Service.this, serviceId, ctx.getChannel()));
             }
         });
+    }
+
+    public void sendServiceMessage(ServiceImpl sender, final Packet packet) {
+        this.receiveServiceMessage(sender, packet);
+    }
+
+    public void sendServiceMessage(final short serviceId, final Packet packet) {
+        this.addWork(serviceId, new Runnable() {
+            @Override
+            public void run() {
+                ServiceImpl service = serviceMap[getWorkerIndex(serviceId)].get(serviceId);
+                service.sendServiceMessage(Service.this, packet);
+            }
+        });
+    }
+
+    public void receiveServiceMessage(ServiceImpl sender, Packet packet) {
     }
 }
