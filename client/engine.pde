@@ -79,4 +79,8 @@ public static class Engine {
 		this.notifyText = text;
 		this.notifyTime = time;
 	}
+
+	public void playBGM(String path) {
+		getEngineAdapter().playBGM(path);
+	}
 }

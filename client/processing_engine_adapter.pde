@@ -1,7 +1,12 @@
+import ddf.minim.*;
+
 class ProcessingEngineAdapter implements EngineAdapter {
 	private PFont[] fonts = new PFont[4];
 	private int[] fontSize = new int[]{18, 24, 48, 64};
 	private PApplet processing;
+	private Minim minim;
+	private AudioPlayer bgmPlayer;
+
 	public ProcessingEngineAdapter(PApplet processing) {
 		this.processing = processing;
 
@@ -11,6 +16,8 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		for(int i=0; i<4; i++) {
 			this.fonts[i] = this.getProcessing().createFont("NanumGothic", this.fontSize[i]);
 		}
+
+		this.minim = new Minim(this.getProcessing());
 	}
 
 	public int getWidth() {
@@ -27,6 +34,16 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 	public PApplet getProcessing() {
 		return this.processing;
+	}
+
+	public void playBGM(String path) {
+		if(bgmPlayer != null) {
+			bgmPlayer.close();
+		}
+
+		bgmPlayer = minim.loadFile(path);
+		bgmPlayer.play();
+		bgmPlayer.rewind();
 	}
 
 	public void drawFrameRate() {

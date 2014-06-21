@@ -7,6 +7,8 @@ public static class IntroScene implements Scene {
         this.bg.setWidth(Engine.getInstance().getWidth());
         this.bg.setHeight(Engine.getInstance().getHeight());
 
+        Engine.getInstance().playBGM("data/bgm/intro.mp3");
+
         Engine.getInstance().showNotify("서버에 접속중입니다...", -1);
 
         Engine.getInstance().getNetwork().initNetwork();

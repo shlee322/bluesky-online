@@ -2,6 +2,7 @@ interface EngineAdapter {
 	int getWidth();
 	int getHeight();
 	int getFrameRate();
+	void playBGM(String path);
 	void drawFrameRate();
 	void drawText(String text, int x, int y);
 	void drawText(String text, int x, int y, int size);

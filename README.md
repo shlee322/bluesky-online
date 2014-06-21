@@ -11,8 +11,14 @@ Bluesky Online
 
 ## Dependent
 - Processing 2
+- Minim
 - Netty 3.9.2
 - fusesource mqtt-client 0.4.0
 - Log4j 2.0
 - Curator 1.3.3
 - MsgPack 0.6.11
+- Java MysqlConnector
+
+
+# Resources
+http://opengameart.org/content/meloncholy-town
