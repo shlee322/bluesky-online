@@ -14,6 +14,7 @@ import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.msgpack.MessagePack;
 import org.msgpack.packer.Packer;
+import org.msgpack.annotation.Message;
 
 public static class Network implements Model {
 	private ClientPacketList packetList = new ClientPacketList();
@@ -67,12 +68,24 @@ public static class UserHandler extends SimpleChannelUpstreamHandler {
     public void channelDisconnected(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ChannelStateEvent e) {
         Engine.getInstance().showNotify("서버와의 연결이 끊어졌습니다.", -1);
     }
+
+    public void messageReceived(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.MessageEvent e) { 
+        if(e.getMessage() instanceof SC_Notify) {
+            SC_Notify notify = (SC_Notify)e.getMessage();
+            Engine.getInstance().showNotify(notify.msg, notify.time);
+        }
+    }
+
+    public void exceptionCaught(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ExceptionEvent e) {
+        e.getCause().printStackTrace();
+    }
 }
 
 
 public static class ClientPacketList extends PacketList {
     private static final Class<?>[] PacketList = new Class<?>[] {
-            null
+            null,
+            SC_Notify.class
     };
 
     @Override
@@ -80,6 +93,22 @@ public static class ClientPacketList extends PacketList {
         return PacketList;
     }
 }
+
+@Message
+public static class SC_Notify implements Packet {
+    public String msg;
+    public int time;
+
+    @Override
+    public byte getPacketId() { return 1; }
+
+    public SC_Notify() {}
+    public SC_Notify(String msg, int time) {
+        this.msg = msg;
+        this.time = time;
+    }
+}
+
 
 public interface Packet {
     public byte getPacketId();

@@ -59,7 +59,7 @@ public static class Engine {
 	    getUIManager().runUILoop();
 
 	    if(notifyTime != -1) {
-	    	notifyTime -= notifyTime;
+	    	notifyTime -= 1;
 	    	if(notifyTime == 0) notifyText = null;
 	    }
 
