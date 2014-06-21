@@ -11,6 +11,7 @@ public static class UIManager {
 
 	public void addComponent(UIComponent comp) {
 		this.componentList.add(comp);
+		comp.setUIManager(this);
 	}
 
 	public void removeComponent(UIComponent comp) {

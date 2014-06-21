@@ -3,7 +3,7 @@ public static class IntroScene implements Scene {
 
     @Override
     public void init() {
-        this.bg = Engine.getInstance().getEngineAdapter().loadImage("images/intro.png");
+        this.bg = Engine.getInstance().loadImage("images/intro.png");
         this.bg.setWidth(Engine.getInstance().getWidth());
         this.bg.setHeight(Engine.getInstance().getHeight());
 
@@ -18,7 +18,7 @@ public static class IntroScene implements Scene {
     public void runSceneLoop() {
         this.bg.draw();
 
-        Engine.getInstance().getEngineAdapter().drawText("BlueSky Online", Engine.getInstance().getWidth() / 2, 150, 64, true);
+        Engine.getInstance().drawText("BlueSky Online", Engine.getInstance().getWidth() / 2, 150, 64, true);
     }
 
     @Override
