@@ -1,5 +1,6 @@
 package client.item;
 
+
 /**
  * Created by Hong on 2014-06-20.
  * <p/>
@@ -9,13 +10,13 @@ package client.item;
  */
 
 public class MixTable {
-    Item[] ItemMakeOn = new Item[9];
+    int[] ItemMakeOn = new int[9];
 
-    public void setItemMakeOn(int i, Item item) {
-        ItemMakeOn[i] = item;
+    public void setItemMakeOn(int i, int GrahpicCode) {
+        ItemMakeOn[i] = GrahpicCode;
     }
 
-    public Item getItemMakeOn(int i) {
+    public int getItemMakeOn(int i) {
         return ItemMakeOn[i];
     }
 }
