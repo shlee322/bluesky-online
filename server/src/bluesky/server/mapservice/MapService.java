@@ -1,8 +1,10 @@
 package bluesky.server.mapservice;
 
 import bluesky.protocol.packet.Packet;
+import bluesky.protocol.packet.service.GetMapInfo;
 import bluesky.server.service.Service;
 import bluesky.server.service.ServiceImpl;
+import bluesky.server.usersevice.MapProxy;
 import org.apache.zookeeper.CreateMode;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -24,7 +26,7 @@ public class MapService extends Service {
         this.subscribeMQTT("/event/request_map");
     }
 
-    protected void arrivedMQTTMessage(String topic, MqttMessage message) {
+    protected void arrivedMQTTMessage(String topic, final MqttMessage message) {
         if(topic.equals("/event/request_map")) {
             byte[] mapIdBytes = message.getPayload();
             int map_id = 0;
@@ -40,6 +42,25 @@ public class MapService extends Service {
                 }
             });
         }
+
+        if(topic.startsWith("/maps/")) {
+            String subTopic = topic.substring(6);
+            int mapIdEndIndex = subTopic.indexOf("/");
+            final int mapId = Integer.valueOf(subTopic.substring(0, mapIdEndIndex));
+            subTopic = subTopic.substring(mapIdEndIndex);
+            final String finalSubTopic = subTopic;
+            this.addWork(mapId, new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<Integer, Map> localMaps = maps[getWorkerIndex(mapId)];
+                    if(!localMaps.containsKey(mapId)) {
+                        return;
+                    }
+                    Map map = localMaps.get(mapId);
+                    map.arrivedMQTTMessage(finalSubTopic, message.getPayload());
+                }
+            });
+        }
     }
 
     private void linkMap(int map_id) {
@@ -50,7 +71,8 @@ public class MapService extends Service {
                             (byte) (this.getServiceId() & 0xFF00 >> 8),
                             (byte) (this.getServiceId() & 0xFF)
                     });
-            this.maps[getWorkerIndex(map_id)].put(map_id, new Map());
+            this.maps[getWorkerIndex(map_id)].put(map_id, new Map(map_id));
+            this.subscribeMQTT("/maps/" + map_id + "/#");
             this.publishMQTT("/event/link_map", new byte[]{
                     (byte)(map_id & 0xFF000000 >> 24),
                     (byte)(map_id & 0xFF0000 >> 16),
@@ -66,5 +88,8 @@ public class MapService extends Service {
 
     public void receiveServiceMessage(ServiceImpl sender, Packet packet) {
         getLogger().info("메시지가 왔어요!!!! 아마 맵정보 요청이겠죠?");
+        if(packet instanceof GetMapInfo) {
+
+        }
     }
 }

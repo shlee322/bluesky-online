@@ -1,13 +1,13 @@
 package bluesky.server.usersevice;
 
 import bluesky.protocol.packet.Packet;
-import bluesky.protocol.packet.client.CS_GetMapInfo;
-import bluesky.protocol.packet.client.CS_Join;
-import bluesky.protocol.packet.client.CS_Login;
-import bluesky.protocol.packet.client.SC_Notify;
+import bluesky.protocol.packet.client.*;
+import bluesky.server.db.DBManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jboss.netty.channel.*;
+
+import java.sql.*;
 
 public class UserHandler extends SimpleChannelUpstreamHandler {
     private static Logger logger = LogManager.getLogger("UserService");
@@ -25,6 +25,9 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
 
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws java.lang.Exception {
         logger.info("클라이언트 연결 끊김 - " + e.getChannel().getRemoteAddress());
+        if(this.user != null) {
+            this.service.exitUser(this.user);
+        }
     }
 
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
@@ -37,16 +40,49 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
             }
 
             if (packet instanceof CS_Login) {
-                ctx.getChannel().write(new SC_Notify("로그인 성공", 40));
+                try {
+                    Connection conn = DBManager.getInstance().getConnection();
+                    PreparedStatement statement =
+                            conn.prepareStatement("SELECT * FROM `users` WHERE `user_id`=? and `user_pw`=SHA1(?);");
 
-                this.user = new UserObject(this.service, ctx.getChannel(), ((CS_Login) packet).id);
-                this.service.loginUser(this.user);
+                    statement.setString(1, ((CS_Login) packet).id);
+                    statement.setString(2, ((CS_Login) packet).pw);
+
+                    ResultSet result = statement.executeQuery();
+                    if(result.next()) {
+                        ctx.getChannel().write(new SC_Notify("로그인 성공", 40));
+
+                        this.user = new UserObject(this.service, ctx.getChannel(),
+                                result.getString("user_name"), result.getInt("map_id"),
+                                result.getInt("x"), result.getInt("y"));
+                        this.service.loginUser(this.user);
+                    } else {
+                        ctx.getChannel().write(new SC_Notify("로그인 도중 에러가 발생하였습니다.", 120));
+                    }
+
+                    result.close();
+                    statement.close();
+                    conn.close();
+                } catch (SQLException e1) {
+                    logger.warn("DB 에러가 발생하였습니다.", e1);
+                    ctx.getChannel().write(new SC_Notify("로그인 도중 에러가 발생하였습니다.", 120));
+                }
+
+                return;
             }
         } else {
             if(packet instanceof CS_GetMapInfo) {
                 CS_GetMapInfo getMapInfo = (CS_GetMapInfo)packet;
-
                 this.service.getMapInfo(this.user, getMapInfo.map_id);
+                return;
+            }
+
+            if(packet instanceof CS_GetObjectInfo) {
+                return;
+            }
+
+            if(packet instanceof MoveObject) {
+                this.service.moveObject(this.user, (MoveObject)packet);
             }
         }
     }
