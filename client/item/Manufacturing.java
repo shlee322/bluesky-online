@@ -40,6 +40,7 @@ public class Manufacturing {
                     }
                 }
                 //  Inventory.getInstance().getItem(도끼);
+                //  재료 따라서 구분
             } else if (str.equals("nife")) {
 
                 if (canMix) {

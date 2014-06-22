@@ -9,7 +9,7 @@ public class Item {
     int[] GraphicCode = new int[255];
     boolean[][] ItemTag = new boolean[255][8];
     //체력 등 저장?;
-        private static Item instance = new Item();
+    private static Item instance = new Item();
 
     Item() {
         for (int x = 0; x < 255; x++) {
@@ -41,6 +41,9 @@ public class Item {
      * <p/>
      * <p/>
      * '3' 태그를 가지고 있으면 단일 가공 가능 ( 나무 -> 막대기 4개, 철 -> 철 막대 4개)
+     *
+     *
+     * 부수면 그 블럭의 GraphicCode 값을 리턴해서 그걸로 템템관
      */
 
     //생성자
