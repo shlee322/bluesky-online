@@ -19,7 +19,7 @@ public class Inventory {
         return instance;
     }
 
-    public void getItem(int GrahpicCode) {
+    public void getItem(int GrahpicCode) { //아이템 얻을때
         for (int x = 0; x < 24; x++) {
             if (Inventory[x] == GrahpicCode) {
                 ItemNumber[x]++;
@@ -32,7 +32,7 @@ public class Inventory {
         }
     }
 
-    public void useItem(int GrahpicCode) {
+    public void useItem(int GrahpicCode) { //아이템 사용, 파기에도 응용
         for (int x = 23; x == 0; x--) {
             if (Inventory[x] == GrahpicCode && ItemNumber[x] > 0) {
                 ItemNumber[x]--;
@@ -43,4 +43,5 @@ public class Inventory {
             }
         }
     }
+
 }
