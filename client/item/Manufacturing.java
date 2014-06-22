@@ -1,5 +1,6 @@
 package client.item;
 
+
 /**
  * Created by Hong on 2014-06-20.
  * <p/>
@@ -12,11 +13,12 @@ public class Manufacturing {
     private boolean canMixing = true;
     private boolean[] tableChk = new boolean[9];
 
+
     public void Manufacture(MixTable m) {
         for (int x = 0; x < 9; x++) {
-            if (m.getItemMakeOn(x) != null) { //x가 비지 않을 경우
+            if (m.getItemMakeOn(x) != 0) { //x가 비지 않을 경우
                 tableChk[x] = true;
-                if (m.getItemMakeOn(x).getItemTag().contains(0)) { //x 아이템이 0(조합 가능을 포함하면)
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(x), 0)) { //x 아이템이 0(조합 가능을 포함하면)
                 } else {
                     canMixing = false;
                 }
@@ -29,77 +31,41 @@ public class Manufacturing {
             String str = findItemRecipe.Find(tableChk);
             boolean canMix = false;
             if (str.equals("axe")) {
-                if (m.getItemMakeOn(6).getItemTag().contains(2))
-                    if (m.getItemMakeOn(7).getItemTag().contains(2))
-                        if (m.getItemMakeOn(1).getItemTag().contains(4))
-                            if (m.getItemMakeOn(4).getItemTag().contains(4))
-                                canMix = true;
-
-                if (canMix) {
-                    //만들자
+                //태그 검사
+            }
+            if (canMix) {
+                for (int x = 0; x < 9; x++) {
+                    if (m.getItemMakeOn(x) != 0) { //x가 비지 않을 경우
+                        Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                    }
                 }
+                //  Inventory.getInstance().getItem(도끼);
             } else if (str.equals("nife")) {
-                if (m.getItemMakeOn(1).getItemTag().contains(4))
-                    if (m.getItemMakeOn(4).getItemTag().contains(2))
-                        if (m.getItemMakeOn(7).getItemTag().contains(2))
-                            canMix = true;
 
                 if (canMix) {
-                    //만들자
                 }
             } else if (str.equals("pickax")) {
-                if (m.getItemMakeOn(6).getItemTag().contains(2))
-                    if (m.getItemMakeOn(7).getItemTag().contains(2))
-                        if (m.getItemMakeOn(1).getItemTag().contains(4))
-                            if (m.getItemMakeOn(4).getItemTag().contains(4)) {
-                                canMix = true;
-                            }
+
                 if (canMix) {
-                    //만들자
                 }
             } else if (str.equals("helmet")) {
-                if (m.getItemMakeOn(6).getItemTag().contains(2))
-                    if (m.getItemMakeOn(7).getItemTag().contains(2))
-                        if (m.getItemMakeOn(1).getItemTag().contains(4))
-                            if (m.getItemMakeOn(4).getItemTag().contains(4)) {
-                                canMix = true;
-                            }
+
                 if (canMix) {
-                    //만들자
                 }
             } else if (str.equals("armor")) {
-                if (m.getItemMakeOn(6).getItemTag().contains(2))
-                    if (m.getItemMakeOn(7).getItemTag().contains(2))
-                        if (m.getItemMakeOn(1).getItemTag().contains(4))
-                            if (m.getItemMakeOn(4).getItemTag().contains(4)) {
-                                canMix = true;
-                            }
+
                 if (canMix) {
-                    //만들자
                 }
             } else if (str.equals("gloves")) {
-                if (m.getItemMakeOn(6).getItemTag().contains(2))
-                    if (m.getItemMakeOn(7).getItemTag().contains(2))
-                        if (m.getItemMakeOn(1).getItemTag().contains(4))
-                            if (m.getItemMakeOn(4).getItemTag().contains(4)) {
-                                canMix = true;
-                            }
+
                 if (canMix) {
-                    //만들자
                 }
             } else if (str.equals("shoes")) {
-                if (m.getItemMakeOn(6).getItemTag().contains(2))
-                    if (m.getItemMakeOn(7).getItemTag().contains(2))
-                        if (m.getItemMakeOn(1).getItemTag().contains(4))
-                            if (m.getItemMakeOn(4).getItemTag().contains(4)) {
-                                canMix = true;
-                            }
                 if (canMix) {
-                    //만들자
                 }
             } else {
             }
-        } // table상태에 따라서 axe, nife 등등등 리턴;
+        }
         /**
          * 무기 - 도끼 00X, 칼 XOX, 곡괭이 OOO
          *             X0X     XOX         XOX
@@ -112,7 +78,7 @@ public class Manufacturing {
          *
          *
          *           1. 얼마나 차있는지 조사 (tableChk[]를 이용해서 레시피 조사)
-         *           2. 그거에 따라 케이스 분류 (무엇인가)//////// 까지했음. 내일 3번부터하기
+         *           2. 그거에 따라 케이스 분류 (무엇인가)
          *           3. 태그가 일치하는지 조사
          *           4. 만들기
          * */
