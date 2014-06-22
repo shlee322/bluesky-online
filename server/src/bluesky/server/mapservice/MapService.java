@@ -68,17 +68,17 @@ public class MapService extends Service {
             this.getZooKeeperClient().create()
                     .withMode(CreateMode.EPHEMERAL)
                     .forPath("/maps/" + map_id, new byte[]{
-                            (byte) (this.getServiceId() & 0xFF00 >> 8),
-                            (byte) (this.getServiceId() & 0xFF)
+                            (byte) ((this.getServiceId() & 0xFF00) >> 8),
+                            (byte) ((this.getServiceId() & 0xFF))
                     });
-            this.maps[getWorkerIndex(map_id)].put(map_id, new Map(map_id));
+            this.maps[getWorkerIndex(map_id)].put(map_id, new Map(this, map_id));
             this.subscribeMQTT("/maps/" + map_id + "/#");
             this.publishMQTT("/event/link_map", new byte[]{
-                    (byte)(map_id & 0xFF000000 >> 24),
-                    (byte)(map_id & 0xFF0000 >> 16),
-                    (byte)(map_id & 0xFF00 >> 8),
+                    (byte)((map_id & 0xFF000000) >> 24),
+                    (byte)((map_id & 0xFF0000) >> 16),
+                    (byte)((map_id & 0xFF00) >> 8),
                     (byte)(map_id & 0xFF),
-                    (byte)(this.getServiceId() & 0xFF00 >> 8),
+                    (byte)((this.getServiceId() & 0xFF00) >> 8),
                     (byte)(this.getServiceId() & 0xFF)
             });
         } catch (Exception e) {
@@ -86,10 +86,20 @@ public class MapService extends Service {
         }
     }
 
-    public void receiveServiceMessage(ServiceImpl sender, Packet packet) {
-        getLogger().info("메시지가 왔어요!!!! 아마 맵정보 요청이겠죠?");
+    public void receiveServiceMessage(final ServiceImpl sender, Packet packet) {
         if(packet instanceof GetMapInfo) {
-
+            final GetMapInfo getMapInfo = (GetMapInfo)packet;
+            this.addWork(getMapInfo.map_id, new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<Integer, Map> localMaps = maps[getWorkerIndex(getMapInfo.map_id)];
+                    if(!localMaps.containsKey(getMapInfo.map_id)) {
+                        return;
+                    }
+                    Map map = localMaps.get(getMapInfo.map_id);
+                    map.getMapInfo(sender, getMapInfo);
+                }
+            });
         }
     }
 }

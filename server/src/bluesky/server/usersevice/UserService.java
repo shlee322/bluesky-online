@@ -2,9 +2,12 @@ package bluesky.server.usersevice;
 
 import bluesky.protocol.NetworkDecoder;
 import bluesky.protocol.NetworkEncoder;
+import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.client.ClientPacketList;
 import bluesky.protocol.packet.client.MoveObject;
+import bluesky.protocol.packet.service.MapInfo;
 import bluesky.server.service.Service;
+import bluesky.server.service.ServiceImpl;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.*;
@@ -157,5 +160,19 @@ public class UserService extends Service {
                 map.moveObject(user, packet);
             }
         });
+    }
+
+    public void receiveServiceMessage(final ServiceImpl sender, final Packet packet) {
+        if(packet instanceof MapInfo) {
+            final MapInfo info = (MapInfo)packet;
+            this.addWork(info.map_id, new Runnable() {
+                @Override
+                public void run() {
+                    MapProxy map = getMapProxy(info.map_id, false);
+                    if(map == null) return;
+                    map.responseMapInfo(info);
+                }
+            });
+        }
     }
 }

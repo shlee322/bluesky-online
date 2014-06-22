@@ -43,10 +43,10 @@ public class RemoteService implements ServiceImpl {
 
         try {
             b.connect(new InetSocketAddress(h[0], Integer.valueOf(h[1]))).sync();
+            logger.info("Connect " + service.getServiceIdStr() + " -> " + id + "(" + host + ")");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Connect Error " + service.getServiceIdStr() + " -> " + id + "(" + host + ")", e);
         }
-        logger.info("Connect " + service.getServiceIdStr() + " -> " + id + "(" + host + ")");
     }
 
     public RemoteService(Service service, short serviceId, Channel ctx) {
@@ -75,5 +75,10 @@ public class RemoteService implements ServiceImpl {
 
     public void sendServiceMessage(ServiceImpl sender, final Packet packet) {
         this.channel.write(packet);
+    }
+
+    @Override
+    public void receiveServiceMessage(ServiceImpl sender, Packet packet) {
+        logger.warn("RemoteService는 receiveServiceMessage를 사용할 수 없습니다.");
     }
 }

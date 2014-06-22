@@ -87,15 +87,24 @@ public static class UserHandler extends SimpleChannelUpstreamHandler {
         Engine.getInstance().showNotify("서버와의 연결이 끊어졌습니다.", -1);
     }
 
-    public void messageReceived(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.MessageEvent e) { 
+    public void messageReceived(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.MessageEvent e) {
         if(e.getMessage() instanceof SC_Notify) {
             SC_Notify notify = (SC_Notify)e.getMessage();
             Engine.getInstance().showNotify(notify.msg, notify.time);
+            return;
         }
+
+        if(e.getMessage() instanceof SC_MoveMap) {
+            Engine.getInstance().setScene(new MapScene((SC_MoveMap)e.getMessage()));
+            return;
+        }
+
+        Engine.getInstance().receivedPacket((Packet)e.getMessage());
     }
 
     public void exceptionCaught(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ExceptionEvent e) {
         e.getCause().printStackTrace();
+        print("error!");
     }
 }
 
@@ -126,6 +135,11 @@ public static class CS_GetMapInfo implements Packet {
 
     @Override
     public byte getPacketId() { return 5; }
+
+    public CS_GetMapInfo() {}
+    public CS_GetMapInfo(int map_id) {
+        this.map_id = map_id;
+    }
 }
 
 @Message
@@ -154,6 +168,12 @@ public static class CS_Login implements Packet {
 
     @Override
     public byte getPacketId() { return 3; }
+
+    public CS_Login() {}
+    public CS_Login(String id, String pw) {
+        this.id = id;
+        this.pw = pw;
+    }
 }
 
 @Message
@@ -170,8 +190,11 @@ public static class MoveObject implements Packet {
     public byte getPacketId() { return 9; }
 }
 
+@Message
 public static class SC_MapInfo implements Packet {
     public int map_id;
+    public int[] around_map_id;
+    public byte[] tiles;
 
     @Override
     public byte getPacketId() { return 6; }

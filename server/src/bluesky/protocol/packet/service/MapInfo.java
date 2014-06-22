@@ -4,21 +4,23 @@ import bluesky.protocol.packet.Packet;
 import org.msgpack.annotation.Message;
 
 @Message
-public class GetMapInfo implements Packet {
+public class MapInfo implements Packet {
     public long request_id;
     public int map_id;
+    public byte[] tiles;
 
     @Override
     public byte getPacketId() {
-        return 2;
+        return 3;
     }
 
-    public GetMapInfo() {
+    public MapInfo() {
 
     }
 
-    public GetMapInfo(long request_id, int map_id) {
+    public MapInfo(long request_id, int map_id, byte[] tiles) {
         this.request_id = request_id;
         this.map_id = map_id;
+        this.tiles = tiles;
     }
 }

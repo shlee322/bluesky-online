@@ -57,7 +57,7 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
                                 result.getInt("x"), result.getInt("y"));
                         this.service.loginUser(this.user);
                     } else {
-                        ctx.getChannel().write(new SC_Notify("로그인 도중 에러가 발생하였습니다.", 120));
+                        ctx.getChannel().write(new SC_Notify("아이디 혹은 비밀번호가 다릅니다.", 120));
                     }
 
                     result.close();
@@ -88,5 +88,6 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+        logger.warn("UserHandler Error", e);
     }
 }

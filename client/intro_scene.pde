@@ -24,4 +24,9 @@ public static class IntroScene implements Scene {
     @Override
     public void release() {
     }
+
+    @Override
+    public void receivedPacket(Packet packet) {
+
+    }
 }

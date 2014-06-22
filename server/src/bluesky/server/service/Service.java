@@ -97,7 +97,6 @@ public class Service implements ServiceImpl{
         this.worker = new Thread[num];
         this.workQueue = new ConcurrentLinkedQueue[num];
         this.serviceMap = new HashMap[num];
-        this.serviceMap[getWorkerIndex(this.getServiceId())].put(this.getServiceId(), this);
 
         for(int i=0; i<num; i++) {
             this.workQueue[i] = new ConcurrentLinkedQueue<Runnable>();
@@ -119,13 +118,15 @@ public class Service implements ServiceImpl{
                         try {
                             runnable.run();
                         }catch (Exception e) {
-                            getLogger().warn("Worker Error", e);
+                            getLogger().warn("Worker Error Service ID:" + getServiceIdStr(), e);
                         }
                     }
                 }
             });
             this.worker[i].start();
         }
+
+        this.serviceMap[getWorkerIndex(this.getServiceId())].put(this.getServiceId(), this);
     }
 
     public void addWork(int key, Runnable runnable) {
@@ -211,6 +212,7 @@ public class Service implements ServiceImpl{
             List<String> serviceList = this.zooKeeperClient.getChildren().forPath("/service");
             for(final String serviceId : serviceList) {
                 if(serviceId.equals(this.getServiceIdStr())) continue;
+                logger.info("Sync Service " + this.getServiceIdStr() + " <-> " + serviceId);
 
                 final short serviceIdNum = Short.valueOf(serviceId);
                 addWork(serviceIdNum, new Runnable() {

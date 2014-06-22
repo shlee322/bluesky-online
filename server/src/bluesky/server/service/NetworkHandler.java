@@ -9,6 +9,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
+import java.rmi.Remote;
+
 public class NetworkHandler extends SimpleChannelUpstreamHandler {
     private ServiceImpl service;
     private static Logger logger = LogManager.getLogger("ServiceHandler");
@@ -20,10 +22,10 @@ public class NetworkHandler extends SimpleChannelUpstreamHandler {
     @Override
     public void channelConnected(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ChannelStateEvent e) {
         if(this.service instanceof RemoteService) {
-            ctx.getChannel().write(new ServiceInfo(this.service));
+            ctx.getChannel().write(new ServiceInfo(((RemoteService)this.service).getService()));
             ((RemoteService)this.service).setChannel(ctx.getChannel());
         } else {
-            System.out.println("Connent Service " + this.service.getServiceId() + " <- " + ctx.toString());
+            logger.info("Connent Service " + this.service.getServiceId() + " <- " + ctx.getChannel().getRemoteAddress().toString());
         }
     }
 
@@ -34,13 +36,16 @@ public class NetworkHandler extends SimpleChannelUpstreamHandler {
         if(msg instanceof ServiceInfo) { //Client -> Server
             ServiceInfo info = (ServiceInfo)msg;
             if(this.service instanceof Service) {
+                logger.info("Received ServiceInfo " + service.getServiceId() + " <- " + info.serviceId + "(" + ctx.getChannel().getRemoteAddress() + ")");
                 ((Service)service).setRemoteService(info.serviceId, ctx);
             }
             return;
         } else {
+            ServiceImpl s = this.service;
             if(this.service instanceof RemoteService) {
-                ((RemoteService)service).getService().receiveServiceMessage(service, msg);
+                s = ((RemoteService)service).getService();
             }
+            s.receiveServiceMessage(service, msg);
         }
     }
 
