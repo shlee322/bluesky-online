@@ -24,6 +24,10 @@ public static class MapScene implements Scene {
 
     @Override
     public void receivedPacket(Packet packet) {
-        print(packet.toString());
+        if(packet instanceof SC_MapInfo) {
+            //((SC_MapInfo)packet).map_id int
+            //((SC_MapInfo)packet).around_map_id int[8]
+            //((SC_MapInfo)packet).tiles byte[400]
+        }
     }
 }
