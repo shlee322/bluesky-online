@@ -1,7 +1,9 @@
 package bluesky.server.usersevice;
 
 import bluesky.protocol.packet.client.MoveObject;
+import bluesky.protocol.packet.client.SC_MapInfo;
 import bluesky.protocol.packet.service.GetMapInfo;
+import bluesky.protocol.packet.service.MapInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +16,7 @@ public class MapProxy {
     private int map_id;
     private short serviceId;
 
+    private LinkedList<UserObject> waitSendMapInfoUser = new LinkedList<UserObject>();
     private LinkedList<UserObject> objects = new LinkedList<UserObject>();
 
     public MapProxy(UserService service, int map_id) {
@@ -33,10 +36,10 @@ public class MapProxy {
         } catch (Exception e) {
             //맵 서버를 발견하지 못할 경우 맵 서버 할당 요청
             this.service.publishMQTT("/event/request_map", new byte[]{
-                    (byte)(this.map_id & 0xFF000000 >> 24),
-                    (byte)(this.map_id & 0xFF0000 >> 16),
-                    (byte)(this.map_id & 0xFF00 >> 8),
-                    (byte)(this.map_id & 0xFF)
+                    (byte)((this.map_id & 0xFF000000) >> 24),
+                    (byte)((this.map_id & 0xFF0000) >> 16),
+                    (byte)((this.map_id & 0xFF00) >> 8),
+                    (byte)((this.map_id & 0xFF))
             });
         }
     }
@@ -60,6 +63,11 @@ public class MapProxy {
     public void linkService(short serviceId) {
         if(this.serviceId == serviceId) return;
         this.serviceId = serviceId;
+
+        for(UserObject user : this.waitSendMapInfoUser) {
+            this.sendMapInfo(user);
+        }
+        this.waitSendMapInfoUser.clear();
     }
 
     public int getMapId() {
@@ -67,6 +75,11 @@ public class MapProxy {
     }
 
     public void sendMapInfo(UserObject user) {
+        if(this.serviceId == 0) {
+            //아직 연결 못함
+            waitSendMapInfoUser.add(user);
+            return;
+        }
         this.service.sendServiceMessage(this.serviceId, new GetMapInfo(user.getUUID(), getMapId()));
     }
 
@@ -85,6 +98,19 @@ public class MapProxy {
             this.objects.add(user);
         } else {
             this.objects.remove(user);
+        }
+    }
+
+    public void responseMapInfo(MapInfo info) {
+        for(UserObject user : this.objects) {
+            if(user.getUUID() != info.request_id) continue;
+
+            SC_MapInfo mapInfo = new SC_MapInfo();
+            mapInfo.map_id = this.getMapId();
+            mapInfo.around_map_id = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
+            mapInfo.tiles = info.tiles;
+            user.getChannel().write(mapInfo);
+            return;
         }
     }
 }

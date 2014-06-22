@@ -1,3 +1,5 @@
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public static class Engine implements EngineAdapter {
 	private static Engine instance = new Engine();
 
@@ -6,6 +8,7 @@ public static class Engine implements EngineAdapter {
 	private Scene lastScene;
 	private Network network = new Network();
 	private UIManager uiManager = new UIManager();
+	private ConcurrentLinkedQueue<Packet> packetQueue = new ConcurrentLinkedQueue<Packet>();
 
 	private String notifyText;
 	private int notifyTime;
@@ -57,6 +60,9 @@ public static class Engine implements EngineAdapter {
 	            this.scene.init();
 	        }
 
+	        while(!this.packetQueue.isEmpty()) {
+	        	this.scene.receivedPacket(this.packetQueue.poll());
+	        }
 	        this.scene.runSceneLoop();
 	    }
 
@@ -106,9 +112,12 @@ public static class Engine implements EngineAdapter {
 		getEngineAdapter().drawText(text, x, y, size, center);
 	}
 
-
 	//엔진에서만 호출할 수 있도록 함
 	public void drawNotify(String text) {
 		System.err.println("Engine용으로 개발된 메소드입니다. 외부에서 호출하실 수 없습니다.");
+	}
+
+	public void receivedPacket(Packet packet) {
+		this.packetQueue.add(packet);
 	}
 }

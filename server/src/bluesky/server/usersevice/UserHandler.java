@@ -88,5 +88,6 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
+        logger.warn("UserHandler Error", e);
     }
 }

@@ -9,4 +9,5 @@ public interface Scene {
     void init();
     void runSceneLoop();
     void release();
+    void receivedPacket(Packet packet);
 }

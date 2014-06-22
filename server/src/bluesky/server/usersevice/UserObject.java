@@ -36,6 +36,10 @@ public class UserObject extends GameObject {
         this.channel.write(new SC_MoveMap(getUUID(), this.map.getMapId()));
     }
 
+    public Channel getChannel() {
+        return this.channel;
+    }
+
     public long getUUID() {
         return uuid;
     }

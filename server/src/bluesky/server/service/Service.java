@@ -118,7 +118,7 @@ public class Service implements ServiceImpl{
                         try {
                             runnable.run();
                         }catch (Exception e) {
-                            getLogger().warn("Worker Error", e);
+                            getLogger().warn("Worker Error Service ID:" + getServiceIdStr(), e);
                         }
                     }
                 }
@@ -212,6 +212,7 @@ public class Service implements ServiceImpl{
             List<String> serviceList = this.zooKeeperClient.getChildren().forPath("/service");
             for(final String serviceId : serviceList) {
                 if(serviceId.equals(this.getServiceIdStr())) continue;
+                logger.info("Sync Service " + this.getServiceIdStr() + " <-> " + serviceId);
 
                 final short serviceIdNum = Short.valueOf(serviceId);
                 addWork(serviceIdNum, new Runnable() {

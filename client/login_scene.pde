@@ -26,6 +26,11 @@ public static class LoginScene implements Scene, UIOnClickListener {
     }
 
     @Override
+    public void receivedPacket(Packet packet) {
+
+    }
+
+    @Override
     public void onClick(UIComponent comp, int x, int y) {
         //테스트 로그인
         Engine.getInstance().showNotify("로그인 시도중 입니다...", -1);
