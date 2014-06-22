@@ -3,6 +3,7 @@ package bluesky.server.usersevice;
 import bluesky.protocol.NetworkDecoder;
 import bluesky.protocol.NetworkEncoder;
 import bluesky.protocol.packet.client.ClientPacketList;
+import bluesky.protocol.packet.client.MoveObject;
 import bluesky.server.service.Service;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -48,21 +49,26 @@ public class UserService extends Service {
         b.bind(new InetSocketAddress(7000 + this.getServiceId()));
     }
 
-    public void loginUser(final UserObject user) {
-        final int mapid = user.getMapId();
+    private MapProxy getMapProxy(int mapId, boolean n) {
+        HashMap<Integer, MapProxy> localMaps = maps[getWorkerIndex(mapId)];
+        if(!localMaps.containsKey(mapId)) {
+            if(!n) return null;
 
-        this.addWork(mapid, new Runnable() {
+            MapProxy newMap = new MapProxy(UserService.this, mapId);
+            localMaps.put(mapId, newMap);
+            newMap.linkMap();
+        }
+        return localMaps.get(mapId);
+    }
+
+    public void loginUser(final UserObject user) {
+        final int mapId = user.getMapId();
+
+        this.addWork(mapId, new Runnable() {
             @Override
             public void run() {
-                HashMap<Integer, MapProxy> localMaps = maps[getWorkerIndex(mapid)];
-                if(!localMaps.containsKey(mapid)) {
-                    MapProxy newMap = new MapProxy(UserService.this, mapid);
-                    localMaps.put(mapid, newMap);
-                    newMap.linkMap();
-                }
-
-                MapProxy map = localMaps.get(mapid);
-                user.moveMap(map, 10, 10);
+                MapProxy map = getMapProxy(mapId, true);
+                user.moveMap(map, user.getX(), user.getY());
             }
         });
     }
@@ -80,14 +86,12 @@ public class UserService extends Service {
             service_id |= mapIdBytes[5];
             final int finalMap_id = map_id;
             final short finalService_id = service_id;
+
             this.addWork(map_id, new Runnable() {
                 @Override
                 public void run() {
-                    HashMap<Integer, MapProxy> localMaps = maps[getWorkerIndex(finalMap_id)];
-                    if(!localMaps.containsKey(finalMap_id)) {
-                        return;
-                    }
-                    MapProxy map = localMaps.get(finalMap_id);
+                    MapProxy map = getMapProxy(finalMap_id, false);
+                    if(map == null) return;
                     map.linkService(finalService_id);
                 }
             });
@@ -102,30 +106,55 @@ public class UserService extends Service {
             this.addWork(mapId, new Runnable() {
                 @Override
                 public void run() {
-                    HashMap<Integer, MapProxy> localMaps = maps[getWorkerIndex(mapId)];
-                    if(!localMaps.containsKey(mapId)) {
-                        return;
-                    }
-                    MapProxy map = localMaps.get(mapId);
+                    MapProxy map = getMapProxy(mapId, false);
+                    if(map == null) return;
                     map.arrivedMQTTMessage(finalSubTopic, message.getPayload());
                 }
             });
         }
+    }
 
+    public void exitUser(final UserObject user) {
+        final int mapId = user.getMapId();
+        this.addWork(user.getMapId(), new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
+                map.exitUser(user);
+            }
+        });
     }
 
     public void getMapInfo(final UserObject user, final int mapId) {
         this.addWork(mapId, new Runnable() {
             @Override
             public void run() {
-                HashMap<Integer, MapProxy> localMaps = maps[getWorkerIndex(mapId)];
-                if(!localMaps.containsKey(mapId)) {
-                    getLogger().warn("GetMapInfo - 맵 정보를 찾을 수 없습니다.");
-                    return;
-                }
-
-                MapProxy map = localMaps.get(mapId);
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
                 map.sendMapInfo(user);
+            }
+        });
+    }
+
+    public void moveObject(final UserObject user, final MoveObject packet) {
+        this.addWork(packet.src_map, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(packet.src_map, false);
+                if(map == null) return;
+                map.moveObject(user, packet);
+            }
+        });
+
+        if(packet.src_map == packet.dest_map) return;
+
+        this.addWork(packet.dest_map, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(packet.dest_map, false);
+                if(map == null) return;
+                map.moveObject(user, packet);
             }
         });
     }

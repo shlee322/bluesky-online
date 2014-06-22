@@ -20,6 +20,15 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.minim = new Minim(this.getProcessing());
 	}
 
+	public void runGameLoop() {
+		if(bgmPlayer != null && !bgmPlayer.isPlaying()) {
+			bgmPlayer.rewind();
+			bgmPlayer.play();
+		}
+
+		this.drawText("FPS : " + getFrameRate(), 10, 30);
+	}
+
 	public int getWidth() {
 		return 800;
 	}
@@ -43,11 +52,6 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 		bgmPlayer = minim.loadFile(path);
 		bgmPlayer.play();
-		bgmPlayer.rewind();
-	}
-
-	public void drawFrameRate() {
-		this.drawText("FPS : " + getFrameRate(), 10, 30);
 	}
 
 	public void drawText(String text, int x, int y) {
@@ -60,17 +64,17 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 	public void drawText(String text, int x, int y, int size, boolean center) {
 		if(center) {
-			textAlign(CENTER, CENTER);
+			this.getProcessing().textAlign(CENTER, CENTER);
 		} else {
-			textAlign(LEFT);
+			this.getProcessing().textAlign(LEFT);
 		}
 		
 		for(int i=0; i<fontSize.length; i++) {
 			if(fontSize[i] != size) continue;
-			textFont(fonts[i], size);
+			this.getProcessing().textFont(fonts[i], size);
 		}
-		textSize(size);
-		text(text, x, y);
+		this.getProcessing().textSize(size);
+		this.getProcessing().text(text, x, y);
 	}
 
 	public void drawNotify(String text) {
