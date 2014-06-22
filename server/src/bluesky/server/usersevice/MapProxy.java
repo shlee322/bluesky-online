@@ -46,11 +46,28 @@ public class MapProxy {
 
     public void joinUser(UserObject user) {
         this.objects.add(user);
-        //serviceId
-        //UUID
-        //x
-        //y
+
+
+
         this.service.publishMQTT("/maps/" + getMapId() + "/join", new byte[]{
+                (byte)((this.service.getServiceId() & 0xFF00) >> 8),
+                (byte)(this.service.getServiceId() & 0xFF),
+                (byte)(user.getUUID() >>> 56),
+                (byte)(user.getUUID() >>> 48),
+                (byte)(user.getUUID() >>> 40),
+                (byte)(user.getUUID() >>> 32),
+                (byte)(user.getUUID() >>> 24),
+                (byte)(user.getUUID() >>> 16),
+                (byte)(user.getUUID() >>> 8),
+                (byte)(user.getUUID() >>> 0),
+                (byte)((user.getX() & 0xFF000000) >> 24),
+                (byte)((user.getX() & 0xFF0000) >> 16),
+                (byte)((user.getX() & 0xFF00) >> 8),
+                (byte)((user.getX() & 0xFF)),
+                (byte)((user.getY() & 0xFF000000) >> 24),
+                (byte)((user.getY() & 0xFF0000) >> 16),
+                (byte)((user.getY() & 0xFF00) >> 8),
+                (byte)((user.getY() & 0xFF))
         });
     }
 
@@ -84,6 +101,9 @@ public class MapProxy {
     }
 
     public void arrivedMQTTMessage(String subTopic, byte[] data) {
+        if(subTopic.equals("/join")) {
+
+        }
     }
 
     public void moveObject(UserObject user, MoveObject packet) {
@@ -102,15 +122,26 @@ public class MapProxy {
     }
 
     public void responseMapInfo(MapInfo info) {
+        UserObject requestUser = null;
+
         for(UserObject user : this.objects) {
             if(user.getUUID() != info.request_id) continue;
+            requestUser = user;
+            break;
+        }
 
-            SC_MapInfo mapInfo = new SC_MapInfo();
-            mapInfo.map_id = this.getMapId();
-            mapInfo.around_map_id = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
-            mapInfo.tiles = info.tiles;
-            user.getChannel().write(mapInfo);
-            return;
+        if(requestUser == null) return;
+
+        SC_MapInfo mapInfo = new SC_MapInfo();
+        mapInfo.map_id = this.getMapId();
+        mapInfo.around_map_id = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
+        mapInfo.tiles = info.tiles;
+        requestUser.getChannel().write(mapInfo);
+
+        //오브젝트들 전송
+        for(UserObject user : this.objects) {
+            requestUser.getChannel().write(new MoveObject(user.getUUID(),
+                    user.getMapId(), user.getX(), user.getY(), user.getMapId(), user.getX(), user.getY()));
         }
     }
 }
