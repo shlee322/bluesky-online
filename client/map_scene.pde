@@ -15,6 +15,7 @@ public static class MapScene implements Scene {
 
     @Override
     public void init() {
+
     }
 
     @Override
