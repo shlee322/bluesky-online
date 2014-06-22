@@ -5,16 +5,21 @@ public static class UIComponent {
 	public void setUIManager(UIManager manager) {
 		this.manager = manager;
 	}
-	
+
 	public UIManager getUIManager() {
 		return this.manager;
 	}
 
-	public void loop() {}
+	public void loop() {
+	}
+
 	public void callClick(int x, int y) {
 		this.clickListener.onClick(this, x, y);
 	}
 	public void setOnClickListener(UIOnClickListener listener) {
 		this.clickListener = listener;
+	}
+	public boolean clickScreen(int x, int y) {
+		return false;
 	}
 }

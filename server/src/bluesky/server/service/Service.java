@@ -97,7 +97,6 @@ public class Service implements ServiceImpl{
         this.worker = new Thread[num];
         this.workQueue = new ConcurrentLinkedQueue[num];
         this.serviceMap = new HashMap[num];
-        this.serviceMap[getWorkerIndex(this.getServiceId())].put(this.getServiceId(), this);
 
         for(int i=0; i<num; i++) {
             this.workQueue[i] = new ConcurrentLinkedQueue<Runnable>();
@@ -126,6 +125,8 @@ public class Service implements ServiceImpl{
             });
             this.worker[i].start();
         }
+
+        this.serviceMap[getWorkerIndex(this.getServiceId())].put(this.getServiceId(), this);
     }
 
     public void addWork(int key, Runnable runnable) {

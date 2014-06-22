@@ -38,6 +38,10 @@ public static class Engine implements EngineAdapter {
 		return network;
 	}
 
+	public void clickScreen(int x, int y) {
+		getUIManager().clickScreen(x, y);
+	}
+
 	public void init() {
 		this.setScene(new IntroScene());
 	}

@@ -91,7 +91,15 @@ public static class UserHandler extends SimpleChannelUpstreamHandler {
         if(e.getMessage() instanceof SC_Notify) {
             SC_Notify notify = (SC_Notify)e.getMessage();
             Engine.getInstance().showNotify(notify.msg, notify.time);
+            return;
         }
+
+        if(e.getMessage() instanceof SC_MoveMap) {
+            Engine.getInstance().setScene(new MapScene((SC_MoveMap)e.getMessage()));
+            return;
+        }
+
+        System.out.println(e.getMessage());
     }
 
     public void exceptionCaught(org.jboss.netty.channel.ChannelHandlerContext ctx, org.jboss.netty.channel.ExceptionEvent e) {
@@ -154,6 +162,12 @@ public static class CS_Login implements Packet {
 
     @Override
     public byte getPacketId() { return 3; }
+
+    public CS_Login() {}
+    public CS_Login(String id, String pw) {
+        this.id = id;
+        this.pw = pw;
+    }
 }
 
 @Message

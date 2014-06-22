@@ -21,4 +21,10 @@ public static class UIManager {
 	public void clearComponentList() {
 		this.componentList.clear();
 	}
+
+	public void clickScreen(int x, int y) {
+		for(UIComponent comp : this.componentList) {
+			if(comp.clickScreen(x, y)) return;
+		}
+	}
 }

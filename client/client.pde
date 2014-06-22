@@ -8,3 +8,7 @@ void draw() {
     noStroke();
 	Engine.getInstance().runGameLoop();
 }
+
+void mousePressed() {
+	Engine.getInstance().clickScreen(mouseX, mouseY);
+}
