@@ -9,7 +9,7 @@ public class Item {
     int[] GraphicCode = new int[255];
     boolean[][] ItemTag = new boolean[255][8];
     //체력 등 저장?;
-        private static Item instance = new Item();
+    private static Item instance = new Item();
 
     Item() {
         for (int x = 0; x < 255; x++) {
