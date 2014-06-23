@@ -2,6 +2,7 @@ public static class MapModel implements Model {
 	private long myObjectId;
 	private GameObject myObject; //캐릭터를 의미
 	private HashMap<Integer, Map> cacheMaps = new HashMap<Integer, Map>();
+	private HashMap<Long, GameObject> cacheObject = new HashMap<Long, GameObject>();
 	public void init(Scene scene) {}
     public void release(Scene scene) {}
 	public void moveMap(int mapId, long objectId) {
@@ -14,10 +15,36 @@ public static class MapModel implements Model {
 
     //맵정보를 불러와서 동시에 오브젝트 리스트도 불러왔거나, 캐릭터가 이동했을때
     public void moveObject(MoveObject move) {
-    	if(move.object_id != myObjectId) return; //일단 테스트를 위해서 자기 자신의 캐릭터만
-    	if(myObject == null) {
-    		myObject = new GameObject(move.object_id, move.src_map, move.src_x, move.src_y);
+    	if(!cacheObject.containsKey(move.object_id)) {
+    		cacheObject.put(move.object_id, new GameObject(move.object_id, move.src_map, move.src_x, move.src_y));
     	}
+
+    	GameObject obj = cacheObject.get(move.object_id);
+
+    	if(myObject == null) {
+    		myObject = obj;
+    	}
+
+    	obj.move(move.src_map, move.src_x, move.src_y, move.dest_map, move.dest_x, move.dest_y);
+    }
+
+    public void setObjectInfo(SC_ObjectInfo info) {
+    	if(!cacheObject.containsKey(info.object_id)) {
+    		return;
+    	}
+    	print("test");
+
+    	GameObject obj = cacheObject.get(info.object_id);
+    	obj.setName(info.name);
+    }
+
+    public void chat(Chat chat) {
+    	if(!cacheObject.containsKey(chat.object_id)) {
+    		return;
+    	}
+
+    	GameObject obj = cacheObject.get(chat.object_id);
+    	obj.setHeadMessage(chat.msg);
     }
 
     public Map getMap(int id) {
@@ -80,6 +107,9 @@ static class GameObject implements Entity {
 		this.y = y;
 		this.dest_x = x;
 		this.dest_y = y;
+
+		print(uuid);
+		Engine.getInstance().getNetwork().write(new CS_GetObjectInfo(mapId, uuid));
 	}
 
 	public int getMapId() {
@@ -105,7 +135,6 @@ static class GameObject implements Entity {
 		this.y = src_y;
 		this.dest_x = dest_x;
 		this.dest_y = dest_y;
-		print(dest_x+"\n");
 	}
 
 	public void setEngineTag(Object o) {
@@ -118,6 +147,10 @@ static class GameObject implements Entity {
 
     public String getName() {
     	return this.name;
+    }
+
+    public void setName(String name) {
+    	this.name = name;
     }
 
     public String getHeadMessage() {

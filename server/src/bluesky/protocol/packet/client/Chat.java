@@ -4,16 +4,20 @@ import bluesky.protocol.packet.Packet;
 import org.msgpack.annotation.Message;
 
 @Message
-public class CS_GetObjectInfo implements Packet {
+public class Chat implements Packet {
     public int map_id;
     public long object_id;
+    public String msg;
 
-    @Override
-    public byte getPacketId() { return 7; }
+    public Chat() {
+    }
 
-    public CS_GetObjectInfo() {}
-    public CS_GetObjectInfo(int map_id, long object_id) {
+    public Chat(int map_id, long object_id, String msg) {
         this.map_id = map_id;
         this.object_id = object_id;
+        this.msg = msg;
     }
+
+    @Override
+    public byte getPacketId() { return 10; }
 }

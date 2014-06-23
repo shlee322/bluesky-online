@@ -55,4 +55,8 @@ public class UserObject extends GameObject {
     public int getY() {
         return this.y;
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

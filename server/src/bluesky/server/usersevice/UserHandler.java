@@ -35,7 +35,24 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
 
         if(this.user == null) {
             if (packet instanceof CS_Join) {
-                ctx.getChannel().write(new SC_Notify("회원가입 실패", 120));
+                try {
+                    Connection conn = DBManager.getInstance().getConnection();
+                    PreparedStatement statement =
+                            conn.prepareStatement("INSERT INTO `users` (`user_id`,`user_pw`,`user_name`) VALUES(?, SHA1(?), ?);");
+
+                    statement.setString(1, ((CS_Join) packet).id);
+                    statement.setString(2, ((CS_Join) packet).pw);
+                    statement.setString(3, ((CS_Join) packet).name);
+
+                    if(statement.executeUpdate() > 0) {
+                        ctx.getChannel().write(new SC_Notify("회원가입 성공", 60));
+                    }
+                    statement.close();
+                    conn.close();
+                } catch (SQLException e1) {
+                    logger.warn("DB 에러가 발생하였습니다.", e1);
+                    ctx.getChannel().write(new SC_Notify("중복된 아이디가 존재합니다", 60));
+                }
                 return;
             }
 
@@ -78,12 +95,17 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
             }
 
             if(packet instanceof CS_GetObjectInfo) {
+                this.service.getObjectInfo(this.user, (CS_GetObjectInfo)packet);
                 return;
             }
 
             if(packet instanceof MoveObject) {
                 ((MoveObject) packet).object_id = this.user.getUUID();
                 this.service.moveObject(this.user, (MoveObject)packet);
+            }
+
+            if(packet instanceof Chat) {
+                this.service.chat(this.user, ((Chat)packet).msg);
             }
         }
     }

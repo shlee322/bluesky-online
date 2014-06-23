@@ -15,6 +15,6 @@ public class DBManager {
     }
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost/bluesky", "bluesky", "bluesky");
+        return DriverManager.getConnection("jdbc:mysql://localhost/bluesky?useUnicode=true&characterEncoding=utf8", "bluesky", "bluesky");
     }
 }

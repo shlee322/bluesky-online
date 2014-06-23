@@ -3,9 +3,7 @@ package bluesky.server.usersevice;
 import bluesky.protocol.NetworkDecoder;
 import bluesky.protocol.NetworkEncoder;
 import bluesky.protocol.packet.Packet;
-import bluesky.protocol.packet.client.ClientPacketList;
-import bluesky.protocol.packet.client.MoveObject;
-import bluesky.protocol.packet.client.SC_Notify;
+import bluesky.protocol.packet.client.*;
 import bluesky.protocol.packet.service.MapInfo;
 import bluesky.server.service.Service;
 import bluesky.server.service.ServiceImpl;
@@ -219,5 +217,29 @@ public class UserService extends Service {
                 }
             });
         }
+    }
+
+    public void getObjectInfo(final UserObject user, final CS_GetObjectInfo packet) {
+        this.addWork(packet.map_id, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(packet.map_id, false);
+                if(map == null) return;
+                map.getObjectInfo(user, packet.object_id);
+            }
+        });
+    }
+
+    public void chat(final UserObject user, String msg) {
+        final Chat chat = new Chat(user.getMapId(), user.getUUID(), msg);
+        final int mapId = user.getMapId();
+        this.addWork(mapId, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
+                map.sendChat(chat);
+            }
+        });
     }
 }
