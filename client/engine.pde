@@ -116,6 +116,37 @@ public static class Engine implements EngineAdapter {
 		getEngineAdapter().drawTile(x, y, name);
 	}
 
+	public void drawTile(int x, int y, int i) {
+		String name="1";
+		switch (i) {
+			case 0 : 
+			break;
+			case 1 :
+			break;
+			case 2 :
+			name="dirt";
+			break;
+			case 3 :
+			break;
+			case 4 :
+			name="sand";
+			break;
+			case 5 :
+			name="stone";
+			break;
+			case 6 :
+			name="iron_ore";
+			break;
+			case 7 :
+			name="gold_ore";
+			break;
+			default :
+				name="1";
+			break;	
+		}
+		getEngineAdapter().drawTile(x, y, name);
+	}
+
 	//엔진에서만 호출할 수 있도록 함
 	public void drawNotify(String text) {
 		System.err.println("Engine용으로 개발된 메소드입니다. 외부에서 호출하실 수 없습니다.");

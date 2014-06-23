@@ -51,6 +51,9 @@ static class Map {
 	public byte[] getTiles() {
 		return this.tiles;
 	}
+    public int getAroundMapId(int i){
+        return this.aroundMapId[i];
+    }
 }
 
 static class Tile {
