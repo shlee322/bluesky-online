@@ -177,7 +177,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 			drawText(obj.getHeadMessage(), (img.getWidth() / 2), -20, 12, true);
 		}
 		this.getProcessing().rectMode(CORNER);
-		this.getProcessing().translate(-o_x, -o_x);
+		this.getProcessing().translate(-o_x, -o_y);
 	}
 }
 

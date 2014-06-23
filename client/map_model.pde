@@ -111,6 +111,8 @@ static class GameObject implements Entity {
     }
 
     public void updateWeapon() {
+    	if(this.weapon == null) return;
+    	
     	if(this.weapon.getRotate() <= PI/2) {
     		for(int i = 0; i<=30; i++) {
     			this.weapon.setRotate(i*PI/60);
