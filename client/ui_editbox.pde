@@ -27,7 +27,7 @@ public static class UIEditBox extends UIComponent {
 			for(int i=0; i<textLen; i++) text += "*";
 		}
 
-		if("".equals(getText())){
+		if("".equals(getText()) && Engine.getInstance().getUIManager().getFocusComponent() != this){
 			text = emptyText;
 			(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(0,0,0, 128);
 		} else {
