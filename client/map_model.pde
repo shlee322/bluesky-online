@@ -113,6 +113,12 @@ static class GameObject implements Entity {
 		return this.y;
 	}
 
+    public void setX(int i){
+        this.x-=i;
+    } 
+    public void setY(int i){
+        this.y-=i;
+    }
 	public void move(int src_map, int src_x, int src_y, int dest_map, int dest_x, int dest_y) {
 		this.x = src_x;
 		this.y = src_y;

@@ -13,6 +13,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     int RIGHT = 2;
     int JUMP = 3;
     MoveCharacter move = new MoveCharacter();
+    int RealX, RealY;
 
     private byte[] nullTiles = new byte[400];
 
@@ -35,11 +36,14 @@ public static class MapScene implements Scene, UIOnClickListener {
     @Override
     public void init() {
         UIComponent menuBtnComponent = new MenuBtnComponent();
-        UIComponent key = new KeyPressed(this.model);
+         UIComponent key = new KeyPressed();
+         UIComponent ib = new InventoryBtn();
         //loginBtnComp.setOnClickListener(this);
         menuBtnComponent.setOnClickListener(this);
+         ib.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
         Engine.getInstance().getUIManager().addComponent(key);
+        Engine.getInstance().getUIManager().addComponent(ib);
         joyStick = new JoyStick();
 
         ChatBox chat = new ChatBox(this.model);
@@ -60,8 +64,8 @@ public static class MapScene implements Scene, UIOnClickListener {
       this.bg.draw();
       if(this.model.getMyObject() == null) return;
 
-        int RealX = this.model.getMyObject().getX();
-        int RealY = this.model.getMyObject().getY();
+        RealX = this.model.getMyObject().getX();
+        RealY = this.model.getMyObject().getY();
 
         int tileSize = Engine.getInstance().getWidth() / 24;
 
@@ -72,8 +76,7 @@ public static class MapScene implements Scene, UIOnClickListener {
         byte[] mMap = new byte [400];
 
         mMap = getTiles(this.model.getMap(center.getAroundMapId(7)));
-        int test = 0;
-
+        int test = 0; 
          for(int x=0;x<20;x++){
             for(int y=0;y<20;y++){
                 MapAroundTile[x][y]=mMap[test];
@@ -166,6 +169,11 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         //캐릭터 뿌림 (테스트로 자기만)
        // this.model.getMyObject().updateWeapon();
+       Engine.getInstance().drawGameObject(300, 200, this.model.getMyObject());
+       if(MapAroundTile[(RealX+500)/20][(RealY+500)/20]==0)
+        this.model.getMyObject().setY(10);
+
+
        Engine.getInstance().drawGameObject(400, 300, this.model.getMyObject());
        joyStick.draw();
     }
@@ -187,7 +195,10 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        MoveObject mo = new MoveObject();
+                UIComponent it = new Inventory();
+                it.setOnClickListener(this);
+                Engine.getInstance().getUIManager().addComponent(it);
+        
     }
 
     private class MenuBtnComponent extends UIComponent {
@@ -197,6 +208,19 @@ public static class MapScene implements Scene, UIOnClickListener {
             Engine.getInstance().getEngineAdapter().drawBox(720, 20, 16, 50, PI/2, 66, 139, 202, 255);
             Engine.getInstance().getEngineAdapter().drawBox(740, 20, 16, 50, PI/2, 66, 139, 202, 255);
             Engine.getInstance().getEngineAdapter().drawBox(760, 20, 16, 50, PI/2, 66, 139, 202, 255);
+        }
+        public boolean clickScreen(int x, int y) {
+            if(x>=700 && x<780 && y>=20 && y<70) {
+                this.callClick(x, y);
+                return true;
+            }
+            return false;
+        }
+    }
+    private class Inventory extends UIComponent {
+        public void loop() {
+             Engine.getInstance().getEngineAdapter().drawStroke(0, 0, 0, 255, 2);
+            Engine.getInstance().getEngineAdapter().drawBox(100, 100 , 600, 400 , 0, 0, 139, 202, 255);
         }
         public boolean clickScreen(int x, int y) {
             if(x>=700 && x<780 && y>=20 && y<70) {
@@ -227,6 +251,13 @@ public static class MapScene implements Scene, UIOnClickListener {
         }
 
     }
+
+    public class InventoryBtn extends UIComponent{
+        public void loop(){
+             Engine.getInstance().getEngineAdapter().drawBox(120, 15, 25, 25, 0, 0, 139, 202, 255);
+        }
+    }
+
 
     public class ChatBox extends UIEditBox {
         private MapModel model;
