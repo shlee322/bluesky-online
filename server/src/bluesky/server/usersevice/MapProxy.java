@@ -47,8 +47,6 @@ public class MapProxy {
     public void joinUser(UserObject user) {
         this.objects.add(user);
 
-
-
         this.service.publishMQTT("/maps/" + getMapId() + "/join", new byte[]{
                 (byte)((this.service.getServiceId() & 0xFF00) >> 8),
                 (byte)(this.service.getServiceId() & 0xFF),
@@ -108,8 +106,13 @@ public class MapProxy {
 
     public void moveObject(UserObject user, MoveObject packet) {
         if(packet.src_map == getMapId()) { //패킷 전송 뿅뿅
-            System.out.println("패킷 전송 뿅뿅!");
+            //System.out.println("패킷 전송 뿅뿅!");
             //자기가 관리하는 오브젝트 들한테 보내고
+            for(UserObject u : this.objects) {
+                if(u == user) continue;
+                u.getChannel().write(packet);
+            }
+
             //MQTT로
         }
 

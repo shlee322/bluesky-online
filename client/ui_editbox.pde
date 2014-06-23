@@ -10,6 +10,7 @@ public static class UIEditBox extends UIComponent {
 	public int g;
 	public int b;
 	public boolean pw;
+	public String emptyText="";
 
 	public UIEditBox() {
 	}
@@ -19,13 +20,20 @@ public static class UIEditBox extends UIComponent {
 	}
 
 	public void loop() {
-		(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(0,0,0);
 		String text = this.getText();
 		if(pw) {
 			int textLen = text.length();
 			text="";
 			for(int i=0; i<textLen; i++) text += "*";
 		}
+
+		if("".equals(getText())){
+			text = emptyText;
+			(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(0,0,0, 128);
+		} else {
+			(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(0,0,0);
+		}
+
 		Engine.getInstance().drawText(text, x + 5, y + yy);
 		(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(255);
 		if(Engine.getInstance().getUIManager().getFocusComponent() != this) return;

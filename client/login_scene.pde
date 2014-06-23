@@ -27,6 +27,7 @@ public static class LoginScene implements Scene, UIOnClickListener {
         id.x = 270;
         id.y = 350;
         id.yy = 30;
+        id.emptyText = "ID";
         Engine.getInstance().getUIManager().addComponent(id);
 
         pw = new UIEditBox();
@@ -34,6 +35,7 @@ public static class LoginScene implements Scene, UIOnClickListener {
         pw.y = 350 + 45;
         pw.yy = 30;
         pw.pw = true;
+        pw.emptyText = "Password";
         Engine.getInstance().getUIManager().addComponent(pw);
     }
 

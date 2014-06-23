@@ -82,6 +82,7 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
             }
 
             if(packet instanceof MoveObject) {
+                ((MoveObject) packet).object_id = this.user.getUUID();
                 this.service.moveObject(this.user, (MoveObject)packet);
             }
         }
