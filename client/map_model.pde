@@ -86,6 +86,12 @@ static class GameObject implements Entity {
 		return this.y;
 	}
 
+    public void setX(int i){
+        this.x-=i;
+    } 
+    public void setY(int i){
+        this.y-=i;
+    }
 	public void setEngineTag(Object o) {
 		this.engineTag = o;
 	}

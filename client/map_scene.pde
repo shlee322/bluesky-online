@@ -13,6 +13,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     int RIGHT = 2;
     int JUMP = 3;
     MoveCharacter move = new MoveCharacter();
+    int RealX, RealY;
 
     private byte[] nullTiles = new byte[400];
 
@@ -53,8 +54,8 @@ public static class MapScene implements Scene, UIOnClickListener {
       this.bg.draw();
       if(this.model.getMyObject() == null) return;
 
-        int RealX = this.model.getMyObject().getX();
-        int RealY = this.model.getMyObject().getY();
+        RealX = this.model.getMyObject().getX();
+        RealY = this.model.getMyObject().getY();
 
         int tileSize = Engine.getInstance().getWidth() / 24;
 
@@ -138,7 +139,6 @@ public static class MapScene implements Scene, UIOnClickListener {
         int a = (RealX + 100)/20;
         int b = (RealY + 200)/20;
 
-        System.out.println(RealX+" "+RealY);
         for (int i = 0 ; i<24;i++){
             b=(RealY + 200)/20;
             for(int j = 0 ; j<32; j++){
@@ -161,6 +161,10 @@ public static class MapScene implements Scene, UIOnClickListener {
         //캐릭터 뿌림 (테스트로 자기만)
        // this.model.getMyObject().updateWeapon();
        Engine.getInstance().drawGameObject(300, 200, this.model.getMyObject());
+       if(MapAroundTile[(RealX+500)/20][(RealY+500)/20]==0)
+        this.model.getMyObject().setY(10);
+
+
        joyStick.draw();
     }
 
@@ -181,7 +185,12 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        MoveObject mo = new MoveObject();
+        this.model.getMyObject().setX(10);
+        MoveObject mo = new MoveObject(0,this.model.getMyObject().getMapId(),
+            this.model.getMyObject().getX(), this.model.getMyObject().getY(), 
+            this.model.getMyObject().getMapId(), this.model.getMyObject().getX()+10,
+            this.model.getMyObject().getY()); //목표 위치 맵 id 바꿔야함 
+        Engine.getInstance().getNetwork().write(mo);
     }
 
     private class MenuBtnComponent extends UIComponent {
