@@ -19,6 +19,11 @@ public static class UIEditBox extends UIComponent {
 		return text + composedText;
 	}
 
+	public void setText(String text) {
+		this.text = text;
+		this.composedText = "";
+	}
+
 	public void loop() {
 		String text = this.getText();
 		if(pw) {

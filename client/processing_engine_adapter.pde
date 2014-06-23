@@ -165,17 +165,23 @@ class ProcessingEngineAdapter implements EngineAdapter {
 			obj.getWeapon().draw();
 		}
 
+
 		this.getProcessing().rectMode(CENTER);
-		this.getProcessing().fill(0, 0, 0, 160);
-		this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, 80, 18, 7);
-		this.getProcessing().fill(255);
-		drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 10, 12, true);
-		if(obj.getHeadMessage() != null) {
+
+		if(!"".equals(obj.getName())) {
+			this.getProcessing().fill(0, 0, 0, 160);
+			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, 80, 18, 7);
+			this.getProcessing().fill(255);
+			drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 10, 12, true);
+		}
+
+		if(obj.getHeadMessage() != null && !"".equals(obj.getHeadMessage())) {
 			this.getProcessing().fill(0, 0, 0, 160);
 			this.getProcessing().rect((img.getWidth() / 2), -20, 160, 18, 7);
 			this.getProcessing().fill(255);
 			drawText(obj.getHeadMessage(), (img.getWidth() / 2), -20, 12, true);
 		}
+		
 		this.getProcessing().rectMode(CORNER);
 		this.getProcessing().translate(-o_x, -o_y);
 	}

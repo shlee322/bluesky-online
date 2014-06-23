@@ -26,4 +26,7 @@ public static class UIComponent {
 	}
 	public void keyPressed(char key, int keyCode) {
 	}
+	public boolean keyPressedHook(char key, int keyCode) {
+		return false;
+	}
 }

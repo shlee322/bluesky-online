@@ -38,4 +38,11 @@ public static class UIManager {
 	public void setFocusComponent(UIComponent comp) {
 		this.focus = comp;
 	}
+
+	public boolean keyPressedHook(char key, int keyCode) {
+		for(UIComponent comp : this.componentList) {
+			if(comp.keyPressedHook(key, keyCode)) return true;
+		}
+		return false;
+	}
 }
