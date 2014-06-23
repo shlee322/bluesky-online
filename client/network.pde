@@ -120,13 +120,33 @@ public static class ClientPacketList extends PacketList {
             SC_MapInfo.class,
             CS_GetObjectInfo.class,
             SC_ObjectInfo.class,
-            MoveObject.class
+            MoveObject.class,
+            Chat.class
     };
 
     @Override
     public Class<?>[] getPacketList() {
         return PacketList;
     }
+}
+
+@Message
+public static class Chat implements Packet {
+    public int map_id;
+    public long object_id;
+    public String msg;
+
+    public Chat() {
+    }
+
+    public Chat(int map_id, long object_id, String msg) {
+        this.map_id = map_id;
+        this.object_id = object_id;
+        this.msg = msg;
+    }
+
+    @Override
+    public byte getPacketId() { return 10; }
 }
 
 @Message
@@ -149,6 +169,12 @@ public static class CS_GetObjectInfo implements Packet {
 
     @Override
     public byte getPacketId() { return 7; }
+
+    public CS_GetObjectInfo() {}
+    public CS_GetObjectInfo(int map_id, long object_id) {
+        this.map_id = map_id;
+        this.object_id = object_id;
+    }
 }
 
 @Message
@@ -159,6 +185,16 @@ public static class CS_Join implements Packet {
 
     @Override
     public byte getPacketId() { return 2; }
+
+    public CS_Join() {
+
+    }
+
+    public CS_Join(String id, String pw, String name) {
+        this.id = id;
+        this.pw = pw;
+        this.name = name;
+    }
 }
 
 @Message
@@ -236,12 +272,18 @@ public static class SC_Notify implements Packet {
 }
 
 @Message
-public static class SC_ObjectInfo implements Packet {
+public class SC_ObjectInfo implements Packet {
     public int map_id;
     public long object_id;
+    public String name;
 
     @Override
     public byte getPacketId() { return 8; }
+
+    public SC_ObjectInfo() {}
+    public SC_ObjectInfo(int map_id, long object_id, String name) {
+        this.name = name;
+    }
 }
 
 public interface Packet {

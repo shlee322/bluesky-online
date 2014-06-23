@@ -11,4 +11,14 @@ public class CS_Join implements Packet {
 
     @Override
     public byte getPacketId() { return 2; }
+
+    public CS_Join() {
+
+    }
+
+    public CS_Join(String id, String pw, String name) {
+        this.id = id;
+        this.pw = pw;
+        this.name = name;
+    }
 }

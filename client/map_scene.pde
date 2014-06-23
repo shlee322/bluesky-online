@@ -244,7 +244,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
                 if(Engine.getInstance().getUIManager().getFocusComponent() == this) {
                     String text = this.getText();
-                    //메시지 전송
+                    Engine.getInstance().getNetwork().write(new Chat(0, 0, text));
                     this.setText("");
                     this.model.getMyObject().setHeadMessage(this.model.getMyObject().getName() + " : " + text);
 

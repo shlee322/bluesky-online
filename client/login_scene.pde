@@ -109,6 +109,8 @@ public static class LoginScene implements Scene, UIOnClickListener {
             initRegisterBox();
         }
         if(comp instanceof RegisterBtnComponent) {
+            Engine.getInstance().showNotify("회원가입 요청중입니다.", -1);
+            Engine.getInstance().getNetwork().write(new CS_Join(id.getText(), pw.getText(), name.getText()));
             initLoginBox();
         }
         if(comp instanceof GoBackBtnComponent) {
