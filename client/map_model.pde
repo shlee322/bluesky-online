@@ -62,18 +62,24 @@ static class Tile {
 static class GameObject implements Entity {
 	private long uuid;
 	private int mapId;
-	private int x;
-	private int y;
+	public int x;
+	public int y;
 	private Object engineTag;
 	private EImage weapon;
 	private String name="";
 	private String headMessage="";
+	public int dest_x;
+	public int dest_y;
+	public int moveTick=0;
+	public int dir = 0;
 
 	public GameObject(long uuid, int mapId, int x, int y) {
 		this.uuid = uuid;
 		this.mapId = mapId;
 		this.x = x;
 		this.y = y;
+		this.dest_x = x;
+		this.dest_y = y;
 	}
 
 	public int getMapId() {
@@ -86,6 +92,14 @@ static class GameObject implements Entity {
 
 	public int getY() {
 		return this.y;
+	}
+
+	public void move(int src_map, int src_x, int src_y, int dest_map, int dest_x, int dest_y) {
+		this.x = src_x;
+		this.y = src_y;
+		this.dest_x = dest_x;
+		this.dest_y = dest_y;
+		print(dest_x+"\n");
 	}
 
 	public void setEngineTag(Object o) {

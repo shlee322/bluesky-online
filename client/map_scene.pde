@@ -34,9 +34,8 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void init() {
-
         UIComponent menuBtnComponent = new MenuBtnComponent();
-         UIComponent key = new KeyPressed();
+        UIComponent key = new KeyPressed(this.model);
         //loginBtnComp.setOnClickListener(this);
         menuBtnComponent.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
@@ -74,7 +73,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         mMap = getTiles(this.model.getMap(center.getAroundMapId(7)));
         int test = 0;
-        System.out.println();  
+
          for(int x=0;x<20;x++){
             for(int y=0;y<20;y++){
                 MapAroundTile[x][y]=mMap[test];
@@ -146,7 +145,6 @@ public static class MapScene implements Scene, UIOnClickListener {
         int a = (RealX + 100)/20;
         int b = (RealY + 200)/20;
 
-        System.out.println(RealX+" "+RealY);
         for (int i = 0 ; i<24;i++){
             b=(RealY + 200)/20;
             for(int j = 0 ; j<32; j++){
@@ -168,7 +166,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         //캐릭터 뿌림 (테스트로 자기만)
        // this.model.getMyObject().updateWeapon();
-       Engine.getInstance().drawGameObject(300, 200, this.model.getMyObject());
+       Engine.getInstance().drawGameObject(400, 300, this.model.getMyObject());
        joyStick.draw();
     }
 
@@ -208,9 +206,24 @@ public static class MapScene implements Scene, UIOnClickListener {
             return false;
         }
     }
+
     private class KeyPressed extends UIComponent{
-        public void keyPressed(char key, int keyCode) {
-            if(keyCode==RIGHT){System.out.println("hihi");}
+        private MapModel model;
+        public KeyPressed(MapModel model) {
+            this.model = model;
+        }
+
+        public boolean keyPressedHook(char key, int keyCode) {
+            if(this.model.getMyObject() == null) return false;
+            print(keyCode + "\n");
+            if(keyCode==RIGHT || keyCode == 39){
+                this.model.getMyObject().move(
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX()+10, this.model.getMyObject().getY());
+                return true;
+            }
+
+            return false;
         }
 
     }
@@ -255,7 +268,6 @@ public static class MapScene implements Scene, UIOnClickListener {
     }
 
     private class JoyStick {
-    
         void draw() {
             ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().fill(255, 50);
             ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().strokeWeight(10);

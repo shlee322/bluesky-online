@@ -185,7 +185,6 @@ public static class Engine implements EngineAdapter {
 			if(getUIManager().getFocusComponent() == null) {
 				//(((ProcessingEngineAdapter)getEngineAdapter()).getProcessing()).getComponents()[0].enableInputMethods(false);
 			} else {
-				print("2");
 				getUIManager().getFocusComponent().inputEvent(committedText, composedText);
 			}
 		} catch (Exception e) {
