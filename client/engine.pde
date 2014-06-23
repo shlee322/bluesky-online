@@ -117,7 +117,7 @@ public static class Engine implements EngineAdapter {
 	}
 
 	public void drawTile(int x, int y, int i) {
-		String name="1";
+		String name=null;
 		switch (i) {
 			case 0 : 
 			break;
@@ -141,11 +141,12 @@ public static class Engine implements EngineAdapter {
 			name="gold_ore";
 			break;
 			default :
-				name="1";
+				name=null;
 			break;	
 		}
+		if(name!=null){
 		getEngineAdapter().drawTile(x, y, name);
-	}
+	}}
 
 	//엔진에서만 호출할 수 있도록 함
 	public void drawNotify(String text) {

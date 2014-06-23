@@ -155,7 +155,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         //캐릭터 뿌림 (테스트로 자기만)
        // this.model.getMyObject().updateWeapon();
-        //Engine.getInstance().drawGameObject(200, 200, this.model.getMyObject());
+        //Engine.getInstance().drawGameObject(300, 200, this.model.getMyObject());
        joyStick.draw();
     }
 
@@ -176,7 +176,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        System.out.println("hi");
+        MoveObject mo = new MoveObject();
     }
 
     private class MenuBtnComponent extends UIComponent {
