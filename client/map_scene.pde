@@ -36,7 +36,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     @Override
     public void init() {
         UIComponent menuBtnComponent = new MenuBtnComponent();
-         UIComponent key = new KeyPressed();
+         UIComponent key = new KeyPressed(this.model);
          UIComponent ib = new InventoryBtn();
         //loginBtnComp.setOnClickListener(this);
         menuBtnComponent.setOnClickListener(this);
@@ -95,7 +95,7 @@ public static class MapScene implements Scene, UIOnClickListener {
         mMap = getTiles(this.model.getMap(center.getAroundMapId(5))); 
         for(int x=0;x<20;x++){
             for(int y=40;y<60;y++){
-                MapAroundTile[x][y]=mMap[test];
+              MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
@@ -111,35 +111,35 @@ public static class MapScene implements Scene, UIOnClickListener {
                 mMap = center.getTiles(); 
                 for(int x=20;x<40;x++){
             for(int y=20;y<40;y++){
-                MapAroundTile[x][y]=mMap[test];
+             MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
         test = 0;  
         mMap = getTiles(this.model.getMap(center.getAroundMapId(4))); for(int x=20;x<40;x++){
             for(int y=40;y<60;y++){
-                MapAroundTile[x][y]=mMap[test];
+               MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
         test = 0;  
         mMap = getTiles(this.model.getMap(center.getAroundMapId(1))); for(int x=40;x<60;x++){
             for(int y=0;y<20;y++){
-                MapAroundTile[x][y]=mMap[test];
+               MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
         test = 0; 
         mMap = getTiles(this.model.getMap(center.getAroundMapId(2)));  for(int x=40;x<60;x++){
             for(int y=20;y<40;y++){
-                MapAroundTile[x][y]=mMap[test];
+               MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
         test = 0;  
         mMap = getTiles(this.model.getMap(center.getAroundMapId(3))); for(int x=40;x<60;x++){
             for(int y=40;y<60;y++){
-                MapAroundTile[x][y]=mMap[test];
+             MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
@@ -169,9 +169,8 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         //캐릭터 뿌림 (테스트로 자기만)
        // this.model.getMyObject().updateWeapon();
-       Engine.getInstance().drawGameObject(300, 200, this.model.getMyObject());
-       if(MapAroundTile[(RealX+500)/20][(RealY+500)/20]==0)
-        this.model.getMyObject().setY(10);
+      if(MapAroundTile[(RealX+500)/20][(RealY+500)/20]==0){
+        this.model.getMyObject().setY(-5);}
 
 
        Engine.getInstance().drawGameObject(400, 300, this.model.getMyObject());
@@ -241,12 +240,45 @@ public static class MapScene implements Scene, UIOnClickListener {
             if(this.model.getMyObject() == null) return false;
             print(keyCode + "\n");
             if(keyCode==RIGHT || keyCode == 39){
+                int nextMap=this.model.getMyObject().getMapId();
+                if(this.model.getMyObject().getX()>389){
+                      nextMap =  this.model.getMap(this.model.getMyObject().getMapId()).getAroundMapId(3);
+                }
                 this.model.getMyObject().move(
                     this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
-                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX()+10, this.model.getMyObject().getY());
+                    nextMap, this.model.getMyObject().getX()+10, this.model.getMyObject().getY());
                 return true;
             }
-
+            if(keyCode==LEFT || keyCode == 37){
+                int nextMap=this.model.getMyObject().getMapId();
+                if(this.model.getMyObject().getX()<11){
+                      nextMap =  this.model.getMap(this.model.getMyObject().getMapId()).getAroundMapId(6);
+                }
+                this.model.getMyObject().move(
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX()-10, this.model.getMyObject().getY());
+                return true;
+            } 
+            if(keyCode==UP || keyCode == 38){
+                int nextMap=this.model.getMyObject().getMapId();
+                if(this.model.getMyObject().getY()>11){
+                      nextMap =  this.model.getMap(this.model.getMyObject().getMapId()).getAroundMapId(0);
+                }
+                this.model.getMyObject().move(
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX(), this.model.getMyObject().getY()-10);
+                return true;
+            } 
+            if(keyCode==DOWN || keyCode == 40){
+                int nextMap=this.model.getMyObject().getMapId();
+                if(this.model.getMyObject().getY()>389){
+                      nextMap =  this.model.getMap(this.model.getMyObject().getMapId()).getAroundMapId(4);
+                }
+                this.model.getMyObject().move(
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX(), this.model.getMyObject().getY()+10);
+                return true;
+            }
             return false;
         }
 
