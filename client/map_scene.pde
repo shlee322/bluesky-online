@@ -1,6 +1,6 @@
 public static class MapScene implements Scene, UIOnClickListener {
     private MapModel model;
-
+   private EImage bg;
     JoyStick joyStick;
     float circleRad = 100;      
     float circleX = 127;        
@@ -17,6 +17,10 @@ public static class MapScene implements Scene, UIOnClickListener {
     private byte[] nullTiles = new byte[400];
 
     public MapScene(SC_MoveMap moveMap) {
+        this.bg = Engine.getInstance().loadImage("images/sky.png");
+        this.bg.setWidth(Engine.getInstance().getWidth());
+        this.bg.setHeight(Engine.getInstance().getHeight());
+
         if(Engine.getInstance().getScene() instanceof LoginScene) {
             Engine.getInstance().getUIManager().clearComponentList();
         }
@@ -46,6 +50,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     }
     @Override
     public void runSceneLoop() {
+      this.bg.draw();
       if(this.model.getMyObject() == null) return;
 
         int RealX = this.model.getMyObject().getX();
@@ -177,6 +182,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     @Override
     public void onClick(UIComponent comp, int x, int y) {
         MoveObject mo = new MoveObject();
+        mo.MoveObject()
     }
 
     private class MenuBtnComponent extends UIComponent {
