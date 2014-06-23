@@ -194,6 +194,7 @@ public static class Engine implements EngineAdapter {
 	}
 
 	public void keyPressed(char key, int keyCode) {
+		if(getUIManager().keyPressedHook(key, keyCode)) return;
 		if(getUIManager().getFocusComponent() != null) {
 			getUIManager().getFocusComponent().keyPressed(key, keyCode);
 		}

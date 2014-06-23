@@ -43,6 +43,14 @@ public static class MapScene implements Scene, UIOnClickListener {
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
         Engine.getInstance().getUIManager().addComponent(key);
         joyStick = new JoyStick();
+
+        ChatBox chat = new ChatBox(this.model);
+        chat.emptyText = "메시지를 입력하려면 이곳을 클릭하세요.";
+        chat.x = 0;
+        chat.y = 550;
+        chat.width = 800;
+        chat.yy = 30;
+        Engine.getInstance().getUIManager().addComponent(chat);
     }
     
     public byte[] getTiles(Map map) {
@@ -215,6 +223,46 @@ public static class MapScene implements Scene, UIOnClickListener {
         }
 
     }
+
+    public class ChatBox extends UIEditBox {
+        private MapModel model;
+
+        public ChatBox(MapModel model) {
+            this.model = model;
+        }
+
+        public void keyPressed(char key, int keyCode) {
+            if(keyCode == ENTER) {
+                if(this.getText().equals("")) {
+                    Engine.getInstance().getUIManager().setFocusComponent(null);
+                    return;
+                }
+
+                if(Engine.getInstance().getUIManager().getFocusComponent() == this) {
+                    String text = this.getText();
+                    //메시지 전송
+                    this.setText("");
+                    this.model.getMyObject().setHeadMessage(this.model.getMyObject().getName() + " : " + text);
+
+
+                }
+                return;
+            }
+
+            super.keyPressed(key, keyCode);
+        }
+
+        public boolean keyPressedHook(char key, int keyCode) {
+            if(keyCode == ENTER) {
+                if(Engine.getInstance().getUIManager().getFocusComponent() != this) {
+                    Engine.getInstance().getUIManager().setFocusComponent(this);
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     private class JoyStick {
     
         void draw() {

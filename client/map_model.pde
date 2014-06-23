@@ -66,6 +66,8 @@ static class GameObject implements Entity {
 	private int y;
 	private Object engineTag;
 	private EImage weapon;
+	private String name="";
+	private String headMessage="";
 
 	public GameObject(long uuid, int mapId, int x, int y) {
 		this.uuid = uuid;
@@ -101,11 +103,15 @@ static class GameObject implements Entity {
     }
 
     public String getName() {
-    	return "테스터";
+    	return this.name;
     }
 
     public String getHeadMessage() {
-    	return "테스터 : 테스트메시지입니다.";
+    	return this.headMessage;
+    }
+
+    public void setHeadMessage(String msg) {
+    	this.headMessage = msg;
     }
 
     public void setWeapon(EImage weapon) {
@@ -118,7 +124,7 @@ static class GameObject implements Entity {
 
     public void updateWeapon() {
     	if(this.weapon == null) return;
-    	
+
     	if(this.weapon.getRotate() <= PI/2) {
     		for(int i = 0; i<=30; i++) {
     			this.weapon.setRotate(i*PI/60);
