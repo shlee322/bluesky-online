@@ -112,6 +112,10 @@ public static class Engine implements EngineAdapter {
 		getEngineAdapter().drawText(text, x, y, size, center);
 	}
 
+	public void drawTile(int x, int y, String name) {
+		getEngineAdapter().drawTile(x, y, name);
+	}
+
 	//엔진에서만 호출할 수 있도록 함
 	public void drawNotify(String text) {
 		System.err.println("Engine용으로 개발된 메소드입니다. 외부에서 호출하실 수 없습니다.");

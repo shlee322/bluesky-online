@@ -20,6 +20,13 @@ public static class MapScene implements Scene {
 
     @Override
     public void runSceneLoop() {
+        if(this.model.getMyObject() == null) return;
+
+        //자기 캐릭터에 대해서 상대적으로 타일을 뿌려야함
+        //this.model.getMyObject().getX()
+        //this.model.getMyObject().getY()
+
+        Engine.getInstance().drawTile(0, 0, "iron_ore"); //픽셀 좌표 x, y, 이미지 명
         //가시성 있는 Tile 뿌림
         //Engine.getInstance().viewTile();
     }
@@ -31,13 +38,11 @@ public static class MapScene implements Scene {
     @Override
     public void receivedPacket(Packet packet) {
         if(packet instanceof SC_MapInfo) {
-            //((SC_MapInfo)packet).map_id int
-            //((SC_MapInfo)packet).around_map_id int[8]
-            //((SC_MapInfo)packet).tiles byte[400]
+            this.model.setMapInfo(((SC_MapInfo)packet));
         }
 
         if(packet instanceof MoveObject) {
-            //맵정보를 불러와서 동시에 오브젝트 리스트도 불러왔거나, 캐릭터가 이동했을때
+            this.model.moveObject((MoveObject)packet);
         }
     }
 }

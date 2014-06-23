@@ -7,6 +7,7 @@ interface EngineAdapter {
 	void drawText(String text, int x, int y);
 	void drawText(String text, int x, int y, int size);
 	void drawText(String text, int x, int y, int size, boolean center);
+	void drawTile(int x, int y, String name);
 	void drawNotify(String text);
 	EImage loadImage(String path);
 }
