@@ -1,7 +1,7 @@
 public static class MapScene implements Scene, UIOnClickListener {
     private MapModel model;
     private byte[] nullTiles = new byte[400];
-    
+
     public MapScene(SC_MoveMap moveMap) {
         if(Engine.getInstance().getScene() instanceof LoginScene) {
             Engine.getInstance().getUIManager().clearComponentList();
@@ -19,6 +19,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         UIComponent menuBtnComponent = new MenuBtnComponent();
         //loginBtnComp.setOnClickListener(this);
+        menuBtnComponent.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
     }
     public byte[] getTiles(Map map) {
@@ -156,6 +157,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
+        System.out.println("hi");
     }
 
     private class MenuBtnComponent extends UIComponent {
