@@ -6,9 +6,7 @@ import java.util.Random;
 
 public class YunJeongTilesGenerator implements IMapTilesGenerator {
 
-    
-
-    Random ramdom = new Random();
+    Random random = new Random();
     DecideTiles decideTiles = new DecideTiles();
     
     @Override
@@ -28,7 +26,7 @@ public class YunJeongTilesGenerator implements IMapTilesGenerator {
         else if(map.getMapY() < 0) {
             for(int y=0; y<20; y++) {
                 for(int x=0; x<20; x++) {
-                    decideTiles.returnTiles(random.nextDouble(), getMapY());
+                    map.setTile(x, y, decideTiles.returnTiles(random.nextDouble(), map.getMapY()));
         }
     }
 }
