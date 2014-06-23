@@ -27,7 +27,6 @@ public static class LoginScene implements Scene, UIOnClickListener {
 
     @Override
     public void receivedPacket(Packet packet) {
-
     }
 
     @Override

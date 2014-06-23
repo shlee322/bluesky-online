@@ -6,6 +6,8 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private PApplet processing;
 	private Minim minim;
 	private AudioPlayer bgmPlayer;
+	private HashMap<String, EImage> tileImages = new HashMap<String, EImage>();
+
 
 	public ProcessingEngineAdapter(PApplet processing) {
 		this.processing = processing;
@@ -75,6 +77,19 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		}
 		this.getProcessing().textSize(size);
 		this.getProcessing().text(text, x, y);
+	}
+
+	public void drawTile(int x, int y, String name) {
+		if(!tileImages.containsKey(name)) {
+			EImage img = loadImage("data/tiles/" + name + ".png");
+			img.setWidth(this.getWidth() / 24);
+			img.setHeight(this.getWidth() / 24);
+			tileImages.put(name, img);
+		}
+
+		this.getProcessing().translate(x, y);
+		tileImages.get(name).draw();
+		this.getProcessing().translate(-x, -y);
 	}
 
 	public void drawNotify(String text) {
