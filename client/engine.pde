@@ -121,6 +121,25 @@ public static class Engine implements EngineAdapter {
 		System.err.println("Engine용으로 개발된 메소드입니다. 외부에서 호출하실 수 없습니다.");
 	}
 
+	public void fill(float r, float g, float b, float alpha) {
+		getEngineAdapter().fill(r, g, b,alpha);
+	}
+
+	public void drawBox(float rectX, float rectY, float rectWid, float rectHei, float rectRad, float r, float g, float b, float alpha) {
+		getEngineAdapter().drawBox(rectX, rectY, rectWid, rectHei, rectRad, r, g, b, alpha);
+	}
+	public void drawStroke(boolean isStroke) {
+		getEngineAdapter().drawStroke(isStroke);
+
+	}
+	public void drawStroke(float strokeR, float strokeG, float strokeB, float strokeAlpha, float strokeWei) {
+		getEngineAdapter().drawStroke(strokeR, strokeG, strokeB, strokeAlpha, strokeWei);
+	}
+
+	public void line(float x1, float y1, float x2, float y2) {
+		getEngineAdapter().line(x1, y1, x2, y2);
+	}
+
 	public void receivedPacket(Packet packet) {
 		this.packetQueue.add(packet);
 	}
