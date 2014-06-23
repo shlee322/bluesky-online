@@ -5,6 +5,7 @@ import bluesky.protocol.NetworkEncoder;
 import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.client.ClientPacketList;
 import bluesky.protocol.packet.client.MoveObject;
+import bluesky.protocol.packet.client.SC_Notify;
 import bluesky.protocol.packet.service.MapInfo;
 import bluesky.server.service.Service;
 import bluesky.server.service.ServiceImpl;
@@ -14,12 +15,16 @@ import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
 import java.net.InetSocketAddress;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 
 public class UserService extends Service {
     private ClientPacketList packetList = new ClientPacketList();
     private HashMap<Integer, MapProxy>[] maps;
+    private LinkedList<UserObject> users = new LinkedList<UserObject>();
 
     public UserService(short id, String address) {
         this.setServiceInfo(id, address, 8000 + id);
@@ -50,6 +55,32 @@ public class UserService extends Service {
         b.setOption("child.tcpNoDelay", true);
         b.setOption("child.keepAlive", true);
         b.bind(new InetSocketAddress(7000 + this.getServiceId()));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                    }
+
+                    Calendar deadline = Calendar.getInstance();
+                    deadline.set(2014, Calendar.JUNE, 24, 9, 0, 0);
+
+                    final long deadline_s = (deadline.getTime().getTime() - new Date().getTime())/1000;
+
+                    addWork(0, new Runnable() {
+                        @Override
+                        public void run() {
+                            for (UserObject user : users) {
+                                user.getChannel().write(new SC_Notify("창공 데드라인까지 " + deadline_s + "초 남았습니다.", 120));
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     private MapProxy getMapProxy(int mapId, boolean n) {
@@ -72,6 +103,32 @@ public class UserService extends Service {
             public void run() {
                 MapProxy map = getMapProxy(mapId, true);
                 user.moveMap(map, user.getX(), user.getY());
+            }
+        });
+
+        this.addWork(0, new Runnable() {
+            @Override
+            public void run() {
+                users.add(user);
+            }
+        });
+    }
+
+    public void exitUser(final UserObject user) {
+        final int mapId = user.getMapId();
+        this.addWork(user.getMapId(), new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
+                map.exitUser(user);
+            }
+        });
+
+        this.addWork(0, new Runnable() {
+            @Override
+            public void run() {
+                users.remove(user);
             }
         });
     }
@@ -115,18 +172,6 @@ public class UserService extends Service {
                 }
             });
         }
-    }
-
-    public void exitUser(final UserObject user) {
-        final int mapId = user.getMapId();
-        this.addWork(user.getMapId(), new Runnable() {
-            @Override
-            public void run() {
-                MapProxy map = getMapProxy(mapId, false);
-                if(map == null) return;
-                map.exitUser(user);
-            }
-        });
     }
 
     public void getMapInfo(final UserObject user, final int mapId) {

@@ -9,18 +9,31 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private HashMap<String, EImage> tileImages = new HashMap<String, EImage>();
 	private HashMap<String, ProcessingGameObjectImage> characterImages = new HashMap<String, ProcessingGameObjectImage>();
 
-
 	public ProcessingEngineAdapter(PApplet processing) {
 		this.processing = processing;
 
 		this.getProcessing().frameRate(60);
-		this.getProcessing().size(800, 600, P3D);
+		this.getProcessing().size(800, 600, "SanghyuckP3D");
 
 		for(int i=0; i<6; i++) {
 			this.fonts[i] = this.getProcessing().createFont("NanumGothic", this.fontSize[i]);
 		}
 
 		this.minim = new Minim(this.getProcessing());
+
+
+		SanghyuckInputMethod.getSanghyuckInputMethod().event = new SanghyuckInputMethodInputEvent() {
+			public void inputEvent(String committedText, String composedText) {
+				Engine.getInstance().inputEvent(committedText, composedText);
+			/*
+				if(committedText.length() > 0 ) {
+					text += committedText;
+					viewComposedText = "";
+				} else {
+					viewComposedText = composedText;
+				}*/
+			}
+		};
 	}
 
 	public void runGameLoop() {
@@ -252,7 +265,7 @@ class ProcessingEImage implements EImage {
 
 	public int getHeight() {
 		return this.height;
-	}
+	}	
 
 	public void setWidth(int width) {
 		this.width = width;
@@ -268,5 +281,6 @@ class ProcessingEImage implements EImage {
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().translate(this.getX(), this.getY());
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().shape(this.shape);
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().translate(-this.getX(), -this.getY());
+
 	}
 }
