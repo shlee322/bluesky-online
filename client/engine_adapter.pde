@@ -24,4 +24,8 @@ interface EImage {
 	int getHeight();
 	void setWidth(int width);
 	void setHeight(int height);
+	int getX();
+	int getY();
+	void setX(int x);
+	void setY(int y);
 }

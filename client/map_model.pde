@@ -21,6 +21,12 @@ public static class MapModel implements Model {
     }
 
     public Map getMap(int id) {
+    	if(id == -1) return null;
+    	if(!cacheMaps.containsKey(id)) { //캐싱되어있지 않음
+    		Engine.getInstance().getNetwork().write(new CS_GetMapInfo(id));
+    		return null;
+    	}
+
     	return cacheMaps.get(id);
     }
 
