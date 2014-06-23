@@ -228,12 +228,11 @@ class ProcessingEImage implements EImage {
 	protected PShape shape;
 	private int width;
 	private int height;
-<<<<<<< HEAD
+
 	private float rad;
-=======
+
 	private int x;
 	private int y;
->>>>>>> origin/master
 
 	public ProcessingEImage(PImage img) {
 		this.img = img;
@@ -288,11 +287,8 @@ class ProcessingEImage implements EImage {
 	}
 
 	public void draw() {
-<<<<<<< HEAD
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().rotate(this.getRotate());
-=======
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().translate(this.getX(), this.getY());
->>>>>>> origin/master
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().shape(this.shape);
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().translate(-this.getX(), -this.getY());
 

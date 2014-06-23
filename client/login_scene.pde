@@ -14,7 +14,7 @@ public static class LoginScene implements Scene, UIOnClickListener {
         /*
         Engine.getInstance().getUIManager(); //을 통하여 UI Manager을 사용할 수 있음
         */
-<<<<<<< HEAD
+
         UIComponent loginBoxComp = new LoginBoxComponent();
         UIComponent loginBtnComp = new LoginBtnComponent();
         UIComponent signUpBtnComp = new SignUpBtnComponent();
@@ -22,7 +22,6 @@ public static class LoginScene implements Scene, UIOnClickListener {
         Engine.getInstance().getUIManager().addComponent(loginBoxComp);
         Engine.getInstance().getUIManager().addComponent(loginBtnComp);
         Engine.getInstance().getUIManager().addComponent(signUpBtnComp);
-=======
 
         id = new UIEditBox();
         id.x = 270;
@@ -36,15 +35,6 @@ public static class LoginScene implements Scene, UIOnClickListener {
         pw.yy = 30;
         pw.pw = true;
         Engine.getInstance().getUIManager().addComponent(pw);
-
-        UIComponent comp = new TestComponent();
-        comp.setOnClickListener(this);
-        Engine.getInstance().getUIManager().addComponent(comp);
-
-        UIComponent test = new UIEditBox();
-        Engine.getInstance().getUIManager().addComponent(test);
-
->>>>>>> origin/master
     }
 
     @Override
