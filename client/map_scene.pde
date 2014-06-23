@@ -32,9 +32,11 @@ public static class MapScene implements Scene, UIOnClickListener {
     public void init() {
 
         UIComponent menuBtnComponent = new MenuBtnComponent();
+         UIComponent key = new KeyPressed();
         //loginBtnComp.setOnClickListener(this);
         menuBtnComponent.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
+        Engine.getInstance().getUIManager().addComponent(key);
         joyStick = new JoyStick();
     }
     
@@ -152,9 +154,9 @@ public static class MapScene implements Scene, UIOnClickListener {
         //Engine.getInstance().viewTile();
 
         //캐릭터 뿌림 (테스트로 자기만)
-        this.model.getMyObject().updateWeapon();
-        Engine.getInstance().drawGameObject(200, 200, this.model.getMyObject());
-        joyStick.draw();
+       // this.model.getMyObject().updateWeapon();
+        //Engine.getInstance().drawGameObject(200, 200, this.model.getMyObject());
+       joyStick.draw();
     }
 
     @Override
@@ -193,7 +195,12 @@ public static class MapScene implements Scene, UIOnClickListener {
             return false;
         }
     }
+    private class KeyPressed extends UIComponent{
+        public void keyPressed(char key, int keyCode) {
+            if(keyCode==RIGHT){System.out.println("hihi");}
+        }
 
+    }
     private class JoyStick {
     
         void draw() {
