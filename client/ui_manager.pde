@@ -2,6 +2,7 @@ import java.util.LinkedList;
 
 public static class UIManager {
 	private LinkedList<UIComponent> componentList = new LinkedList<UIComponent>();
+	private UIComponent focus;
 
 	public void runUILoop() {
 		for(UIComponent comp : this.componentList) {
@@ -20,11 +21,21 @@ public static class UIManager {
 
 	public void clearComponentList() {
 		this.componentList.clear();
+		this.focus = null;
 	}
 
 	public void clickScreen(int x, int y) {
 		for(UIComponent comp : this.componentList) {
 			if(comp.clickScreen(x, y)) return;
 		}
+		this.focus = null;
+	}
+
+	public UIComponent getFocusComponent() {
+		return this.focus;
+	}
+
+	public void setFocusComponent(UIComponent comp) {
+		this.focus = comp;
 	}
 }

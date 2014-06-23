@@ -1,5 +1,7 @@
 public static class LoginScene implements Scene, UIOnClickListener {
     private EImage bg;
+    private UIEditBox id;
+    private UIEditBox pw;
 
     @Override
     public void init() {
@@ -7,12 +9,32 @@ public static class LoginScene implements Scene, UIOnClickListener {
         this.bg.setWidth(Engine.getInstance().getWidth());
         this.bg.setHeight(Engine.getInstance().getHeight());
 
+        Engine.getInstance().getUIManager().clearComponentList();
+
         /*
         Engine.getInstance().getUIManager(); //을 통하여 UI Manager을 사용할 수 있음
         */
+
+        id = new UIEditBox();
+        id.x = 270;
+        id.y = 350;
+        id.yy = 30;
+        Engine.getInstance().getUIManager().addComponent(id);
+
+        pw = new UIEditBox();
+        pw.x = 270;
+        pw.y = 350 + 45;
+        pw.yy = 30;
+        pw.pw = true;
+        Engine.getInstance().getUIManager().addComponent(pw);
+
         UIComponent comp = new TestComponent();
         comp.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(comp);
+
+        UIComponent test = new UIEditBox();
+        Engine.getInstance().getUIManager().addComponent(test);
+
     }
 
     @Override
@@ -35,9 +57,8 @@ public static class LoginScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        //테스트 로그인
         Engine.getInstance().showNotify("로그인 시도중 입니다...", -1);
-        Engine.getInstance().getNetwork().write(new CS_Login("test", "test"));
+        Engine.getInstance().getNetwork().write(new CS_Login(id.getText(), pw.getText()));
     }
 
     private class TestComponent extends UIComponent {

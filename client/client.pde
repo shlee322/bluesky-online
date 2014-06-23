@@ -12,3 +12,11 @@ void draw() {
 void mousePressed() {
 	Engine.getInstance().clickScreen(mouseX, mouseY);
 }
+
+void keyPressed() {
+	Engine.getInstance().keyPressed(key, keyCode);
+}
+
+void keyReleased() {
+	//Engine.getInstance().keyReleased();
+}

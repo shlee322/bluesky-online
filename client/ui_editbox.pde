@@ -1,115 +1,66 @@
 public static class UIEditBox extends UIComponent {
+	private String text = "";
+	private String composedText="";
+	public int x;
+	public int y;
+	public int width = 200;
+	public int height = 40;
+	public int yy = 0;
+	public int r;
+	public int g;
+	public int b;
+	public boolean pw;
+
 	public UIEditBox() {
-		//((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().enableInputMethods(true);
 	}
+
+	public String getText() {
+		return text + composedText;
+	}
+
 	public void loop() {
+		(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(0,0,0);
+		String text = this.getText();
+		if(pw) {
+			int textLen = text.length();
+			text="";
+			for(int i=0; i<textLen; i++) text += "*";
+		}
+		Engine.getInstance().drawText(text, x + 5, y + yy);
+		(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).fill(255);
+		if(Engine.getInstance().getUIManager().getFocusComponent() != this) return;
+	}
+
+	public boolean clickScreen(int x, int y) {
+		if(this.x > x || this.y>y || (this.x+width) <= x || (this.y+height) <= y) return false;
+		Engine.getInstance().getUIManager().setFocusComponent(this);
+		//(((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing()).getComponents()[0].enableInputMethods(true);
+		return true;
+	}
+
+	public void inputEvent(String committedText, String composedText) {
+		if(committedText.length() > 0 ) {
+			text += committedText;
+			composedText = "";
+		} else {
+			composedText = composedText;
+		}
+	}
+
+	public void keyPressed(char key, int keyCode) {
+		if(keyCode == BACKSPACE) {
+			if(text.length() < 1) return;
+			text = text.substring(0, text.length() - 1);
+			return;
+		}
+		text += String.valueOf(Character.toChars(key));
 	}
 }
-
-String viewComposedText = "";
-void inputMethodTextChanged() {
-  if(committedText.length() > 0 ) {
-    //print(committedText + "\n");
-    viewComposedText = "";
-  } else {
-    viewComposedText = composedText;
-  }
-  print("committedText:" + committedText + ", composedText:" + composedText.charAt(0) + "\n");
-}
-
-public class InputMethodSystem<T>
- implements java.awt.event.InputMethodListener, java.awt.im.InputMethodRequests
-{
-  private Object applet;
-  private java.lang.reflect.Method inputMethodTextChangedMethod;
-  
-  public InputMethodSystem(Object applet) {
-    this.applet = applet;
-    
-    try {
-      this.inputMethodTextChangedMethod = applet.getClass().getMethod("inputMethodTextChanged");
-    } catch(NoSuchMethodException e) {
-    }
-  }
-  
-  public void inputMethodTextChanged(java.awt.event.InputMethodEvent event) {
-  	System.out.println("inputMethodTextChanged");
-    int committedCharacterCount = event.getCommittedCharacterCount();
-    java.text.AttributedCharacterIterator text = event.getText();
-
-    if (text != null) {
-      StringBuilder committedTextBuilder = new StringBuilder();
-      int toCopy = committedCharacterCount;
-      char c = text.first();
-      while (toCopy-- > 0) {
-        committedTextBuilder.append(c);
-        c = text.next();
-      }
-      committedText = committedTextBuilder.toString();
-      composedText = String.valueOf(c);
-    }
-    if(event.getCaret() == null) {
-      composedText = "";
-    }
-    event.consume();
-
-    if(this.inputMethodTextChangedMethod != null) {
-      try {
-        this.inputMethodTextChangedMethod.invoke(this.applet, null);
-      } catch(IllegalAccessException e) {
-      } catch(java.lang.reflect.InvocationTargetException e) {
-      }
-    }
-  }
-
-  public void caretPositionChanged(java.awt.event.InputMethodEvent event) {
-  	System.out.println("caretPositionChanged");
-  }
-
-  public java.awt.Rectangle getTextLocation(java.awt.font.TextHitInfo offset) {
-  	System.out.println("getTextLocation");
-    return null;
-  }
-
-  public java.awt.font.TextHitInfo getLocationOffset(int x, int y) {
-  	System.out.println("getLocationOffset");
-    return null;
-  }
-
-  public int getInsertPositionOffset() {
-  	System.out.println("getInsertPositionOffset");
-    return 0;
-  }
-
-  public java.text.AttributedCharacterIterator getCommittedText(int beginIndex, int endIndex, java.text.AttributedCharacterIterator.Attribute[] attributes) {
-    System.out.println("getCommittedText");
-    return null;
-  }
-
-  public int getCommittedTextLength() {
-  	System.out.println("getCommittedTextLength");
-    return 0;
-  }
-
-  public java.text.AttributedCharacterIterator cancelLatestCommittedText(java.text.AttributedCharacterIterator.Attribute[] attributes) {
-  	System.out.println("cancelLatestCommittedText");
-    return null;
-  }
-
-  public java.text.AttributedCharacterIterator getSelectedText(java.text.AttributedCharacterIterator.Attribute[] attributes) {
-  	System.out.println("getSelectedText");
-    return null;
-  }
-}
-
-String committedText="";
-String composedText="";
-InputMethodSystem inputMethodSystem = new InputMethodSystem(this);
 
 void addListeners(java.awt.Component comp) {
   super.addListeners(comp);
-  this.addInputMethodListener(inputMethodSystem);
-  comp.addInputMethodListener(inputMethodSystem);
+  this.addInputMethodListener(SanghyuckInputMethod.getSanghyuckInputMethod());
+  comp.addInputMethodListener(SanghyuckInputMethod.getSanghyuckInputMethod());
   this.enableInputMethods(true);
   comp.enableInputMethods(true);
   //((javax.media.opengl.awt.GLCanvas)this.getComponents()[0])
@@ -117,12 +68,8 @@ void addListeners(java.awt.Component comp) {
 
 void removeListeners(java.awt.Component comp) {
   super.removeListeners(comp);
-  this.addInputMethodListener(inputMethodSystem);
-  comp.removeInputMethodListener(inputMethodSystem);
+  this.removeInputMethodListener(SanghyuckInputMethod.getSanghyuckInputMethod());
+  comp.removeInputMethodListener(SanghyuckInputMethod.getSanghyuckInputMethod());
   this.enableInputMethods(false);
   comp.enableInputMethods(false);
-}
-
-java.awt.im.InputMethodRequests getInputMethodRequests() {
-  return inputMethodSystem;
 }

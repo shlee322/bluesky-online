@@ -22,4 +22,8 @@ public static class UIComponent {
 	public boolean clickScreen(int x, int y) {
 		return false;
 	}
+	public void inputEvent(String committedText, String composedText) {
+	}
+	public void keyPressed(char key, int keyCode) {
+	}
 }
