@@ -2,38 +2,19 @@ public static class LoginScene implements Scene, UIOnClickListener {
     private EImage bg;
     private UIEditBox id;
     private UIEditBox pw;
+    private UIEditBox name;
 
-    @Override
-    public void init() {
-        this.bg = Engine.getInstance().loadImage("images/intro.png");
-        this.bg.setWidth(Engine.getInstance().getWidth());
-        this.bg.setHeight(Engine.getInstance().getHeight());
-
+    private void initLoginBox() {
         Engine.getInstance().getUIManager().clearComponentList();
 
-        /*
-        Engine.getInstance().getUIManager(); //을 통하여 UI Manager을 사용할 수 있음
-        */
-
-        /*
         UIComponent loginBoxComp = new LoginBoxComponent();
         UIComponent loginBtnComp = new LoginBtnComponent();
         UIComponent signUpBtnComp = new SignUpBtnComponent();
         loginBtnComp.setOnClickListener(this);
+        signUpBtnComp.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(loginBoxComp);
         Engine.getInstance().getUIManager().addComponent(loginBtnComp);
         Engine.getInstance().getUIManager().addComponent(signUpBtnComp);
-        */
-        
-
-        UIComponent signUpBoxComp = new SignUpBoxComponent();
-        UIComponent registerBtnComp = new RegisterBtnComponent();
-        UIComponent goBackBtnComp = new GoBackBtnComponent();
-        //oginBtnComp.setOnClickListener(this);
-        Engine.getInstance().getUIManager().addComponent(signUpBoxComp);
-        Engine.getInstance().getUIManager().addComponent(registerBtnComp);
-        Engine.getInstance().getUIManager().addComponent(goBackBtnComp);
-
 
         id = new UIEditBox();
         id.x = 270;
@@ -49,6 +30,53 @@ public static class LoginScene implements Scene, UIOnClickListener {
         pw.pw = true;
         pw.emptyText = "Password";
         Engine.getInstance().getUIManager().addComponent(pw);
+    }
+
+    private void initRegisterBox() {
+        Engine.getInstance().getUIManager().clearComponentList();
+
+        UIComponent signUpBoxComp = new SignUpBoxComponent();
+        UIComponent registerBtnComp = new RegisterBtnComponent();
+        UIComponent goBackBtnComp = new GoBackBtnComponent();
+        registerBtnComp.setOnClickListener(this);
+        goBackBtnComp.setOnClickListener(this);
+        Engine.getInstance().getUIManager().addComponent(signUpBoxComp);
+        Engine.getInstance().getUIManager().addComponent(registerBtnComp);
+        Engine.getInstance().getUIManager().addComponent(goBackBtnComp);
+
+        id = new UIEditBox();
+        id.x = 270;
+        id.y = 310;
+        id.yy = 30;
+        id.emptyText = "ID";
+        Engine.getInstance().getUIManager().addComponent(id);
+
+        pw = new UIEditBox();
+        pw.x = 270;
+        pw.y = 310 + 45;
+        pw.yy = 30;
+        pw.pw = true;
+        pw.emptyText = "Password";
+        Engine.getInstance().getUIManager().addComponent(pw);
+
+        name = new UIEditBox();
+        name.x = 270;
+        name.y = 310 + 45 + 45;
+        name.yy = 30;
+        name.emptyText = "Name";
+        Engine.getInstance().getUIManager().addComponent(name);
+
+    }
+
+    @Override
+    public void init() {
+        this.bg = Engine.getInstance().loadImage("images/intro.png");
+        this.bg.setWidth(Engine.getInstance().getWidth());
+        this.bg.setHeight(Engine.getInstance().getHeight());
+
+        Engine.getInstance().getUIManager().clearComponentList();
+
+        this.initLoginBox();
     }
 
     @Override
@@ -68,8 +96,19 @@ public static class LoginScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        Engine.getInstance().showNotify("로그인 시도중 입니다...", -1);
-        Engine.getInstance().getNetwork().write(new CS_Login(id.getText(), pw.getText()));
+        if(comp instanceof LoginBtnComponent) {
+            Engine.getInstance().showNotify("로그인 시도중 입니다...", -1);
+            Engine.getInstance().getNetwork().write(new CS_Login(id.getText(), pw.getText()));
+        }
+        if(comp instanceof SignUpBtnComponent) {
+            initRegisterBox();
+        }
+        if(comp instanceof RegisterBtnComponent) {
+            initLoginBox();
+        }
+        if(comp instanceof GoBackBtnComponent) {
+            initLoginBox();
+        }
     }
 
     private class LoginBoxComponent extends UIComponent {
@@ -123,7 +162,7 @@ public static class LoginScene implements Scene, UIOnClickListener {
     private class SignUpBoxComponent extends UIComponent {
         public void loop() {
             Engine.getInstance().getEngineAdapter().drawStroke(false);
-            Engine.getInstance().getEngineAdapter().drawBox(220, 255, 405, 246, 30, 200, 200, 200, 100);   //loginBox
+            Engine.getInstance().getEngineAdapter().drawBox(200, 270, 405, 246, 30, 200, 200, 200, 100);   //loginBox
 
             Engine.getInstance().getEngineAdapter().drawStroke(66, 139, 202, 100, 2);
             Engine.getInstance().getEngineAdapter().drawBox(270, 305, 260, 135, 10, 255, 255, 255, 100);    //SignUpBtn
