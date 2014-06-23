@@ -180,6 +180,10 @@ public static class MapScene implements Scene, UIOnClickListener {
             this.model.setMapInfo(((SC_MapInfo)packet));
         }
 
+        if(packet instanceof SC_ObjectInfo) {
+            this.model.setObjectInfo((SC_ObjectInfo)packet);
+        }
+
         if(packet instanceof MoveObject) {
             this.model.moveObject((MoveObject)packet);
         }

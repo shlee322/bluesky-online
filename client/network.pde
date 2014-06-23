@@ -272,7 +272,7 @@ public static class SC_Notify implements Packet {
 }
 
 @Message
-public class SC_ObjectInfo implements Packet {
+public static class SC_ObjectInfo implements Packet {
     public int map_id;
     public long object_id;
     public String name;

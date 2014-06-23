@@ -14,6 +14,8 @@ public class SC_ObjectInfo implements Packet {
 
     public SC_ObjectInfo() {}
     public SC_ObjectInfo(int map_id, long object_id, String name) {
+        this.map_id = map_id;
+        this.object_id = object_id;
         this.name = name;
     }
 }

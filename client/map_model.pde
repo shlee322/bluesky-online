@@ -28,6 +28,16 @@ public static class MapModel implements Model {
     	obj.move(move.src_map, move.src_x, move.src_y, move.dest_map, move.dest_x, move.dest_y);
     }
 
+    public void setObjectInfo(SC_ObjectInfo info) {
+    	if(!cacheObject.containsKey(info.object_id)) {
+    		return;
+    	}
+    	print("test");
+
+    	GameObject obj = cacheObject.get(info.object_id);
+    	obj.setName(info.name);
+    }
+
     public void chat(Chat chat) {
     	if(!cacheObject.containsKey(chat.object_id)) {
     		return;
@@ -98,6 +108,7 @@ static class GameObject implements Entity {
 		this.dest_x = x;
 		this.dest_y = y;
 
+		print(uuid);
 		Engine.getInstance().getNetwork().write(new CS_GetObjectInfo(mapId, uuid));
 	}
 
@@ -124,7 +135,6 @@ static class GameObject implements Entity {
 		this.y = src_y;
 		this.dest_x = dest_x;
 		this.dest_y = dest_y;
-		print(dest_x+"\n");
 	}
 
 	public void setEngineTag(Object o) {
@@ -137,6 +147,10 @@ static class GameObject implements Entity {
 
     public String getName() {
     	return this.name;
+    }
+
+    public void setName(String name) {
+    	this.name = name;
     }
 
     public String getHeadMessage() {
