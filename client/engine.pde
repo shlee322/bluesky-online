@@ -124,4 +124,8 @@ public static class Engine implements EngineAdapter {
 	public void receivedPacket(Packet packet) {
 		this.packetQueue.add(packet);
 	}
+
+	public void drawGameObject(int x, int y, GameObject obj) {
+		getEngineAdapter().drawGameObject(x, y, obj);
+	}
 }

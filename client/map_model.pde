@@ -50,11 +50,12 @@ static class Map {
 static class Tile {
 }
 
-static class GameObject {
+static class GameObject implements Entity {
 	private long uuid;
 	private int mapId;
 	private int x;
 	private int y;
+	private Object engineTag;
 
 	public GameObject(long uuid, int mapId, int x, int y) {
 		this.uuid = uuid;
@@ -74,4 +75,21 @@ static class GameObject {
 	public int getY() {
 		return this.y;
 	}
+
+	public void setEngineTag(Object o) {
+		this.engineTag = o;
+	}
+
+    public Object getEngineTag() {
+    	return this.engineTag;
+    }
+
+    public String getName() {
+    	return "테스터";
+    }
+
+    public String getHeadMessage() {
+    	return "테스터 : 테스트메시지입니다.";
+
+    }
 }

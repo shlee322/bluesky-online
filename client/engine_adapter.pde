@@ -10,6 +10,7 @@ interface EngineAdapter {
 	void drawTile(int x, int y, String name);
 	void drawNotify(String text);
 	EImage loadImage(String path);
+	void drawGameObject(int x, int y, GameObject obj);
 }
 
 interface EImage {

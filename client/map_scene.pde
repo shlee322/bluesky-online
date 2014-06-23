@@ -26,9 +26,18 @@ public static class MapScene implements Scene {
         //this.model.getMyObject().getX()
         //this.model.getMyObject().getY()
 
-        Engine.getInstance().drawTile(0, 0, "iron_ore"); //픽셀 좌표 x, y, 이미지 명
+        int tileSize = Engine.getInstance().getWidth() / 24;
+        for(int y=0; y<20; y++) {
+            for(int x=0; x<20; x++) {
+                Engine.getInstance().drawTile(x*tileSize, y*tileSize, "iron_ore"); //픽셀 좌표 x, y, 이미지 명
+            }
+        }
+        
         //가시성 있는 Tile 뿌림
         //Engine.getInstance().viewTile();
+
+        //캐릭터 뿌림 (테스트로 자기만)
+        Engine.getInstance().drawGameObject(200, 200, this.model.getMyObject());
     }
 
     @Override

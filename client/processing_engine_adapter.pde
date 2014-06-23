@@ -1,12 +1,13 @@
 import ddf.minim.*;
 
 class ProcessingEngineAdapter implements EngineAdapter {
-	private PFont[] fonts = new PFont[4];
-	private int[] fontSize = new int[]{18, 24, 48, 64};
+	private PFont[] fonts = new PFont[6];
+	private int[] fontSize = new int[]{8, 12, 18, 24, 48, 64};
 	private PApplet processing;
 	private Minim minim;
 	private AudioPlayer bgmPlayer;
 	private HashMap<String, EImage> tileImages = new HashMap<String, EImage>();
+	private HashMap<String, EImage> characterImages = new HashMap<String, EImage>();
 
 
 	public ProcessingEngineAdapter(PApplet processing) {
@@ -15,7 +16,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.getProcessing().frameRate(60);
 		this.getProcessing().size(800, 600, P3D);
 
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<6; i++) {
 			this.fonts[i] = this.getProcessing().createFont("NanumGothic", this.fontSize[i]);
 		}
 
@@ -103,6 +104,37 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 	public EImage loadImage(String path) {
 		return new ProcessingEImage(this.getProcessing().loadImage(path));
+	}
+
+	public void drawGameObject(int x, int y, GameObject obj) {
+		if(obj.getEngineTag() == null) {
+			if(!this.characterImages.containsKey("1")) {
+				EImage img = loadImage("data/characters/" + "1" + ".png");
+				characterImages.put("1", img);
+			}
+
+			EImage img = characterImages.get("1");
+
+			int o_x = x + (img.getWidth() / 2);
+			int o_y = y - img.getHeight();
+
+			this.getProcessing().translate(o_x, o_y);
+			img.draw();
+
+			this.getProcessing().rectMode(CENTER);
+			this.getProcessing().fill(0, 0, 0, 160);
+			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 6, 80, 18, 7);
+			this.getProcessing().fill(255);
+			drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 6, 12, true);
+			if(obj.getHeadMessage() != null) {
+				this.getProcessing().fill(0, 0, 0, 160);
+				this.getProcessing().rect((img.getWidth() / 2), -30, 160, 18, 7);
+				this.getProcessing().fill(255);
+				drawText(obj.getHeadMessage(), (img.getWidth() / 2), -30, 12, true);
+			}
+			this.getProcessing().rectMode(CORNER);
+			this.getProcessing().translate(-o_x, -o_x);
+		}
 	}
 }
 
