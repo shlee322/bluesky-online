@@ -147,4 +147,23 @@ public static class Engine implements EngineAdapter {
 	public void drawGameObject(int x, int y, GameObject obj) {
 		getEngineAdapter().drawGameObject(x, y, obj);
 	}
+
+	public void inputEvent(String committedText, String composedText) {
+		try {
+			if(getUIManager().getFocusComponent() == null) {
+				//(((ProcessingEngineAdapter)getEngineAdapter()).getProcessing()).getComponents()[0].enableInputMethods(false);
+			} else {
+				print("2");
+				getUIManager().getFocusComponent().inputEvent(committedText, composedText);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	public void keyPressed(char key, int keyCode) {
+		if(getUIManager().getFocusComponent() != null) {
+			getUIManager().getFocusComponent().keyPressed(key, keyCode);
+		}
+	}
 }

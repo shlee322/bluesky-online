@@ -20,7 +20,7 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
 
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws java.lang.Exception {
         logger.info("클라이언트 접속 - " + e.getChannel().getRemoteAddress());
-        ctx.getChannel().write(new SC_Notify("서버 공지사항 테스트", 60*3));
+        //ctx.getChannel().write(new SC_Notify("서버 공지사항 테스트", 60*3));
     }
 
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws java.lang.Exception {
