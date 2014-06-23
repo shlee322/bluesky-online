@@ -33,10 +33,11 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         UIComponent menuBtnComponent = new MenuBtnComponent();
         //loginBtnComp.setOnClickListener(this);
+        menuBtnComponent.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
         joyStick = new JoyStick();
     }
-
+    
     public byte[] getTiles(Map map) {
         if(map == null) return nullTiles;
         return map.getTiles();
@@ -82,7 +83,7 @@ public static class MapScene implements Scene, UIOnClickListener {
             }
         }
         test = 0;  
-    mMap = getTiles(this.model.getMap(center.getAroundMapId(0))); 
+        mMap = getTiles(this.model.getMap(center.getAroundMapId(0))); 
         for(int x=20;x<40;x++){
             for(int y=0;y<20;y++){
                 MapAroundTile[x][y]=mMap[test];
@@ -97,25 +98,29 @@ public static class MapScene implements Scene, UIOnClickListener {
                 test++;
             }
         }
-        test = 0;  mMap = getTiles(this.model.getMap(center.getAroundMapId(4))); for(int x=20;x<40;x++){
+        test = 0;  
+        mMap = getTiles(this.model.getMap(center.getAroundMapId(4))); for(int x=20;x<40;x++){
             for(int y=40;y<60;y++){
                 MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
-        test = 0;  mMap = getTiles(this.model.getMap(center.getAroundMapId(1))); for(int x=40;x<60;x++){
+        test = 0;  
+        mMap = getTiles(this.model.getMap(center.getAroundMapId(1))); for(int x=40;x<60;x++){
             for(int y=0;y<20;y++){
                 MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
-        test = 0; mMap = getTiles(this.model.getMap(center.getAroundMapId(2)));  for(int x=40;x<60;x++){
+        test = 0; 
+        mMap = getTiles(this.model.getMap(center.getAroundMapId(2)));  for(int x=40;x<60;x++){
             for(int y=20;y<40;y++){
                 MapAroundTile[x][y]=mMap[test];
                 test++;
             }
         }
-        test = 0;  mMap = getTiles(this.model.getMap(center.getAroundMapId(3))); for(int x=40;x<60;x++){
+        test = 0;  
+        mMap = getTiles(this.model.getMap(center.getAroundMapId(3))); for(int x=40;x<60;x++){
             for(int y=40;y<60;y++){
                 MapAroundTile[x][y]=mMap[test];
                 test++;
@@ -169,9 +174,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        //테스트 로그인
-        Engine.getInstance().showNotify("로그인 시도중 입니다...", -1);
-        Engine.getInstance().getNetwork().write(new CS_Login("test", "test"));
+        System.out.println("hi");
     }
 
     private class MenuBtnComponent extends UIComponent {
