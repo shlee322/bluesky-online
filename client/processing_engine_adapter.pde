@@ -7,7 +7,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private Minim minim;
 	private AudioPlayer bgmPlayer;
 	private HashMap<String, EImage> tileImages = new HashMap<String, EImage>();
-	private HashMap<String, EImage> characterImages = new HashMap<String, EImage>();
+	private HashMap<String, ProcessingGameObjectImage> characterImages = new HashMap<String, ProcessingGameObjectImage>();
 
 
 	public ProcessingEngineAdapter(PApplet processing) {
@@ -108,33 +108,76 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 	public void drawGameObject(int x, int y, GameObject obj) {
 		if(obj.getEngineTag() == null) {
-			if(!this.characterImages.containsKey("1")) {
-				EImage img = loadImage("data/characters/" + "1" + ".png");
-				characterImages.put("1", img);
-			}
-
-			EImage img = characterImages.get("1");
-
-			int o_x = x + (img.getWidth() / 2);
-			int o_y = y - img.getHeight();
-
-			this.getProcessing().translate(o_x, o_y);
-			img.draw();
-
-			this.getProcessing().rectMode(CENTER);
-			this.getProcessing().fill(0, 0, 0, 160);
-			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 6, 80, 18, 7);
-			this.getProcessing().fill(255);
-			drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 6, 12, true);
-			if(obj.getHeadMessage() != null) {
-				this.getProcessing().fill(0, 0, 0, 160);
-				this.getProcessing().rect((img.getWidth() / 2), -30, 160, 18, 7);
-				this.getProcessing().fill(255);
-				drawText(obj.getHeadMessage(), (img.getWidth() / 2), -30, 12, true);
-			}
-			this.getProcessing().rectMode(CORNER);
-			this.getProcessing().translate(-o_x, -o_x);
 		}
+
+		if(!this.characterImages.containsKey("1")) {
+			ProcessingGameObjectImage img = new ProcessingGameObjectImage(this.getProcessing().loadImage("data/characters/" + "1" + ".png"));
+			characterImages.put("1", img);
+		}
+
+		ProcessingGameObjectImage img = characterImages.get("1");
+
+		int o_x = x + (img.getWidth() / 2);
+		int o_y = y - img.getHeight();
+
+		this.getProcessing().translate(o_x, o_y);
+		img.draw();
+
+		this.getProcessing().rectMode(CENTER);
+		this.getProcessing().fill(0, 0, 0, 160);
+		this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, 80, 18, 7);
+		this.getProcessing().fill(255);
+		drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 10, 12, true);
+		if(obj.getHeadMessage() != null) {
+			this.getProcessing().fill(0, 0, 0, 160);
+			this.getProcessing().rect((img.getWidth() / 2), -20, 160, 18, 7);
+			this.getProcessing().fill(255);
+			drawText(obj.getHeadMessage(), (img.getWidth() / 2), -20, 12, true);
+		}
+		this.getProcessing().rectMode(CORNER);
+		this.getProcessing().translate(-o_x, -o_x);
+	}
+}
+
+class ProcessingGameObjectImage extends ProcessingEImage {
+	protected PShape[] shapeData;
+	private int direction=0;
+
+	public ProcessingGameObjectImage(PImage img) {
+		super(img);
+		this.setWidth(this.img.width / 4);
+		this.setHeight(this.img.height / 4);
+
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	protected void updateShape() {
+		if(this.shapeData == null) {
+			this.shapeData = new PShape[8];
+		}
+		int w = this.img.width / 4;
+		int h = this.img.height / 4;
+		
+		for(int i=0; i<8; i++) {
+			int x = (i+4)%2 * w;
+			int y = (i+4)/2 * h;
+
+			this.shapeData[i] = ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().createShape();
+			this.shapeData[i].beginShape();
+			this.shapeData[i].texture(this.img);
+			this.shapeData[i].vertex(0, 0, 0, x, y);
+			this.shapeData[i].vertex(this.getWidth(), 0, 0, x + w, y);
+			this.shapeData[i].vertex(this.getWidth(), this.getHeight(), 0, x + w, y + h);
+			this.shapeData[i].vertex(0,  this.getHeight(), 0, x, y + h);
+			this.shapeData[i].endShape();
+		}
+	}
+
+	public void draw() {
+		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().shape(this.shapeData[this.direction]);
 	}
 }
 
@@ -151,7 +194,7 @@ class ProcessingEImage implements EImage {
 		this.updateShape();
 	}
 
-	private void updateShape() {
+	protected void updateShape() {
 		this.shape = ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().createShape();
 		this.shape.beginShape();
 		this.shape.texture(this.img);
