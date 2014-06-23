@@ -216,6 +216,8 @@ class ProcessingEImage implements EImage {
 	private int width;
 	private int height;
 	private float rad;
+	private int x;
+	private int y;
 
 	public ProcessingEImage(PImage img) {
 		this.img = img;
@@ -233,6 +235,22 @@ class ProcessingEImage implements EImage {
 		this.shape.vertex(this.width, this.height, 0, this.img.width, this.img.height);
 		this.shape.vertex(0,  this.height, 0, 0, this.img.height);
 		this.shape.endShape();
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 	public int getWidth() {
@@ -255,8 +273,9 @@ class ProcessingEImage implements EImage {
 
 	public void draw() {
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().rotate(this.getRotate());
+		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().translate(this.getX(), this.getY());
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().shape(this.shape);
-		//((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().image(this.img, 0, 0);
+		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().translate(-this.getX(), -this.getY());
 	}
 
 	public void setRotate(float rad) {
