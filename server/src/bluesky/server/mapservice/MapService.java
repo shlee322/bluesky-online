@@ -2,6 +2,7 @@ package bluesky.server.mapservice;
 
 import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.service.GetMapInfo;
+import bluesky.server.mapservice.generator.IMapTilesGenerator;
 import bluesky.server.service.Service;
 import bluesky.server.service.ServiceImpl;
 import bluesky.server.usersevice.MapProxy;
@@ -12,8 +13,10 @@ import java.util.HashMap;
 
 public class MapService extends Service {
     private HashMap<Integer, Map>[] maps;
+    private IMapTilesGenerator generator;
 
-    public MapService(short id, String address) {
+    public MapService(short id, String address, IMapTilesGenerator generator) {
+        this.generator = generator;
         this.setServiceInfo(id, address, 8000 + id);
     }
 
@@ -61,6 +64,33 @@ public class MapService extends Service {
                 }
             });
         }
+        if(topic.startsWith("/event/create_map/")) {
+            byte[] data = message.getPayload();
+
+            final int mapId = Integer.valueOf(topic.substring(18));
+            int targetMapId = 0;
+            int targetMapPosition = 0;
+            targetMapId |= data[0] << 24;
+            targetMapId |= data[1] << 16;
+            targetMapId |= data[2] << 8;
+            targetMapId |= data[3];
+            targetMapPosition |= data[4];
+
+            final int finalTargetMapId = targetMapId;
+
+            final int finalTargetMapPosition = targetMapPosition;
+            this.addWork(mapId, new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<Integer, Map> localMaps = maps[getWorkerIndex(mapId)];
+                    if(!localMaps.containsKey(mapId)) {
+                        return;
+                    }
+                    Map map = localMaps.get(mapId);
+                    map.linkAroundMap(finalTargetMapId, finalTargetMapPosition);
+                }
+            });
+        }
     }
 
     private void linkMap(int map_id) {
@@ -73,6 +103,7 @@ public class MapService extends Service {
                     });
             this.maps[getWorkerIndex(map_id)].put(map_id, new Map(this, map_id));
             this.subscribeMQTT("/maps/" + map_id + "/#");
+            this.subscribeMQTT("/event/create_map/" + map_id);
             this.publishMQTT("/event/link_map", new byte[]{
                     (byte)((map_id & 0xFF000000) >> 24),
                     (byte)((map_id & 0xFF0000) >> 16),
@@ -101,5 +132,9 @@ public class MapService extends Service {
                 }
             });
         }
+    }
+
+    public IMapTilesGenerator getMapGenerator() {
+        return this.generator;
     }
 }
