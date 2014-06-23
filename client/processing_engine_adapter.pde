@@ -146,6 +146,12 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.getProcessing().translate(o_x, o_y);
 		img.draw();
 
+		//weapon
+		
+		if(obj.getWeapon() != null){
+			obj.getWeapon().draw();
+		}
+
 		this.getProcessing().rectMode(CENTER);
 		this.getProcessing().fill(0, 0, 0, 160);
 		this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, 80, 18, 7);
@@ -209,6 +215,7 @@ class ProcessingEImage implements EImage {
 	protected PShape shape;
 	private int width;
 	private int height;
+	private float rad;
 
 	public ProcessingEImage(PImage img) {
 		this.img = img;
@@ -247,7 +254,16 @@ class ProcessingEImage implements EImage {
 	}
 
 	public void draw() {
+		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().rotate(this.getRotate());
 		((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().shape(this.shape);
 		//((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().image(this.img, 0, 0);
+	}
+
+	public void setRotate(float rad) {
+		this.rad = rad;
+	}
+
+	public float getRotate() {
+		return this.rad;
 	}
 }

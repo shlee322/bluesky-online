@@ -56,6 +56,7 @@ static class GameObject implements Entity {
 	private int x;
 	private int y;
 	private Object engineTag;
+	private EImage weapon;
 
 	public GameObject(long uuid, int mapId, int x, int y) {
 		this.uuid = uuid;
@@ -90,6 +91,29 @@ static class GameObject implements Entity {
 
     public String getHeadMessage() {
     	return "테스터 : 테스트메시지입니다.";
+    }
 
+    public void setWeapon(EImage weapon) {
+    	this.weapon = weapon;
+    }
+
+    public EImage getWeapon() {
+    	return this.weapon;
+    }
+
+    public void updateWeapon() {
+    	if(this.weapon.getRotate() <= PI/2) {
+    		for(int i = 0; i<=30; i++) {
+    			this.weapon.setRotate(i*PI/60);
+    			((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().rotate(this.weapon.getRotate());
+    		}
+    	}
+
+    	if(this.weapon.getRotate() == PI/2) {
+    		for(int i = 30; i>=0; i--) {
+    			this.weapon.setRotate(i*PI/60);
+    			((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().rotate(this.weapon.getRotate());
+   			}
+    	}
     }
 }

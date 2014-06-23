@@ -1,4 +1,4 @@
-public static class MapScene implements Scene {
+public static class MapScene implements Scene, UIOnClickListener {
     private MapModel model;
 
     public MapScene(SC_MoveMap moveMap) {
@@ -16,6 +16,9 @@ public static class MapScene implements Scene {
     @Override
     public void init() {
 
+        UIComponent menuBtnComponent = new MenuBtnComponent();
+        //loginBtnComp.setOnClickListener(this);
+        Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
     }
 
     @Override
@@ -37,6 +40,7 @@ public static class MapScene implements Scene {
         //Engine.getInstance().viewTile();
 
         //캐릭터 뿌림 (테스트로 자기만)
+        this.model.getMyObject().updateWeapon();
         Engine.getInstance().drawGameObject(200, 200, this.model.getMyObject());
     }
 
@@ -54,4 +58,29 @@ public static class MapScene implements Scene {
             this.model.moveObject((MoveObject)packet);
         }
     }
+
+    @Override
+    public void onClick(UIComponent comp, int x, int y) {
+        //테스트 로그인
+        Engine.getInstance().showNotify("로그인 시도중 입니다...", -1);
+        Engine.getInstance().getNetwork().write(new CS_Login("test", "test"));
+    }
+
+    private class MenuBtnComponent extends UIComponent {
+        public void loop() {
+            Engine.getInstance().getEngineAdapter().drawStroke(0, 0, 0, 255, 2);
+            Engine.getInstance().getEngineAdapter().drawBox(700, 20, 16, 50, PI/2, 66, 139, 202, 255);
+            Engine.getInstance().getEngineAdapter().drawBox(720, 20, 16, 50, PI/2, 66, 139, 202, 255);
+            Engine.getInstance().getEngineAdapter().drawBox(740, 20, 16, 50, PI/2, 66, 139, 202, 255);
+            Engine.getInstance().getEngineAdapter().drawBox(760, 20, 16, 50, PI/2, 66, 139, 202, 255);
+        }
+        public boolean clickScreen(int x, int y) {
+            if(x>=700 && x<780 && y>=20 && y<70) {
+                this.callClick(x, y);
+                return true;
+            }
+            return false;
+        }
+    }
 }
+

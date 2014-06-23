@@ -24,4 +24,6 @@ interface EImage {
 	int getHeight();
 	void setWidth(int width);
 	void setHeight(int height);
+	void setRotate(float rad);
+	float getRotate();
 }
