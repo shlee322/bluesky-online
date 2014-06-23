@@ -153,6 +153,34 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 		ProcessingGameObjectImage img = characterImages.get("1");
 
+		if(obj.getX() != obj.dest_x/* || obj.getY() != obj.dest_y*/) {
+			obj.moveTick += 1;
+			if(obj.moveTick >= 120) {
+				obj.moveTick = 0;
+			}
+
+			int test = obj.dest_x - obj.getX();
+			if(obj.moveTick%30 == 0) {
+				if(test > 0) {
+					obj.dir = 1;
+				} else {
+					obj.dir = 0;
+				}
+			}
+			if(test > 0) {
+				obj.dir = 1;
+				obj.x += 1;
+			} else {
+				obj.dir = 0;
+				obj.x -= 1;
+			}
+		} else {
+			obj.moveTick = 0;
+		}
+
+		img.setDirection(4*obj.dir + (obj.moveTick / 30));
+
+
 		int o_x = x + (img.getWidth() / 2);
 		int o_y = y - img.getHeight();
 
@@ -181,7 +209,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 			this.getProcessing().fill(255);
 			drawText(obj.getHeadMessage(), (img.getWidth() / 2), -20, 12, true);
 		}
-		
+
 		this.getProcessing().rectMode(CORNER);
 		this.getProcessing().translate(-o_x, -o_y);
 	}
@@ -210,8 +238,8 @@ class ProcessingGameObjectImage extends ProcessingEImage {
 		int h = this.img.height / 4;
 		
 		for(int i=0; i<8; i++) {
-			int x = (i+4)%2 * w;
-			int y = (i+4)/2 * h;
+			int x = (i+4)%4 * w;
+			int y = (i+4)/4 * h;
 
 			this.shapeData[i] = ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().createShape();
 			this.shapeData[i].beginShape();

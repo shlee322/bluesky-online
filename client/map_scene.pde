@@ -35,7 +35,6 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void init() {
-
         UIComponent menuBtnComponent = new MenuBtnComponent();
          UIComponent key = new KeyPressed();
          UIComponent ib = new InventoryBtn();
@@ -175,6 +174,7 @@ public static class MapScene implements Scene, UIOnClickListener {
         this.model.getMyObject().setY(10);
 
 
+       Engine.getInstance().drawGameObject(400, 300, this.model.getMyObject());
        joyStick.draw();
     }
 
@@ -232,8 +232,22 @@ public static class MapScene implements Scene, UIOnClickListener {
     }
 
     private class KeyPressed extends UIComponent{
-        public void keyPressed(char key, int keyCode) {
-            if(keyCode==RIGHT){System.out.println("hihi");}
+        private MapModel model;
+        public KeyPressed(MapModel model) {
+            this.model = model;
+        }
+
+        public boolean keyPressedHook(char key, int keyCode) {
+            if(this.model.getMyObject() == null) return false;
+            print(keyCode + "\n");
+            if(keyCode==RIGHT || keyCode == 39){
+                this.model.getMyObject().move(
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    this.model.getMyObject().getMapId(), this.model.getMyObject().getX()+10, this.model.getMyObject().getY());
+                return true;
+            }
+
+            return false;
         }
 
     }
@@ -285,7 +299,6 @@ public static class MapScene implements Scene, UIOnClickListener {
     }
 
     private class JoyStick {
-    
         void draw() {
             ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().fill(255, 50);
             ((ProcessingEngineAdapter)Engine.getInstance().getEngineAdapter()).getProcessing().strokeWeight(10);
