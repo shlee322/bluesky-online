@@ -13,7 +13,7 @@ public class Item {
 
     Item() {
         for (int x = 0; x < 255; x++) {
-            GraphicCode[x] = x;
+            GraphicCode[x] = 0; // 아이템 수
             for (int y = 0; y < 8; y++) {
                 ItemTag[x][y] = true; //일단 모든 태그 다 true처리 해놓음
             }
@@ -27,6 +27,7 @@ public class Item {
     public boolean ContainTag(int GraphicCode, int i) {
         return ItemTag[GraphicCode][i]; //GraphicCode의 i 태그가 포함되있는지 확인한다.
     }
+
     /**
      * 각각의 아이템은 고유 식별 넘버, 아이템 코드, 아이템 태그가 있다.
      * <p/>
@@ -41,11 +42,18 @@ public class Item {
      * <p/>
      * <p/>
      * '3' 태그를 가지고 있으면 단일 가공 가능 ( 나무 -> 막대기 4개, 철 -> 철 막대 4개)
-     *
-     *
+     * <p/>
+     * <p/>
      * 부수면 그 블럭의 GraphicCode 값을 리턴해서 그걸로 템템관
      */
 
-    //생성자
+    public void equip(int gcode) {
+        if (GraphicCode[gcode] > 0) {
+            //Equipment 생성
+        }
+    }
 
+    public Install(int gcode) {
+        //캐릭터좌표기준으로 아이템을 설치한다
+    }
 }

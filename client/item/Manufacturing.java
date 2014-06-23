@@ -29,40 +29,91 @@ public class Manufacturing {
         if (canMixing) {
             FindItemRecipe findItemRecipe = new FindItemRecipe();
             String str = findItemRecipe.Find(tableChk);
-            boolean canMix = false;
             if (str.equals("axe")) {
-                //태그 검사
-            }
-            if (canMix) {
-                for (int x = 0; x < 9; x++) {
-                    if (m.getItemMakeOn(x) != 0) { //x가 비지 않을 경우
-                        Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(1), 4) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(4), 4) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(6), 2) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(7), 2)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
+                    } //만들기
+
+                }
+
+            } else if (str.equals("nife")) {
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(1), 4) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(4), 2) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(7), 2)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
                     }
                 }
-                //  Inventory.getInstance().getItem(도끼);
-                //  재료 따라서 구분
-            } else if (str.equals("nife")) {
-
-                if (canMix) {
-                }
             } else if (str.equals("pickax")) {
-
-                if (canMix) {
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(1), 4) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(4), 4) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(6), 2) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(7), 2) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(8), 2)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
+                    }
                 }
-            } else if (str.equals("helmet")) {
 
-                if (canMix) {
+            } else if (str.equals("helmet")) {
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(3), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(5), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(6), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(7), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(8), 1)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
+                    }
                 }
             } else if (str.equals("armor")) {
-
-                if (canMix) {
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(0), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(1), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(2), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(3), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(4), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(5), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(6), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(8), 1)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
+                    }
                 }
-            } else if (str.equals("gloves")) {
 
-                if (canMix) {
+            } else if (str.equals("gloves")) {
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(3), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(5), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(6), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(8), 1)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
+                    }
                 }
             } else if (str.equals("shoes")) {
-                if (canMix) {
+                if (Item.getInstance().ContainTag(m.getItemMakeOn(0), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(2), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(3), 1) &&
+                        Item.getInstance().ContainTag(m.getItemMakeOn(5), 1)) {
+                    for (int x = 0; x < 9; x++) {
+                        if (m.getItemMakeOn(x) != 0) {
+                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                        }
+                    }
                 }
             } else {
             }
