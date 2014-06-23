@@ -19,6 +19,10 @@ public static class LoginScene implements Scene, UIOnClickListener {
     public void runSceneLoop() {
         this.bg.draw();
         Engine.getInstance().drawText("BlueSky Online", Engine.getInstance().getWidth() / 2, 150, 64, true);
+        drawLoginBox();
+        Engine.getInstance().fill(255, 255, 255, 255);
+        
+
     }
 
     @Override
@@ -39,7 +43,7 @@ public static class LoginScene implements Scene, UIOnClickListener {
 
     private class TestComponent extends UIComponent {
         public void loop() {
-            Engine.getInstance().drawText("테스트 로그인", 300, 500, 18, false);
+            //Engine.getInstance().drawText("테스트 로그인", 300, 500, 18, false);
         }
 
         public boolean clickScreen(int x, int y) {
@@ -49,5 +53,27 @@ public static class LoginScene implements Scene, UIOnClickListener {
             }
             return false;
         }
+    }
+
+    static void drawLoginBox(){
+        Engine.getInstance().getEngineAdapter().drawStroke(false);
+        Engine.getInstance().getEngineAdapter().drawBox(220, 300, 360, 246, 30, 200, 200, 200, 100);   //loginBox
+
+        Engine.getInstance().getEngineAdapter().drawStroke(66, 139, 202, 100, 2);
+        Engine.getInstance().getEngineAdapter().drawBox(270, 350, 260, 90, 10, 255, 255, 255, 100);    //login
+
+        Engine.getInstance().getEngineAdapter().drawStroke(66, 139, 202, 255, 1);
+        Engine.getInstance().getEngineAdapter().line(270, 395, 530, 395);                           //login line
+
+        Engine.getInstance().getEngineAdapter().drawStroke(255, 255, 255, 100, 1);
+        Engine.getInstance().getEngineAdapter().drawBox(270, 460, 120, 46, 10, 66, 139, 202, 255);    //signIn
+
+        Engine.getInstance().getEngineAdapter().fill(255, 255, 255, 255);
+        Engine.getInstance().getEngineAdapter().drawText("Sign In", 300, 490, 23, false);
+        Engine.getInstance().getEngineAdapter().drawBox(410, 460, 120, 46, 10, 66, 139, 202, 255);    //sighUp 
+        Engine.getInstance().getEngineAdapter().fill(255, 255, 255, 255);
+        Engine.getInstance().getEngineAdapter().drawText("Sign Up", 432, 490, 23, false);
+
+
     }
 }

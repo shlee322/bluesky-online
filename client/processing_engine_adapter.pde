@@ -86,6 +86,29 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.drawText(text, getWidth() / 2, getHeight() / 2, 18, true);
 	}
 
+	
+	public void fill(float r, float g, float b, float alpha) {
+		this.getProcessing().fill(r, g, b,alpha);
+	}
+
+	public void drawBox(float rectX, float rectY, float rectWid, float rectHei, float rectRad, float r, float g, float b, float alpha) {
+		this.getProcessing().fill(r, g, b,alpha);
+		this.getProcessing().rect(rectX, rectY, rectWid, rectHei, rectRad);
+	}
+
+	public void drawStroke(boolean isStroke) {
+		this.getProcessing().noStroke();
+	}
+
+	public void drawStroke(float strokeR, float strokeG, float strokeB, float strokeAlpha, float strokeWei) {
+		this.getProcessing().stroke(strokeR, strokeG, strokeB, strokeAlpha);
+		this.getProcessing().strokeWeight(strokeWei);
+	}
+
+	public void line(float x1, float y1, float x2, float y2) {
+		this.getProcessing().line(x1, y1, x2, y2);
+	}
+
 	public EImage loadImage(String path) {
 		return new ProcessingEImage(this.getProcessing().loadImage(path));
 	}
