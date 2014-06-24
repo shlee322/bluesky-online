@@ -155,18 +155,12 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 		if(obj.getX() != obj.dest_x/* || obj.getY() != obj.dest_y*/) {
 			obj.moveTick += 1;
-			if(obj.moveTick >= 120) {
+			if(obj.moveTick >= 40) {
 				obj.moveTick = 0;
 			}
 
 			int test = obj.dest_x - obj.getX();
-			if(obj.moveTick%30 == 0) {
-				if(test > 0) {
-					obj.dir = 1;
-				} else {
-					obj.dir = 0;
-				}
-			}
+
 			if(test > 0) {
 				obj.dir = 1;
 				obj.x += 1;
@@ -174,11 +168,15 @@ class ProcessingEngineAdapter implements EngineAdapter {
 				obj.dir = 0;
 				obj.x -= 1;
 			}
+
 		} else {
 			obj.moveTick = 0;
 		}
 
-		img.setDirection(4*obj.dir + (obj.moveTick / 30));
+		obj.setWidth(img.getWidth() / 4);
+		obj.setHeight(img.getHeight() / 4);
+
+		img.setDirection(4*obj.dir + (obj.moveTick / 10));
 
 
 		int o_x = x + (img.getWidth() / 2);
@@ -223,7 +221,6 @@ class ProcessingGameObjectImage extends ProcessingEImage {
 		super(img);
 		this.setWidth(this.img.width / 4);
 		this.setHeight(this.img.height / 4);
-
 	}
 
 	public void setDirection(int direction) {

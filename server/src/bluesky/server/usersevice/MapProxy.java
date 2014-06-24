@@ -69,6 +69,13 @@ public class MapProxy {
                 (byte)((user.getY() & 0xFF00) >> 8),
                 (byte)((user.getY() & 0xFF))
         });
+
+        for(UserObject u : this.objects) {
+            u.getChannel().write(new MoveObject(user.getUUID(),
+                    user.getMapId(), user.getX(), user.getY(), user.getMapId(), user.getX(), user.getY()));
+        }
+
+
     }
 
     public void exitUser(UserObject user) {

@@ -13,6 +13,8 @@ public static class MapScene implements Scene, UIOnClickListener {
     int RIGHT = 2;
     int JUMP = 3;
     MoveCharacter move = new MoveCharacter();
+    private final int MAP_SIZE = 20;
+    private final int MAP_PX_SIZE = MAP_SIZE*32;
 
     private byte[] nullTiles = new byte[400];
 
@@ -35,8 +37,6 @@ public static class MapScene implements Scene, UIOnClickListener {
     @Override
     public void init() {
         UIComponent menuBtnComponent = new MenuBtnComponent();
-         UIComponent key = new KeyPressed(this.model);
-         UIComponent ib = new InventoryBtn();
         UIComponent key = new KeyPressed(this.model);
         //loginBtnComp.setOnClickListener(this);
         menuBtnComponent.setOnClickListener(this);
@@ -59,121 +59,53 @@ public static class MapScene implements Scene, UIOnClickListener {
     }
     @Override
     public void runSceneLoop() {
-      this.bg.draw();
-      if(this.model.getMyObject() == null) return;
+        this.bg.draw();
+        if(this.model.getMyObject() == null) return;
 
-        int RealX = this.model.getMyObject().getX();
-        int RealY = this.model.getMyObject().getY();
+        this.model.updateMapDisplayPosition();
 
-        int tileSize = Engine.getInstance().getWidth() / 24;
+        Map mainMap = this.model.getMap(this.model.getMyObject().getMapId());
 
-        int[][] MapAroundTile = new int[60][60];
+        if(mainMap != null) {
+          for(int y=0; y<20; y++) {
+            for(int x=0; x<20; x++) {
+                if(mainMap.getTiles()[y*20+x] == 0) continue;
+                Engine.getInstance().drawTile(this.model.getDisplayX(-1) + (x*MapModel.getTileSize()),
+                    this.model.getDisplayY(-1) + (y*MapModel.getTileSize()),
+                    mainMap.getTiles()[y*20+x]);
+            }
+          }
+        }
 
-        Map center = this.model.getMap(this.model.getMyObject().getMapId());
-
-        byte[] mMap = new byte [400];
-
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(7)));
-        int test = 0;
-
-         for(int x=0;x<20;x++){
-            for(int y=0;y<20;y++){
-                MapAroundTile[x][y]=mMap[test];
-                test++;
+        for(int i=0; i<8; i++) {
+            Map map = this.model.getMap(mainMap.aroundMapId[i]);
+            if(map != null) {
+                for(int y=0; y<20; y++) {
+                    for(int x=0; x<20; x++) {
+                        if(map.getTiles()[y*20+x] == 0) continue;
+                        int d_x = this.model.getDisplayX(i) + (x*MapModel.getTileSize());
+                        int d_y = this.model.getDisplayY(i) + (y*MapModel.getTileSize());
+                        if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
+                        Engine.getInstance().drawTile(d_x, d_y, map.getTiles()[y*20+x]);
+                    }
+                }
             }
         }
-        test = 0;
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(6)));
-          for(int x=0;x<20;x++){
-            for(int y=20;y<40;y++){
-                MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0; 
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(5))); 
-        for(int x=0;x<20;x++){
-            for(int y=40;y<60;y++){
-              MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0;  
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(0))); 
-        for(int x=20;x<40;x++){
-            for(int y=0;y<20;y++){
-                MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0; 
-                mMap = center.getTiles(); 
-                for(int x=20;x<40;x++){
-            for(int y=20;y<40;y++){
-             MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0;  
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(4))); for(int x=20;x<40;x++){
-            for(int y=40;y<60;y++){
-               MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0;  
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(1))); for(int x=40;x<60;x++){
-            for(int y=0;y<20;y++){
-               MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0; 
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(2)));  for(int x=40;x<60;x++){
-            for(int y=20;y<40;y++){
-               MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0;  
-        mMap = getTiles(this.model.getMap(center.getAroundMapId(3))); for(int x=40;x<60;x++){
-            for(int y=40;y<60;y++){
-             MapAroundTile[x][y]=mMap[test];
-                test++;
-            }
-        }
-        test = 0;
 
-        int a = (RealX + 100)/20;
-        int b = (RealY + 200)/20;
+        for(Object entry : this.model.getGameObjects()) {
+            GameObject obj = (GameObject)((java.util.Map.Entry)entry).getValue();
+            Map map = this.model.getMap(obj.getMapId());
+            if(!map.isDisplay(this.model.getMyObject())) continue;
 
-        for (int i = 0 ; i<24;i++){
-            b=(RealY + 200)/20;
-            for(int j = 0 ; j<32; j++){
-                 Engine.getInstance().drawTile(i*tileSize, j*tileSize, MapAroundTile[a][b]);
-                 b++;
-            }a++;
+            int d_x = this.model.getDisplayX(map.getDisplayPosition()) + obj.getX() * MapModel.getTileSize() / 4;
+            int d_y = this.model.getDisplayY(map.getDisplayPosition()) + obj.getY() * MapModel.getTileSize() / 4;
+
+            if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
+
+            Engine.getInstance().drawGameObject(d_x, d_y, obj);
         }
-      //픽셀 좌표 x, y, 이미지 명
 
-         //    1. 기준 맵 주변 8 개 맵까지 총 9개 모두 불러온다.
-           //  2. (0,0) ~ (20*3,20*3)까지 좌표화 시킨다
-           //  3. 그중에서 (x(-이동거리)+-400)/20, (y(-이동거리)+-300)/20 을 데려온다
-
-         //   }
-      //  }
-        
-        //가시성 있는 Tile 뿌림
-        //Engine.getInstance().viewTile();
-
-        //캐릭터 뿌림 (테스트로 자기만)
-       // this.model.getMyObject().updateWeapon();
-      if(MapAroundTile[(RealX+500)/20][(RealY+500)/20]==0){
-        this.model.getMyObject().setY(-5);}
-
-
-       Engine.getInstance().drawGameObject(400, 300, this.model.getMyObject());
-       joyStick.draw();
+        joyStick.draw();
     }
 
     @Override
@@ -361,4 +293,3 @@ public static class MapScene implements Scene, UIOnClickListener {
         }
     }
 }
-

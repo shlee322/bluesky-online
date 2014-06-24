@@ -53,32 +53,6 @@ public class UserService extends Service {
         b.setOption("child.tcpNoDelay", true);
         b.setOption("child.keepAlive", true);
         b.bind(new InetSocketAddress(7000 + this.getServiceId()));
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                    }
-
-                    Calendar deadline = Calendar.getInstance();
-                    deadline.set(2014, Calendar.JUNE, 24, 9, 0, 0);
-
-                    final long deadline_s = (deadline.getTime().getTime() - new Date().getTime())/1000;
-
-                    addWork(0, new Runnable() {
-                        @Override
-                        public void run() {
-                            for (UserObject user : users) {
-                                user.getChannel().write(new SC_Notify("창공 데드라인까지 " + deadline_s + "초 남았습니다.", 120));
-                            }
-                        }
-                    });
-                }
-            }
-        }).start();
     }
 
     private MapProxy getMapProxy(int mapId, boolean n) {
