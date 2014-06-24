@@ -6,7 +6,11 @@ void setup() {
 void draw() {
 	background(0);
     noStroke();
-	Engine.getInstance().runGameLoop();
+    try {
+		Engine.getInstance().runGameLoop();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 }
 
 void mousePressed() {

@@ -104,7 +104,7 @@ public class MapProxy {
             waitSendMapInfoUser.add(user);
             return;
         }
-        this.service.sendServiceMessage(this.serviceId, new GetMapInfo(user.getUUID(), getMapId()));
+        this.service.sendServiceMessage(this.serviceId, new GetMapInfo(user.getUUID(), user.getMapId(), getMapId()));
     }
 
     public void arrivedMQTTMessage(String subTopic, byte[] data) {
@@ -145,8 +145,8 @@ public class MapProxy {
         if(requestUser == null) return;
 
         SC_MapInfo mapInfo = new SC_MapInfo();
-        mapInfo.map_id = this.getMapId();
-        mapInfo.around_map_id = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
+        mapInfo.map_id = info.map_id;
+        mapInfo.around_map_id = info.around_map_id;
         mapInfo.tiles = info.tiles;
         requestUser.getChannel().write(mapInfo);
 

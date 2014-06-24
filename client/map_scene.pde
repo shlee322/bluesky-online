@@ -70,9 +70,11 @@ public static class MapScene implements Scene, UIOnClickListener {
           for(int y=0; y<20; y++) {
             for(int x=0; x<20; x++) {
                 if(mainMap.getTiles()[y*20+x] == 0) continue;
-                Engine.getInstance().drawTile(this.model.getDisplayX(-1) + (x*MapModel.getTileSize()),
-                    this.model.getDisplayY(-1) + (y*MapModel.getTileSize()),
-                    mainMap.getTiles()[y*20+x]);
+
+                int d_x = this.model.getDisplayX(-1) + (x*MapModel.getTileSize());
+                int d_y = this.model.getDisplayY(-1) + (y*MapModel.getTileSize());
+                if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
+                Engine.getInstance().drawTile(d_x, d_y, mainMap.getTiles()[y*20+x]);
             }
           }
         }
@@ -160,8 +162,7 @@ public static class MapScene implements Scene, UIOnClickListener {
         }
 
         public boolean keyPressedHook(char key, int keyCode) {
-            if(this.model.getMyObject() == null) return false;
-            print(keyCode + "\n");
+            if(this.model.getMyObject() == null) return false; 
             if(keyCode==RIGHT || keyCode == 39){
                 int nextMap=this.model.getMyObject().getMapId();
                 if(this.model.getMyObject().getX()>389){
@@ -170,6 +171,8 @@ public static class MapScene implements Scene, UIOnClickListener {
                 this.model.getMyObject().move(
                     this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
                     nextMap, this.model.getMyObject().getX()+10, this.model.getMyObject().getY());
+                Engine.getInstance().getNetwork().write(new MoveObject(0, this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX()+10, this.model.getMyObject().getY()));
                 return true;
             }
             if(keyCode==LEFT || keyCode == 37){
@@ -180,6 +183,8 @@ public static class MapScene implements Scene, UIOnClickListener {
                 this.model.getMyObject().move(
                     this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
                     nextMap, this.model.getMyObject().getX()-10, this.model.getMyObject().getY());
+                Engine.getInstance().getNetwork().write(new MoveObject(0, this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX()+10, this.model.getMyObject().getY()));
                 return true;
             } 
             if(keyCode==UP || keyCode == 38){
@@ -190,6 +195,8 @@ public static class MapScene implements Scene, UIOnClickListener {
                 this.model.getMyObject().move(
                     this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
                     nextMap, this.model.getMyObject().getX(), this.model.getMyObject().getY()-10);
+                Engine.getInstance().getNetwork().write(new MoveObject(0, this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX()+10, this.model.getMyObject().getY()));
                 return true;
             } 
             if(keyCode==DOWN || keyCode == 40){
@@ -200,6 +207,8 @@ public static class MapScene implements Scene, UIOnClickListener {
                 this.model.getMyObject().move(
                     this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
                     nextMap, this.model.getMyObject().getX(), this.model.getMyObject().getY()+10);
+                Engine.getInstance().getNetwork().write(new MoveObject(0, this.model.getMyObject().getMapId(), this.model.getMyObject().getX(), this.model.getMyObject().getY(),
+                    nextMap, this.model.getMyObject().getX()+10, this.model.getMyObject().getY()));
                 return true;
             }
             return false;

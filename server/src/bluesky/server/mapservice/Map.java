@@ -101,7 +101,8 @@ public class Map implements IMap {
     }
 
     public void getMapInfo(ServiceImpl sender, GetMapInfo getMapInfo) {
-        sender.sendServiceMessage(null, new MapInfo(getMapInfo.request_id, this.getMapId(), this.tiles));
+        sender.sendServiceMessage(null, new MapInfo(getMapInfo.request_id, getMapInfo.request_map_id,
+                this.getMapId(), this.aroundMapId, this.tiles));
     }
 
     public static int getRelativeX(int position) {

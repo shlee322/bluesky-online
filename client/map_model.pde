@@ -90,11 +90,14 @@ public static class MapModel implements Model {
 
     public void updateMapDisplayPosition() {
         Map centerMap = getCenterMap();
+        
         centerMap.setDisplayPosition(MapPosition.CENTER, centerMap.getMapId());
         for(int i=0; i<8; i++) {
             int mapId = centerMap.getAroundMapId(i);
             if(mapId == -1) continue;
-            this.getMap(mapId).setDisplayPosition(i, centerMap.getMapId());
+            Map map = this.getMap(mapId);
+            if(map == null) continue;
+            map.setDisplayPosition(i, centerMap.getMapId());
         }
     }
 

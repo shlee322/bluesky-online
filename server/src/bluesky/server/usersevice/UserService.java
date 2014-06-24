@@ -150,7 +150,7 @@ public class UserService extends Service {
         this.addWork(mapId, new Runnable() {
             @Override
             public void run() {
-                MapProxy map = getMapProxy(mapId, false);
+                MapProxy map = getMapProxy(mapId, true);
                 if(map == null) return;
                 map.sendMapInfo(user);
             }
@@ -182,10 +182,10 @@ public class UserService extends Service {
     public void receiveServiceMessage(final ServiceImpl sender, final Packet packet) {
         if(packet instanceof MapInfo) {
             final MapInfo info = (MapInfo)packet;
-            this.addWork(info.map_id, new Runnable() {
+            this.addWork(info.request_map_id, new Runnable() {
                 @Override
                 public void run() {
-                    MapProxy map = getMapProxy(info.map_id, false);
+                    MapProxy map = getMapProxy(info.request_map_id, false);
                     if(map == null) return;
                     map.responseMapInfo(info);
                 }
