@@ -90,6 +90,7 @@ public static class MapModel implements Model {
 
     public void updateMapDisplayPosition() {
         Map centerMap = getCenterMap();
+        if(centerMap == null) return;
 
         centerMap.setDisplayPosition(MapPosition.CENTER, centerMap.getMapId());
         for(int i=0; i<8; i++) {
