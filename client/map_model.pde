@@ -4,14 +4,14 @@ public static class MapModel implements Model {
 
     public static class MapPosition {
         public static final int CENTER = -1;
-        public static final int LEFT = 0;
-        public static final int UP = 1;
+        public static final int UP = 0;
+        public static final int UP_RIGHT = 1;
         public static final int RIGHT = 2;
-        public static final int DOWN = 3;
-        public static final int UP_LEFT = 4;
-        public static final int UP_RIGHT = 5;
-        public static final int DOWN_LEFT = 6;
-        public static final int DOWN_RIGHT = 7;
+        public static final int DOWN_RIGHT = 3;
+        public static final int DOWN = 4;
+        public static final int DOWN_LEFT = 5;
+        public static final int LEFT = 6;
+        public static final int UP_LEFT = 7;
       }
 
     public static int getTileSize() {
@@ -90,7 +90,7 @@ public static class MapModel implements Model {
 
     public void updateMapDisplayPosition() {
         Map centerMap = getCenterMap();
-        
+
         centerMap.setDisplayPosition(MapPosition.CENTER, centerMap.getMapId());
         for(int i=0; i<8; i++) {
             int mapId = centerMap.getAroundMapId(i);

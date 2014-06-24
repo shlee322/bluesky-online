@@ -1,3 +1,5 @@
+package bluesky.server.mapservice.generator;
+
 import bluesky.server.mapservice.IMap;
 import bluesky.server.mapservice.generator.IMapTilesGenerator;
 
