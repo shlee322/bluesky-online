@@ -1,6 +1,7 @@
 public static class MapModel implements Model {
     private static int TILE_SIZE = 800 / 24; //타일 사이즈 화면에 총 24개의 타일이 출력될 수 있음
     private static int MAP_SIZE = TILE_SIZE * 20; //한 변에 있는 타일 수
+    private static MapModel instance = new MapModel();
 
     public static class MapPosition {
         public static final int CENTER = -1;
@@ -12,10 +13,14 @@ public static class MapModel implements Model {
         public static final int DOWN_LEFT = 5;
         public static final int LEFT = 6;
         public static final int UP_LEFT = 7;
-      }
+    }
 
     public static int getTileSize() {
         return TILE_SIZE;
+    }
+
+    public static MapModel getInstance() {
+        return instance;
     }
 
 	private long myObjectId;
@@ -42,7 +47,7 @@ public static class MapModel implements Model {
 
     	GameObject obj = cacheObject.get(move.object_id);
 
-    	if(myObject == null) {
+    	if(myObject == null && myObjectId == obj.getUUID()) {
     		myObject = obj;
     	}
 
@@ -96,9 +101,9 @@ public static class MapModel implements Model {
         for(int i=0; i<8; i++) {
             int mapId = centerMap.getAroundMapId(i);
             if(mapId == -1) continue;
-            Map map = this.getMap(mapId);
-            if(map == null) continue;
-            map.setDisplayPosition(i, centerMap.getMapId());
+            Map aroundMap = this.getMap(mapId);
+            if(aroundMap == null) continue;
+            aroundMap.setDisplayPosition(i, centerMap.getMapId());
         }
     }
 
@@ -154,7 +159,7 @@ if(주인공맵 id가 자기와 같다?!) {
 }
 */
 
-static class Map {
+public static class Map {
     private int mapId;
     private int[] aroundMapId;
     private byte[] tiles;
@@ -197,7 +202,7 @@ static class Map {
 static class Tile {
 }
 
-static class GameObject implements Entity {
+public static class GameObject implements Entity {
 	private long uuid;
 	private int mapId;
 	public int x;
@@ -206,23 +211,29 @@ static class GameObject implements Entity {
 	private EImage weapon;
 	private String name="";
 	private String headMessage="";
+    public int dest_map;
 	public int dest_x;
 	public int dest_y;
 	public int moveTick=0;
-	public int dir = 0;
     private int width=0;
     private int height=0;
+    private int dir;
 
 	public GameObject(long uuid, int mapId, int x, int y) {
 		this.uuid = uuid;
 		this.mapId = mapId;
 		this.x = x;
 		this.y = y;
+        this.dest_map = mapId;
 		this.dest_x = x;
 		this.dest_y = y;
 
 		Engine.getInstance().getNetwork().write(new CS_GetObjectInfo(mapId, uuid));
 	}
+
+    public long getUUID() {
+        return this.uuid;
+    }
 
 	public int getMapId() {
 		return this.mapId;
@@ -253,11 +264,36 @@ static class GameObject implements Entity {
     }
 
 	public void move(int src_map, int src_x, int src_y, int dest_map, int dest_x, int dest_y) {
+        this.mapId = src_map;
 		this.x = src_x;
 		this.y = src_y;
+        this.dest_map = dest_map;
 		this.dest_x = dest_x;
 		this.dest_y = dest_y;
 	}
+
+    public int getMoveDir() {
+        if(dest_map == mapId) {
+            dir = dest_x > x ? 1 : 0;
+            return dir;
+        }
+
+        Map destMap = MapModel.getInstance().getMap(dest_map);
+        if(destMap == null) return -1;
+        if(dest_map == destMap.getAroundMapId(MapModel.MapPosition.LEFT)) {
+            dir = 0;
+            return 0;
+        }
+        if(dest_map == destMap.getAroundMapId(MapModel.MapPosition.RIGHT)) {
+            dir = 1;
+            return 1;
+        }
+        return -1;
+    }
+
+    public int getDir() {
+        return dir;
+    }
 
 	public void setEngineTag(Object o) {
 		this.engineTag = o;

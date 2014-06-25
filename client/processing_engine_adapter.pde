@@ -159,16 +159,13 @@ class ProcessingEngineAdapter implements EngineAdapter {
 				obj.moveTick = 0;
 			}
 
-			int test = obj.dest_x - obj.getX();
+			int dir = obj.getMoveDir();
 
-			if(test > 0) {
-				obj.dir = 1;
-				obj.x += 1;
-			} else {
-				obj.dir = 0;
-				obj.x -= 1;
+			obj.x += dir == 1 ? 1 : dir == 0 ? -1 : 0;
+			if(obj.x < 0 || obj.getX() >= 80) { //맵 넘어감
+				obj.move(obj.dest_map, obj.getX() < 0 ? 79 : 0, obj.getY(),
+					obj.dest_map, obj.dest_x, obj.dest_y);
 			}
-
 		} else {
 			obj.moveTick = 0;
 		}
@@ -176,7 +173,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		obj.setWidth(img.getWidth() / 4);
 		obj.setHeight(img.getHeight() / 4);
 
-		img.setDirection(4*obj.dir + (obj.moveTick / 10));
+		img.setDirection(4*obj.getDir() + (obj.moveTick / 10));
 
 
 		int o_x = x + (img.getWidth() / 2);

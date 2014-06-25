@@ -94,8 +94,8 @@ public class RefMap implements IMap {
                 }
                 result.close();
                 statement.close();
-                conn.close();
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
