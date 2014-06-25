@@ -2,6 +2,7 @@ package bluesky.server.mapservice;
 
 import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.service.GetMapInfo;
+import bluesky.protocol.packet.service.ServiceBreakTile;
 import bluesky.server.mapservice.generator.IMapTilesGenerator;
 import bluesky.server.service.Service;
 import bluesky.server.service.ServiceImpl;
@@ -132,6 +133,21 @@ public class MapService extends Service {
                     }
                     Map map = localMaps.get(getMapInfo.map_id);
                     map.getMapInfo(sender, getMapInfo);
+                }
+            });
+        }
+
+        if(packet instanceof ServiceBreakTile) {
+            final ServiceBreakTile serviceBreakTile = (ServiceBreakTile)packet;
+            this.addWork(serviceBreakTile.map_id, new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<Integer, Map> localMaps = maps[getWorkerIndex(serviceBreakTile.map_id)];
+                    if(!localMaps.containsKey(serviceBreakTile.map_id)) {
+                        return;
+                    }
+                    Map map = localMaps.get(serviceBreakTile.map_id);
+                    map.breakTile(serviceBreakTile.x, serviceBreakTile.y);
                 }
             });
         }

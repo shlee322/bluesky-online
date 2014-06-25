@@ -160,4 +160,40 @@ public class Map implements IMap {
                 (byte)(mapId & 0xFF)
         });
     }
+
+    public void breakTile(int x, int y) {
+        byte tile = this.tiles[y * 20 + x];
+        this.tiles[y * 20 + x] = 0;
+
+        this.service.publishMQTT("/maps/" + this.getMapId() + "/break_tile", new byte[]{
+                (byte)((mapId & 0xFF000000) >> 24),
+                (byte)((mapId & 0xFF0000) >> 16),
+                (byte)((mapId & 0xFF00) >> 8),
+                (byte)(mapId & 0xFF),
+                (byte)(x & 0xFF),
+                (byte)(y & 0xFF)
+        });
+
+        this.createDropItem(new DropItem(x, y, tile));
+    }
+
+    public void createDropItem(DropItem item) {
+        this.service.publishMQTT("/maps/" + this.getMapId() + "/drop_item", new byte[]{
+                (byte)((mapId & 0xFF000000) >> 24),
+                (byte)((mapId & 0xFF0000) >> 16),
+                (byte)((mapId & 0xFF00) >> 8),
+                (byte)(mapId & 0xFF),
+                (byte)(item.getUUID() >>> 56),
+                (byte)(item.getUUID() >>> 48),
+                (byte)(item.getUUID() >>> 40),
+                (byte)(item.getUUID() >>> 32),
+                (byte)(item.getUUID() >>> 24),
+                (byte)(item.getUUID() >>> 16),
+                (byte)(item.getUUID() >>> 8),
+                (byte)(item.getUUID() >>> 0),
+                (byte)(item.getX() & 0xFF),
+                (byte)(item.getY() & 0xFF),
+                item.getResId()
+        });
+    }
 }

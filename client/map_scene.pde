@@ -157,6 +157,10 @@ public static class MapScene implements Scene, UIOnClickListener {
         if(packet instanceof BreakTile) {
             MapModel.getInstance().breakTile((BreakTile)packet);
         }
+
+        if(packet instanceof SC_DropItem) {
+            print("SC_DropItem!\n");
+        }
     }
 
     @Override
@@ -231,7 +235,10 @@ public static class MapScene implements Scene, UIOnClickListener {
                     return true;
                 }
                 Tile tile = map.getTile(tilePosition.x, tilePosition.y);
-                if(tile != null && tile.getResId() != 0) return true;
+                if(tile != null && tile.getResId() != 0) {
+                    MapModel.getInstance().getMyObject().setDir((keyCode==LEFT || keyCode == 37) ? 0 : 1);
+                    return true;
+                }
             }
 
             if(destX<0 || destX>=80) {

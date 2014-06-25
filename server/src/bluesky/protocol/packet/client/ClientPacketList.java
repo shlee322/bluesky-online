@@ -13,7 +13,8 @@ public class ClientPacketList extends bluesky.protocol.packet.PacketList {
             SC_ObjectInfo.class,
             MoveObject.class,
             Chat.class,
-            BreakTile.class
+            BreakTile.class,
+            SC_DropItem.class
     };
 
     @Override

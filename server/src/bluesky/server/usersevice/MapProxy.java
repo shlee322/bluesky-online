@@ -3,6 +3,7 @@ package bluesky.server.usersevice;
 import bluesky.protocol.packet.client.*;
 import bluesky.protocol.packet.service.GetMapInfo;
 import bluesky.protocol.packet.service.MapInfo;
+import bluesky.protocol.packet.service.ServiceBreakTile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -114,6 +115,35 @@ public class MapProxy {
                 this.sendMapInfo(user);
             }
         }
+
+        if(subTopic.equals("/drop_item")) {
+            long uuid = 0;
+            int mapId=0;
+            int x=0;
+            int y=0;
+            byte resId=0;
+
+            uuid |= data[0] << 56;
+            uuid |= data[1] << 48;
+            uuid |= data[2] << 40;
+            uuid |= data[3] << 32;
+            uuid |= data[4] << 24;
+            uuid |= data[5] << 16;
+            uuid |= data[6] << 8;
+            uuid |= data[7];
+            mapId |= data[8] << 24;
+            mapId |= data[9] << 16;
+            mapId |= data[10] << 8;
+            mapId |= data[11];
+            x = data[12];
+            y = data[13];
+            resId = data[14];
+
+            SC_DropItem dropItem = new SC_DropItem(uuid, mapId, x, y, resId);
+            for(UserObject user : this.objects) {
+                user.getChannel().write(dropItem);
+            }
+        }
     }
 
     public void moveObject(UserObject user, MoveObject packet) {
@@ -173,11 +203,16 @@ public class MapProxy {
     }
 
     public void breakTile(UserObject user, int x, int y) {
+        this.service.sendServiceMessage(this.serviceId, new ServiceBreakTile(getMapId(), x, y));
+        /*
         BreakTile breakTile = new BreakTile(this.getMapId(), x, y);
         for(UserObject u : this.objects) {
             if(u == user) continue;
             u.getChannel().write(breakTile);
             break;
-        }
+        }*/
+
+        //아이템 드랍
+
     }
 }

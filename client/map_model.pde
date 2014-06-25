@@ -325,7 +325,7 @@ public static class Tile {
     }
 
     public boolean isDrawHp() {
-        return true;
+        return this.drawHp;
     }
 }
 
@@ -436,6 +436,10 @@ public static class GameObject implements Entity {
             return 1;
         }
         return -1;
+    }
+
+    public void setDir(int dir) {
+        this.dir = dir;
     }
 
     public int getDir() {
