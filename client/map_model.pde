@@ -205,15 +205,15 @@ static class Tile {
 public static class GameObject implements Entity {
 	private long uuid;
 	private int mapId;
-	public int x;
-	public int y;
+	private int x;
+	private int y;
 	private Object engineTag;
 	private EImage weapon;
 	private String name="";
 	private String headMessage="";
-    public int dest_map;
-	public int dest_x;
-	public int dest_y;
+    private int dest_map_id;
+	private int dest_x;
+	private int dest_y;
 	public int moveTick=0;
     private int width=0;
     private int height=0;
@@ -224,7 +224,7 @@ public static class GameObject implements Entity {
 		this.mapId = mapId;
 		this.x = x;
 		this.y = y;
-        this.dest_map = mapId;
+        this.dest_map_id = mapId;
 		this.dest_x = x;
 		this.dest_y = y;
 
@@ -247,6 +247,14 @@ public static class GameObject implements Entity {
 		return this.y;
 	}
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void setWidth(int width) {
         this.width = width;
     }
@@ -263,28 +271,41 @@ public static class GameObject implements Entity {
         return this.height;
     }
 
-	public void move(int src_map, int src_x, int src_y, int dest_map, int dest_x, int dest_y) {
+	public void move(int src_map, int src_x, int src_y, int dest_map_id, int dest_x, int dest_y) {
         this.mapId = src_map;
 		this.x = src_x;
 		this.y = src_y;
-        this.dest_map = dest_map;
+        this.dest_map_id = dest_map_id;
 		this.dest_x = dest_x;
 		this.dest_y = dest_y;
+        print(this.getUUID() + " - " + this.getMapId() + " - " + this.getDestMapId() + "\n");
 	}
 
+    public int getDestMapId() {
+        return this.dest_map_id;
+    }
+
+    public int getDestX() {
+        return this.dest_x;
+    }
+
+    public int getDestY() {
+        return this.dest_y;
+    }
+
     public int getMoveDir() {
-        if(dest_map == mapId) {
+        if(this.getDestMapId() == mapId) {
             dir = dest_x > x ? 1 : 0;
             return dir;
         }
 
-        Map destMap = MapModel.getInstance().getMap(dest_map);
+        Map destMap = MapModel.getInstance().getMap(this.getDestMapId());
         if(destMap == null) return -1;
-        if(dest_map == destMap.getAroundMapId(MapModel.MapPosition.LEFT)) {
+        if(this.getDestMapId() == destMap.getAroundMapId(MapModel.MapPosition.LEFT)) {
             dir = 0;
             return 0;
         }
-        if(dest_map == destMap.getAroundMapId(MapModel.MapPosition.RIGHT)) {
+        if(this.getDestMapId() == destMap.getAroundMapId(MapModel.MapPosition.RIGHT)) {
             dir = 1;
             return 1;
         }

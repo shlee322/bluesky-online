@@ -10,6 +10,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private HashMap<String, ProcessingGameObjectImage> characterImages = new HashMap<String, ProcessingGameObjectImage>();
 	private float nameLen;
 	private float chatLen;
+	private PShader gaussianBlurShader;
 
 	public ProcessingEngineAdapter(PApplet processing) {
 		this.processing = processing;
@@ -22,6 +23,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		}
 
 		this.minim = new Minim(this.getProcessing());
+		//this.gaussianBlurShader = this.getProcessing().loadShader("shaders/gaussian_blur.fs", "shaders/gaussian_blur.vs");
 
 
 		SanghyuckInputMethod.getSanghyuckInputMethod().event = new SanghyuckInputMethodInputEvent() {
@@ -45,6 +47,13 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		}
 
 		this.drawText("FPS : " + getFrameRate(), 10, 30);
+	}
+
+	public void drawBefore() {
+	}
+
+	public void drawAfter() {
+		//this.getProcessing().shader(this.gaussianBlurShader);
 	}
 
 	public int getWidth() {
@@ -163,10 +172,11 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 			int dir = obj.getMoveDir();
 
-			obj.x += dir == 1 ? 1 : dir == 0 ? -1 : 0;
-			if(obj.x < 0 || obj.getX() >= 80) { //맵 넘어감
-				obj.move(obj.dest_map, obj.getX() < 0 ? 79 : 0, obj.getY(),
-					obj.dest_map, obj.dest_x, obj.dest_y);
+			obj.setX( obj.getX() + (dir == 1 ? 1 : dir == 0 ? -1 : 0));
+			if(obj.getX() < 0 || obj.getX() >= 80) {
+        		print(obj.getDestMapId() + " - test\n");
+				obj.move(obj.getDestMapId(), obj.getX() < 0 ? 79 : 0, obj.getY(),
+					obj.getDestMapId(), obj.getDestX(), obj.getDestX());
 			}
 		} else {
 			obj.moveTick = 0;
@@ -198,7 +208,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 			this.getProcessing().fill(0, 0, 0, 160);
 			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, nameLen+10, 18, 7);
 			this.getProcessing().fill(255);
-			drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 10, 12, true);
+			drawText(obj.getName() + obj.getUUID() , (img.getWidth() / 2), img.getHeight() + 10, 12, true);
 		}
 
 		if(obj.getHeadMessage() != null && !"".equals(obj.getHeadMessage())) {

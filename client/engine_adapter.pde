@@ -16,6 +16,8 @@ interface EngineAdapter {
 	void line(float x1, float y1, float x2, float y2);
 	EImage loadImage(String path);
 	void drawGameObject(int x, int y, GameObject obj);
+	void drawBefore();
+	void drawAfter();
 }
 
 interface EImage {
