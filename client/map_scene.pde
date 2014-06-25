@@ -253,6 +253,10 @@ public static class MapScene implements Scene, UIOnClickListener {
             if(destX<0 || destX>=80) {
                 destMapId = MapModel.getInstance().getMap(MapModel.getInstance().getMyObject().getMapId())
                     .getAroundMapId(destX<0 ? MapModel.MapPosition.LEFT : MapModel.MapPosition.RIGHT);
+                if(destMapId == -1) {
+                    Engine.getInstance().showNotify("비바람이 휘몰아 치고 있습니다", 120);
+                    return false;
+                }
                 mapId = destMapId;
                 x = destX<0 ? 79 : 0;
                 destX = destX<0 ? 78 : 2;

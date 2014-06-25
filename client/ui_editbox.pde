@@ -66,6 +66,7 @@ public static class UIEditBox extends UIComponent {
 			text = text.substring(0, text.length() - 1);
 			return;
 		}
+		if(key < 32 || key >126) return;
 		text += String.valueOf(Character.toChars(key));
 	}
 }
