@@ -129,6 +129,7 @@ public static class Engine implements EngineAdapter {
 			case 0 : 
 			break;
 			case 1 :
+			name="water";
 			break;
 			case 2 :
 			name="dirt";
@@ -146,9 +147,12 @@ public static class Engine implements EngineAdapter {
 			break;
 			case 7 :
 			name="gold_ore";
-			break;
+  			break;
+  			case 9 :
+  			name="coal_ore";
+  			break;
 			default :
-				name=null;
+			name=null;
 			break;	
 		}
 		if(name!=null){
@@ -205,7 +209,6 @@ public static class Engine implements EngineAdapter {
 			getUIManager().getFocusComponent().keyPressed(key, keyCode);
 		}
 	}
-
 	public void drawBefore() {}
 	public void drawAfter() {}
 }
