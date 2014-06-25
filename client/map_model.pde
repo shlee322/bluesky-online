@@ -266,6 +266,40 @@ public static class Tile {
         return this.resId;
     }
 
+    public int getMaxHp() {
+        return 300;
+    }
+
+    public int getHp() {
+        return this.hp;
+    }
+
+    public String getResName() {
+        switch (this.getResId()) {
+            case 0 : 
+                break;
+            case 1 :
+                return "water";
+            case 2 :
+                return "dirt";
+            case 3 :
+                break;
+            case 4 :
+                return "sand";
+            case 5 :
+                return "stone";
+            case 6 :
+                return "iron_ore";
+            case 7 :
+                return "gold_ore";
+            case 9 :
+                return "coal_ore";
+            default :
+                break;  
+        }
+        return null;
+    }
+
     public void breakTile() {
         this.hp -= 1;
         print(this.hp + "\n");
@@ -276,6 +310,10 @@ public static class Tile {
             this.resId = 0;
             this.hp = 0;
         }
+    }
+
+    public boolean isDrawHp() {
+        return true;
     }
 }
 

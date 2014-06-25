@@ -6,7 +6,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private PApplet processing;
 	private Minim minim;
 	private AudioPlayer bgmPlayer;
-	private HashMap<String, EImage> tileImages = new HashMap<String, EImage>();
+	private HashMap<Byte, EImage> tileImages = new HashMap<Byte, EImage>();
 	private HashMap<String, ProcessingGameObjectImage> characterImages = new HashMap<String, ProcessingGameObjectImage>();
 	private float nameLen;
 	private float chatLen;
@@ -104,16 +104,17 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.getProcessing().text(text, x, y);
 	}
 
-	public void drawTile(int x, int y, String name) {
-		if(!tileImages.containsKey(name)) {
-			EImage img = loadImage("data/tiles/" + name + ".png");
+	public void drawTile(int x, int y, Tile tile) {
+		if(tile.getResName() == null) return;
+		if(!tileImages.containsKey(tile.getResId())) {
+			EImage img = loadImage("data/tiles/" + tile.getResName() + ".png");
 			img.setWidth(this.getWidth() / 24);
 			img.setHeight(this.getWidth() / 24);
-			tileImages.put(name, img);
+			tileImages.put(tile.getResId(), img);
 		}
 
 		this.getProcessing().translate(x, y);
-		tileImages.get(name).draw();
+		tileImages.get(tile.getResId()).draw();
 		this.getProcessing().translate(-x, -y);
 	}
 

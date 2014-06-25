@@ -7,7 +7,7 @@ interface EngineAdapter {
 	void drawText(String text, int x, int y);
 	void drawText(String text, int x, int y, int size);
 	void drawText(String text, int x, int y, int size, boolean center);
-	void drawTile(int x, int y, String name);
+	void drawTile(int x, int y, Tile tile);
 	void drawNotify(String text);
 	void fill(float r, float g, float b, float alpha);
 	void drawBox(float rectX, float rectY, float rectWid, float rectHei, float rectRad, float r, float g, float b, float alpha);

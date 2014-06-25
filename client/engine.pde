@@ -119,45 +119,9 @@ public static class Engine implements EngineAdapter {
 		getEngineAdapter().drawText(text, x, y, size, center);
 	}
 
-	public void drawTile(int x, int y, String name) {
-		getEngineAdapter().drawTile(x, y, name);
+	public void drawTile(int x, int y, Tile tile) {
+		getEngineAdapter().drawTile(x, y, tile);
 	}
-
-	public void drawTile(int x, int y, int i) {
-		String name=null;
-		switch (i) {
-			case 0 : 
-			break;
-			case 1 :
-			name="water";
-			break;
-			case 2 :
-			name="dirt";
-			break;
-			case 3 :
-			break;
-			case 4 :
-			name="sand";
-			break;
-			case 5 :
-			name="stone";
-			break;
-			case 6 :
-			name="iron_ore";
-			break;
-			case 7 :
-			name="gold_ore";
-  			break;
-  			case 9 :
-  			name="coal_ore";
-  			break;
-			default :
-			name=null;
-			break;	
-		}
-		if(name!=null){
-		getEngineAdapter().drawTile(x, y, name);
-	}}
 
 	//엔진에서만 호출할 수 있도록 함
 	public void drawNotify(String text) {

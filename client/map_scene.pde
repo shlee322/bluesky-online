@@ -85,7 +85,7 @@ public static class MapScene implements Scene, UIOnClickListener {
                 int d_x = MapModel.getInstance().getDisplayX(-1) + (x*MapModel.getTileSize());
                 int d_y = MapModel.getInstance().getDisplayY(-1) + (y*MapModel.getTileSize());
                 if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
-                Engine.getInstance().drawTile(d_x, d_y, mainMap.getTile(x,y).getResId());
+                Engine.getInstance().drawTile(d_x, d_y, mainMap.getTile(x,y));
             }
           }
         }
@@ -99,7 +99,7 @@ public static class MapScene implements Scene, UIOnClickListener {
                         int d_x = MapModel.getInstance().getDisplayX(i) + (x*MapModel.getTileSize());
                         int d_y = MapModel.getInstance().getDisplayY(i) + (y*MapModel.getTileSize());
                         if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
-                        Engine.getInstance().drawTile(d_x, d_y, map.getTile(x, y).getResId());
+                        Engine.getInstance().drawTile(d_x, d_y, map.getTile(x, y));
                     }
                 }
             }
