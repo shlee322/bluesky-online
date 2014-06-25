@@ -121,12 +121,30 @@ public static class ClientPacketList extends PacketList {
             CS_GetObjectInfo.class,
             SC_ObjectInfo.class,
             MoveObject.class,
-            Chat.class
+            Chat.class,
+            BreakTile.class
     };
 
     @Override
     public Class<?>[] getPacketList() {
         return PacketList;
+    }
+}
+
+@Message
+public static class BreakTile implements Packet {
+    public int map_id;
+    public int x;
+    public int y;
+
+    @Override
+    public byte getPacketId() { return 11; }
+
+    public BreakTile() {}
+    public BreakTile(int mapId, int x, int y) {
+        this.map_id = mapId;
+        this.x = x;
+        this.y = y;
     }
 }
 

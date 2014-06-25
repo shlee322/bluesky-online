@@ -216,4 +216,15 @@ public class UserService extends Service {
             }
         });
     }
+
+    public void breakTile(final UserObject user, final int mapId, final int x, final int y) {
+        this.addWork(mapId, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
+                map.breakTile(user, x, y);
+            }
+        });
+    }
 }

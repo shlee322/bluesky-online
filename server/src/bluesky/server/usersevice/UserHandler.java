@@ -107,6 +107,11 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
             if(packet instanceof Chat) {
                 this.service.chat(this.user, ((Chat)packet).msg);
             }
+
+            if(packet instanceof BreakTile) {
+                this.service.breakTile(this.user,
+                        ((BreakTile)packet).map_id, ((BreakTile)packet).x, ((BreakTile)packet).y);
+            }
         }
     }
 

@@ -1,9 +1,6 @@
 package bluesky.server.usersevice;
 
-import bluesky.protocol.packet.client.Chat;
-import bluesky.protocol.packet.client.MoveObject;
-import bluesky.protocol.packet.client.SC_MapInfo;
-import bluesky.protocol.packet.client.SC_ObjectInfo;
+import bluesky.protocol.packet.client.*;
 import bluesky.protocol.packet.service.GetMapInfo;
 import bluesky.protocol.packet.service.MapInfo;
 import org.apache.logging.log4j.LogManager;
@@ -171,6 +168,15 @@ public class MapProxy {
         for(UserObject u : this.objects) {
             if(u.getUUID() == chat.object_id) continue;
             u.getChannel().write(chat);
+            break;
+        }
+    }
+
+    public void breakTile(UserObject user, int x, int y) {
+        BreakTile breakTile = new BreakTile(this.getMapId(), x, y);
+        for(UserObject u : this.objects) {
+            if(u == user) continue;
+            u.getChannel().write(breakTile);
             break;
         }
     }

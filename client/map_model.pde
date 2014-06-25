@@ -73,6 +73,12 @@ public static class MapModel implements Model {
     	obj.setHeadMessage(chat.msg);
     }
 
+    public void breakTile(BreakTile breakTile) {
+        Map map = this.getMap(breakTile.map_id);
+        if(map == null) return;
+        map.setTile(new Tile((byte)0, breakTile.map_id, breakTile.x, breakTile.y));
+    }
+
     public Map getMap(int id) {
     	if(id == -1) return null;
     	if(!cacheMaps.containsKey(id)) { //캐싱되어있지 않음
@@ -143,7 +149,7 @@ public static class MapModel implements Model {
             return -1 * MapModel.getTileSize() * this.getMyObject().getX() / 4 + 400 - (this.getMyObject().getWidth()/2);
         }
 
-      return this.getDisplayX(MapPosition.CENTER) + p;
+        return this.getDisplayX(MapPosition.CENTER) + p;
     }
 
     public int getDisplayY(int position) {
@@ -186,7 +192,7 @@ public static class Map {
     	this.aroundMapId = aroundMapId;
         this.tiles = new Tile[tiles.length];
         for(int i=0; i<tiles.length; i++) {
-            this.tiles[i] = new Tile(tiles[i]);
+            this.tiles[i] = new Tile(tiles[i], this.mapId, i%20, i/20);
         }
     }
 
@@ -197,6 +203,11 @@ public static class Map {
 	public Tile getTile(int x, int y) {
 		return this.tiles[y*20+x];
 	}
+
+    public void setTile(Tile tile) {
+        this.tiles[tile.getY()*20+tile.getX()] = tile;
+
+    }
 
     public int getAroundMapId(int i){
         return this.aroundMapId[i];
@@ -232,9 +243,23 @@ public static class TilePosition {
 public static class Tile {
     private byte resId;
     private int hp = 300;
+    private int mapId;
+    private int x;
+    private int y;
 
-    public Tile(byte resId) {
+    public Tile(byte resId, int mapId, int x, int y) {
         this.resId = resId;
+        this.mapId = mapId;
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
     }
 
     public byte getResId() {
@@ -245,6 +270,9 @@ public static class Tile {
         this.hp -= 1;
         print(this.hp + "\n");
         if(hp < 1) {
+            if(this.resId != 0) {
+                Engine.getInstance().getNetwork().write(new BreakTile(mapId, x, y));
+            }
             this.resId = 0;
             this.hp = 0;
         }

@@ -12,7 +12,8 @@ public class ClientPacketList extends bluesky.protocol.packet.PacketList {
             CS_GetObjectInfo.class,
             SC_ObjectInfo.class,
             MoveObject.class,
-            Chat.class
+            Chat.class,
+            BreakTile.class
     };
 
     @Override

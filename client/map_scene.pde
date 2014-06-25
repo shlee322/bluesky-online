@@ -15,7 +15,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     private final int MAP_SIZE = 20;
     private final int MAP_PX_SIZE = MAP_SIZE*32;
 
-    private Tile nullTile = new Tile((byte)0);
+    private Tile nullTile = new Tile((byte)0, -1, -1, -1);
 
     public MapScene(SC_MoveMap moveMap) {
         this.bg = Engine.getInstance().loadImage("images/sky.png");
@@ -141,6 +141,10 @@ public static class MapScene implements Scene, UIOnClickListener {
 
         if(packet instanceof Chat) {
             MapModel.getInstance().chat((Chat)packet);
+        }
+
+        if(packet instanceof BreakTile) {
+            MapModel.getInstance().breakTile((BreakTile)packet);
         }
     }
 
