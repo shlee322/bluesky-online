@@ -1,5 +1,3 @@
-package client.item;
-
 
 /**
  * Created by Hong on 2014-06-20.
@@ -36,7 +34,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(7), 2)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     } //만들기
 
@@ -48,7 +46,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(7), 2)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     }
                 }
@@ -60,7 +58,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(8), 2)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     }
                 }
@@ -73,7 +71,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(8), 1)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     }
                 }
@@ -88,7 +86,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(8), 1)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     }
                 }
@@ -100,7 +98,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(8), 1)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     }
                 }
@@ -111,7 +109,7 @@ public class Manufacturing {
                         Item.getInstance().ContainTag(m.getItemMakeOn(5), 1)) {
                     for (int x = 0; x < 9; x++) {
                         if (m.getItemMakeOn(x) != 0) {
-                            Inventory.getInstance().useItem(m.getItemMakeOn(x));
+                            Inven.getInstance().useItem(m.getItemMakeOn(x));
                         }
                     }
                 }

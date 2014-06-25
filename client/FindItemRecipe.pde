@@ -1,6 +1,4 @@
 
-package client.item;
-
 import java.util.ArrayList;
 
 /**

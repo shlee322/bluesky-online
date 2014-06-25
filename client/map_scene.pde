@@ -11,6 +11,7 @@ public static class MapScene implements Scene, UIOnClickListener {
     int LEFT = 1;
     int RIGHT = 2;
     int JUMP = 3;
+     int slot;
     MoveCharacter move = new MoveCharacter();
     private final int MAP_SIZE = 20;
     private final int MAP_PX_SIZE = MAP_SIZE*32;
@@ -34,11 +35,17 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void init() {
+        Engine.getInstance().getUIManager().clearComponentList();
+
         UIComponent menuBtnComponent = new MenuBtnComponent();
+
+        UIComponent inventory = new Inventory();
         UIComponent key = new KeyPressed();
         //loginBtnComp.setOnClickListener(this);
         menuBtnComponent.setOnClickListener(this);
+        inventory.setOnClickListener(this);
         Engine.getInstance().getUIManager().addComponent(menuBtnComponent);
+        Engine.getInstance().getUIManager().addComponent(inventory);
         Engine.getInstance().getUIManager().addComponent(key);
         joyStick = new JoyStick();
 
@@ -51,6 +58,12 @@ public static class MapScene implements Scene, UIOnClickListener {
         Engine.getInstance().getUIManager().addComponent(chat);
     }
     
+    public void initInven(){
+             UIComponent inventory_full = new Inventory_full();
+             inventory_full.setOnClickListener(this);
+             Engine.getInstance().getUIManager().addComponent(inventory_full);
+    }
+
     public byte[] getTiles(Map map) {
         if(map == null) return nullTiles;
         return map.getTiles();
@@ -104,10 +117,6 @@ public static class MapScene implements Scene, UIOnClickListener {
             if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
 
             Engine.getInstance().drawGameObject(d_x, d_y, obj);
-
-            if(obj == MapModel.getInstance().getMyObject()) {
-                Engine.getInstance().drawText("(" + d_x + ", " + d_y + ")", 20, 20);
-            }
         }
 
         joyStick.draw();
@@ -138,7 +147,13 @@ public static class MapScene implements Scene, UIOnClickListener {
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
-        MoveObject mo = new MoveObject();
+        if(comp instanceof MenuBtnComponent){}
+        if(comp instanceof Inventory){
+            initInven();
+        }
+        if(comp instanceof Inventory_full){
+           System.out.println(slot);
+        }
     }
 
     private class MenuBtnComponent extends UIComponent {
@@ -156,6 +171,55 @@ public static class MapScene implements Scene, UIOnClickListener {
             }
             return false;
         }
+    }
+
+    private class Inventory extends UIComponent {
+        public void loop() {
+            Engine.getInstance().getEngineAdapter().drawStroke(255, 255, 255, 100, 1);
+            Engine.getInstance().getEngineAdapter().drawBox(90, 15, 40, 40, 0, 0, 0, 0, 0);  
+            Engine.getInstance().getEngineAdapter().fill(255, 255, 255, 255);
+        }
+        
+        public boolean clickScreen(int x, int y) {
+            if(x>=90 && x<130 && y>=15 && y<55) {
+                this.callClick(x, y);
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+    private class Inventory_full extends UIComponent {
+       
+        public void loop() {
+            Engine.getInstance().getEngineAdapter().drawStroke(255, 255, 255, 100, 1);
+            Engine.getInstance().getEngineAdapter().drawBox(65, 75, 670, 450, 10, 66, 139, 202, 255);
+            Engine.getInstance().getEngineAdapter().drawBox(255, 155, 450, 352, 10, 66, 139, 202, 255);  
+
+            for(int x=0;x<3;x++){
+               Engine.getInstance().getEngineAdapter().line(255,155+88*(x+1),705,155+88*(x+1));
+            }
+            for(int x=0;x<5;x++){
+                Engine.getInstance().getEngineAdapter().line(255+75*(x+1),155,255+75*(x+1), 507);
+            }
+            Engine.getInstance().getEngineAdapter().fill(255, 255, 255, 255);
+            for(int x = 0 ; x<24; x++){
+            Engine.getInstance().drawText(String.valueOf(Inven.getInstance().getInventory(x)), 255+75*(x%6)+30, 155+88*(x/6)+30, 30, true);
+            }
+        }
+        
+        public boolean clickScreen(int x, int y) {
+            for(int a=0; a<24;a++){
+                if(x>=255+75*(a%6) && x<255+75*(a%6)+75 && y>=155+88*(a/6) && y<155+88*(a/6)+88){
+                    slot = a;
+                    this.callClick(x,y);
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
     private class KeyPressed extends UIComponent{

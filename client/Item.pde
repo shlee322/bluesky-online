@@ -1,10 +1,9 @@
-package client.item;
 
 /**
  * Created by Hong on 2014-06-19.
  */
 
-public class Item {
+public static class Item {
 
     int[] GraphicCode = new int[255];
     boolean[][] ItemTag = new boolean[255][8];
@@ -51,9 +50,5 @@ public class Item {
         if (GraphicCode[gcode] > 0) {
             //Equipment 생성
         }
-    }
-
-    public Install(int gcode) {
-        //캐릭터좌표기준으로 아이템을 설치한다
     }
 }
