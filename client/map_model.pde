@@ -286,7 +286,7 @@ public static class Tile {
             case 2 :
                 return "dirt";
             case 3 :
-                break;
+                return "grass";
             case 4 :
                 return "sand";
             case 5 :
@@ -295,8 +295,14 @@ public static class Tile {
                 return "iron_ore";
             case 7 :
                 return "gold_ore";
+            case 8 :
+                return "lava";
             case 9 :
                 return "coal_ore";
+            case 10 :
+                return "diamond_ore";
+            case 11 :
+                return "clay";
             default :
                 break;  
         }
