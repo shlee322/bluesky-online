@@ -234,9 +234,9 @@ public static class MapScene implements Scene, UIOnClickListener {
             int mapId = MapModel.getInstance().getMyObject().getMapId();
             int x = MapModel.getInstance().getMyObject().getX();
             int y = MapModel.getInstance().getMyObject().getY();
-            int destMapId = MapModel.getInstance().getMyObject().dest_map;
-            int destX = MapModel.getInstance().getMyObject().dest_x;
-            int destY = MapModel.getInstance().getMyObject().dest_y;
+            int destMapId = MapModel.getInstance().getMyObject().getDestMapId();
+            int destX = MapModel.getInstance().getMyObject().getDestX();
+            int destY = MapModel.getInstance().getMyObject().getDestX();
 
             if(keyCode==LEFT || keyCode == 37){
                 //if(destX>x) destX = MapModel.getInstance().getMyObject().getX();
@@ -246,14 +246,15 @@ public static class MapScene implements Scene, UIOnClickListener {
 
             if(keyCode==RIGHT || keyCode == 39){
                 //if(destX<x) destX = MapModel.getInstance().getMyObject().getX();
-
                 isMove = true;
                 destX += 2;
             }
 
-            if(destX<0 || destX>80) {
+            if(destX<0 || destX>=80) {
                 destMapId = MapModel.getInstance().getMap(MapModel.getInstance().getMyObject().getMapId())
                     .getAroundMapId(destX<0 ? MapModel.MapPosition.LEFT : MapModel.MapPosition.RIGHT);
+                mapId = destMapId;
+                x = destX<0 ? 79 : 0;
                 destX = destX<0 ? 78 : 2;
             }
 
@@ -263,6 +264,8 @@ public static class MapScene implements Scene, UIOnClickListener {
             */
 
             if(!isMove) return false;
+
+            print(destMapId + " - key\n");
 
             MapModel.getInstance().getMyObject().move(mapId, x, y, destMapId, destX, destY);
             Engine.getInstance().getNetwork().write(

@@ -1,5 +1,8 @@
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+* Bluesky Online의 모든 루틴를 관리하는 클래스입니다.
+*/
 public static class Engine implements EngineAdapter {
 	private static Engine instance = new Engine();
 
@@ -50,6 +53,8 @@ public static class Engine implements EngineAdapter {
 	}
 
 	public void runGameLoop() {
+		getEngineAdapter().drawBefore();
+
 	    if(this.scene != null) {
 	        if(lastScene != scene) {
 	            if(this.lastScene != null) {
@@ -65,6 +70,8 @@ public static class Engine implements EngineAdapter {
 	        }
 	        this.scene.runSceneLoop();
 	    }
+
+	    getEngineAdapter().drawAfter();
 
 	    getUIManager().runUILoop();
 
@@ -202,4 +209,6 @@ public static class Engine implements EngineAdapter {
 			getUIManager().getFocusComponent().keyPressed(key, keyCode);
 		}
 	}
+	public void drawBefore() {}
+	public void drawAfter() {}
 }
