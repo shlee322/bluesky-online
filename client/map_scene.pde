@@ -236,7 +236,7 @@ public static class MapScene implements Scene, UIOnClickListener {
             int y = MapModel.getInstance().getMyObject().getY();
             int destMapId = MapModel.getInstance().getMyObject().getDestMapId();
             int destX = MapModel.getInstance().getMyObject().getDestX();
-            int destY = MapModel.getInstance().getMyObject().getDestX();
+            int destY = MapModel.getInstance().getMyObject().getDestY();
 
             if(keyCode==LEFT || keyCode == 37){
                 //if(destX>x) destX = MapModel.getInstance().getMyObject().getX();
@@ -269,7 +269,7 @@ public static class MapScene implements Scene, UIOnClickListener {
 
             if(!isMove) return false;
 
-            print(destMapId + " - key\n");
+            print(destMapId + " " + destX + "," + destY + "\n");
 
             MapModel.getInstance().getMyObject().move(mapId, x, y, destMapId, destX, destY);
             Engine.getInstance().getNetwork().write(

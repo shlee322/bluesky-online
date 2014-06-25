@@ -44,6 +44,7 @@ public class MapService extends Service {
                     linkMap(finalMap_id);
                 }
             });
+            return;
         }
 
         if(topic.startsWith("/maps/")) {
@@ -63,6 +64,7 @@ public class MapService extends Service {
                     map.arrivedMQTTMessage(finalSubTopic, message.getPayload());
                 }
             });
+            return;
         }
         if(topic.startsWith("/event/create_map/")) {
             byte[] data = message.getPayload();
@@ -90,6 +92,7 @@ public class MapService extends Service {
                     map.linkAroundMap(finalTargetMapId, finalTargetMapPosition);
                 }
             });
+            return;
         }
     }
 

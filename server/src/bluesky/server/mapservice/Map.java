@@ -152,6 +152,12 @@ public class Map implements IMap {
 
         this.aroundMapId[position] = mapId;
 
-        //클라이언트한테 알림
+        this.service.publishMQTT("/maps/" + this.getMapId() + "/link_around_map", new byte[]{
+                (byte)(position & 0xFF),
+                (byte)((mapId & 0xFF000000) >> 24),
+                (byte)((mapId & 0xFF0000) >> 16),
+                (byte)((mapId & 0xFF00) >> 8),
+                (byte)(mapId & 0xFF)
+        });
     }
 }

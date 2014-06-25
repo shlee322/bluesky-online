@@ -1,10 +1,9 @@
 package bluesky.server.usersevice;
 
 import bluesky.protocol.packet.client.SC_MoveMap;
-import bluesky.server.gameobject.GameObject;
 import org.jboss.netty.channel.Channel;
 
-public class UserObject extends GameObject {
+public class UserObject {
     private static int testIndex = 0;
     private UserService service;
     private Channel channel;
@@ -33,7 +32,7 @@ public class UserObject extends GameObject {
 
         map.joinUser(this);
 
-        this.channel.write(new SC_MoveMap(getUUID(), this.map.getMapId()));
+        this.channel.write(new SC_MoveMap(this.getUUID(), this.map.getMapId()));
     }
 
     public Channel getChannel() {
@@ -58,5 +57,17 @@ public class UserObject extends GameObject {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setMap(MapProxy map) {
+        this.map = map;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

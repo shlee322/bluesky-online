@@ -35,6 +35,7 @@ public static class MapModel implements Model {
         myObjectId = objectId;
         Engine.getInstance().getNetwork().write(new CS_GetMapInfo(mapId));
     }
+
     public void setMapInfo(SC_MapInfo info) {
         cacheMaps.put(info.map_id, new Map(info.map_id, info.around_map_id, info.tiles));
     }
@@ -49,6 +50,7 @@ public static class MapModel implements Model {
 
     	if(myObject == null && myObjectId == obj.getUUID()) {
     		myObject = obj;
+            print("test\n");
     	}
 
     	obj.move(move.src_map, move.src_x, move.src_y, move.dest_map, move.dest_x, move.dest_y);
@@ -278,7 +280,6 @@ public static class GameObject implements Entity {
         this.dest_map_id = dest_map_id;
 		this.dest_x = dest_x;
 		this.dest_y = dest_y;
-        print(this.getUUID() + " - " + this.getMapId() + " - " + this.getDestMapId() + "\n");
 	}
 
     public int getDestMapId() {

@@ -48,6 +48,7 @@ public class MapProxy {
 
     public void joinUser(UserObject user) {
         this.objects.add(user);
+        user.setMap(this);
 
         this.service.publishMQTT("/maps/" + getMapId() + "/join", new byte[]{
                 (byte)((this.service.getServiceId() & 0xFF00) >> 8),
@@ -71,11 +72,11 @@ public class MapProxy {
         });
 
         for(UserObject u : this.objects) {
+            if(u == user) continue;
+
             u.getChannel().write(new MoveObject(user.getUUID(),
                     user.getMapId(), user.getX(), user.getY(), user.getMapId(), user.getX(), user.getY()));
         }
-
-
     }
 
     public void exitUser(UserObject user) {
@@ -109,27 +110,28 @@ public class MapProxy {
 
     public void arrivedMQTTMessage(String subTopic, byte[] data) {
         if(subTopic.equals("/join")) {
+        }
 
+        if(subTopic.equals("/link_around_map")) {
+            for(UserObject user : this.objects) {
+                this.sendMapInfo(user);
+            }
         }
     }
 
     public void moveObject(UserObject user, MoveObject packet) {
-        if(packet.src_map == getMapId()) { //패킷 전송 뿅뿅
-            //System.out.println("패킷 전송 뿅뿅!");
-            //자기가 관리하는 오브젝트 들한테 보내고
-            for(UserObject u : this.objects) {
-                if(u == user) continue;
-                u.getChannel().write(packet);
-            }
-
-            //MQTT로
+        for(UserObject u : this.objects) {
+            if(u == user) continue;
+            u.getChannel().write(packet);
         }
 
-        if(packet.src_map == packet.dest_map) return;
+        user.setX(packet.dest_x);
+        user.setY(packet.dest_y);
+        if(user.getMapId() == packet.dest_map) return;
         if(packet.dest_map == getMapId()) {
-            this.objects.add(user);
+            this.joinUser(user);
         } else {
-            this.objects.remove(user);
+            this.exitUser(user);
         }
     }
 

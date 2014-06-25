@@ -158,21 +158,21 @@ public class UserService extends Service {
     }
 
     public void moveObject(final UserObject user, final MoveObject packet) {
-        this.addWork(packet.src_map, new Runnable() {
+        this.addWork(/*packet.src_map*/user.getMapId(), new Runnable() {
             @Override
             public void run() {
-                MapProxy map = getMapProxy(packet.src_map, false);
+                MapProxy map = getMapProxy(user.getMapId(), false);
                 if(map == null) return;
                 map.moveObject(user, packet);
             }
         });
 
-        if(packet.src_map == packet.dest_map) return;
+        if(user.getMapId() == packet.dest_map) return;
 
         this.addWork(packet.dest_map, new Runnable() {
             @Override
             public void run() {
-                MapProxy map = getMapProxy(packet.dest_map, false);
+                MapProxy map = getMapProxy(packet.dest_map, true);
                 if(map == null) return;
                 map.moveObject(user, packet);
             }
