@@ -50,7 +50,6 @@ public static class MapModel implements Model {
 
     	if(myObject == null && myObjectId == obj.getUUID()) {
     		myObject = obj;
-            print("test\n");
     	}
 
     	obj.move(move.src_map, move.src_x, move.src_y, move.dest_map, move.dest_x, move.dest_y);
@@ -113,40 +112,54 @@ public static class MapModel implements Model {
         return this.cacheObject.entrySet();
     }
 
-    public int getDisplayX(int position) {
-        int p = (position == MapPosition.LEFT ? -1 * MAP_SIZE
+    private int getPositionX(int position) {
+        return (position == MapPosition.LEFT ? -1
           : position == MapPosition.UP ? 0
-          : position == MapPosition.RIGHT ? MAP_SIZE
+          : position == MapPosition.RIGHT ? 1
           : position == MapPosition.DOWN ? 0
-          : position == MapPosition.UP_LEFT ? -1 * MAP_SIZE
-          : position == MapPosition.UP_RIGHT ? MAP_SIZE
-          : position == MapPosition.DOWN_LEFT ? -1 * MAP_SIZE
-          : position == MapPosition.DOWN_RIGHT ? MAP_SIZE
+          : position == MapPosition.UP_LEFT ? -1
+          : position == MapPosition.UP_RIGHT ? 1
+          : position == MapPosition.DOWN_LEFT ? -1
+          : position == MapPosition.DOWN_RIGHT ? 1
           : 0);
+    }
 
-      if(position == MapPosition.CENTER) {
-        return -1*MapModel.getTileSize()*this.getMyObject().getX()/4 + 400 - (this.getMyObject().getWidth()/2);
-      }
+    private int getPositionY(int position) {
+        return (position == MapPosition.LEFT ? 0
+          : position == MapPosition.UP ?  -1
+          : position == MapPosition.RIGHT ? 0
+          : position == MapPosition.DOWN ? 1
+          : position == MapPosition.UP_LEFT ? -1
+          : position == MapPosition.UP_RIGHT ? -1
+          : position == MapPosition.DOWN_LEFT ? 1
+          : position == MapPosition.DOWN_RIGHT ? 1
+          : 0);
+    }
+
+    public int getDisplayX(int position) {
+        int p = this.getPositionX(position) * MAP_SIZE;
+
+        if(position == MapPosition.CENTER) {
+            return -1 * MapModel.getTileSize() * this.getMyObject().getX() / 4 + 400 - (this.getMyObject().getWidth()/2);
+        }
 
       return this.getDisplayX(MapPosition.CENTER) + p;
     }
 
     public int getDisplayY(int position) {
-        int p = (position == MapPosition.LEFT ? 0
-          : position == MapPosition.UP ?  -1 * MAP_SIZE
-          : position == MapPosition.RIGHT ? 0
-          : position == MapPosition.DOWN ? MAP_SIZE
-          : position == MapPosition.UP_LEFT ? -1 * MAP_SIZE
-          : position == MapPosition.UP_RIGHT ? -1 * MAP_SIZE
-          : position == MapPosition.DOWN_LEFT ? MAP_SIZE
-          : position == MapPosition.DOWN_RIGHT ? MAP_SIZE
-          : 0);
+        int p = this.getPositionY(position) * MAP_SIZE;
 
       if(position == MapPosition.CENTER) {
         return -1*MapModel.getTileSize()*this.getMyObject().getY()/4 + 300 - this.getMyObject().getHeight();
       }
 
       return this.getDisplayY(MapPosition.CENTER) + p;
+    }
+
+    public TilePosition getAroundTilePosition(GameObject obj, int position) {
+        int x = (obj.getX()/4) + this.getPositionX(position);
+        int y = ((obj.getY()-1)/4) + this.getPositionY(position);
+        return new TilePosition(obj.getMapId(), x, y);
     }
 }
 
@@ -164,22 +177,25 @@ if(주인공맵 id가 자기와 같다?!) {
 public static class Map {
     private int mapId;
     private int[] aroundMapId;
-    private byte[] tiles;
+    private Tile[] tiles;
     private int position;
     private int centerMapId;
 
     public Map(int mapId, int[] aroundMapId, byte[] tiles) {
     	this.mapId = mapId;
     	this.aroundMapId = aroundMapId;
-    	this.tiles = tiles;
+        this.tiles = new Tile[tiles.length];
+        for(int i=0; i<tiles.length; i++) {
+            this.tiles[i] = new Tile(tiles[i]);
+        }
     }
 
     public int getMapId() {
       return this.mapId;
     }
 
-	public byte[] getTiles() {
-		return this.tiles;
+	public Tile getTile(int x, int y) {
+		return this.tiles[y*20+x];
 	}
 
     public int getAroundMapId(int i){
@@ -201,7 +217,38 @@ public static class Map {
     }
 }
 
-static class Tile {
+public static class TilePosition {
+    public int mapId;
+    public int x;
+    public int y;
+
+    public TilePosition(int mapId, int x, int y) {
+        this.mapId = mapId;
+        this.x = x;
+        this.y = y;
+    }
+}
+
+public static class Tile {
+    private byte resId;
+    private int hp = 300;
+
+    public Tile(byte resId) {
+        this.resId = resId;
+    }
+
+    public byte getResId() {
+        return this.resId;
+    }
+
+    public void breakTile() {
+        this.hp -= 1;
+        print(this.hp + "\n");
+        if(hp < 1) {
+            this.resId = 0;
+            this.hp = 0;
+        }
+    }
 }
 
 public static class GameObject implements Entity {

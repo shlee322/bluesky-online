@@ -29,4 +29,10 @@ public static class UIComponent {
 	public boolean keyPressedHook(char key, int keyCode) {
 		return false;
 	}
+	public void keyReleased() {
+	}
+	public boolean keyReleasedHook() {
+		return false;
+	}
+
 }

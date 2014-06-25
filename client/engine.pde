@@ -209,6 +209,13 @@ public static class Engine implements EngineAdapter {
 			getUIManager().getFocusComponent().keyPressed(key, keyCode);
 		}
 	}
+
+	public void keyReleased() {
+		if(getUIManager().keyReleasedHook()) return;
+		if(getUIManager().getFocusComponent() != null) {
+			getUIManager().getFocusComponent().keyReleased();
+		}
+	}
 	public void drawBefore() {}
 	public void drawAfter() {}
 }

@@ -45,4 +45,11 @@ public static class UIManager {
 		}
 		return false;
 	}
+
+	public boolean keyReleasedHook() {
+		for(UIComponent comp : this.componentList) {
+			if(comp.keyReleasedHook()) return true;
+		}
+		return false;
+	}
 }

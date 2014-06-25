@@ -11,12 +11,11 @@ public static class MapScene implements Scene, UIOnClickListener {
     int LEFT = 1;
     int RIGHT = 2;
     int JUMP = 3;
-     int slot;
     MoveCharacter move = new MoveCharacter();
     private final int MAP_SIZE = 20;
     private final int MAP_PX_SIZE = MAP_SIZE*32;
 
-    private byte[] nullTiles = new byte[400];
+    private Tile nullTile = new Tile((byte)0);
 
     public MapScene(SC_MoveMap moveMap) {
         this.bg = Engine.getInstance().loadImage("images/sky.png");
@@ -64,9 +63,9 @@ public static class MapScene implements Scene, UIOnClickListener {
              Engine.getInstance().getUIManager().addComponent(inventory_full);
     }
 
-    public byte[] getTiles(Map map) {
-        if(map == null) return nullTiles;
-        return map.getTiles();
+    public Tile getTile(Map map, int x, int y) {
+        if(map == null) return nullTile;
+        return map.getTile(x, y);
     }
 
     @Override
@@ -81,12 +80,12 @@ public static class MapScene implements Scene, UIOnClickListener {
         if(mainMap != null) {
           for(int y=0; y<20; y++) {
             for(int x=0; x<20; x++) {
-                if(mainMap.getTiles()[y*20+x] == 0) continue;
+                if(mainMap.getTile(x,y).getResId() == 0) continue;
 
                 int d_x = MapModel.getInstance().getDisplayX(-1) + (x*MapModel.getTileSize());
                 int d_y = MapModel.getInstance().getDisplayY(-1) + (y*MapModel.getTileSize());
                 if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
-                Engine.getInstance().drawTile(d_x, d_y, mainMap.getTiles()[y*20+x]);
+                Engine.getInstance().drawTile(d_x, d_y, mainMap.getTile(x,y).getResId());
             }
           }
         }
@@ -96,11 +95,11 @@ public static class MapScene implements Scene, UIOnClickListener {
             if(map != null) {
                 for(int y=0; y<20; y++) {
                     for(int x=0; x<20; x++) {
-                        if(map.getTiles()[y*20+x] == 0) continue;
+                        if(map.getTile(x, y).getResId() == 0) continue;
                         int d_x = MapModel.getInstance().getDisplayX(i) + (x*MapModel.getTileSize());
                         int d_y = MapModel.getInstance().getDisplayY(i) + (y*MapModel.getTileSize());
                         if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
-                        Engine.getInstance().drawTile(d_x, d_y, map.getTiles()[y*20+x]);
+                        Engine.getInstance().drawTile(d_x, d_y, map.getTile(x, y).getResId());
                     }
                 }
             }
@@ -152,82 +151,37 @@ public static class MapScene implements Scene, UIOnClickListener {
             initInven();
         }
         if(comp instanceof Inventory_full){
-           System.out.println(slot);
+            //클릭?
         }
-    }
-
-    private class MenuBtnComponent extends UIComponent {
-        public void loop() {
-            Engine.getInstance().getEngineAdapter().drawStroke(0, 0, 0, 255, 2);
-            Engine.getInstance().getEngineAdapter().drawBox(700, 20, 16, 50, PI/2, 66, 139, 202, 255);
-            Engine.getInstance().getEngineAdapter().drawBox(720, 20, 16, 50, PI/2, 66, 139, 202, 255);
-            Engine.getInstance().getEngineAdapter().drawBox(740, 20, 16, 50, PI/2, 66, 139, 202, 255);
-            Engine.getInstance().getEngineAdapter().drawBox(760, 20, 16, 50, PI/2, 66, 139, 202, 255);
-        }
-        public boolean clickScreen(int x, int y) {
-            if(x>=700 && x<780 && y>=20 && y<70) {
-                this.callClick(x, y);
-                return true;
-            }
-            return false;
-        }
-    }
-
-    private class Inventory extends UIComponent {
-        public void loop() {
-            Engine.getInstance().getEngineAdapter().drawStroke(255, 255, 255, 100, 1);
-            Engine.getInstance().getEngineAdapter().drawBox(90, 15, 40, 40, 0, 0, 0, 0, 0);  
-            Engine.getInstance().getEngineAdapter().fill(255, 255, 255, 255);
-        }
-        
-        public boolean clickScreen(int x, int y) {
-            if(x>=90 && x<130 && y>=15 && y<55) {
-                this.callClick(x, y);
-                return true;
-            }
-            return false;
-        }
-
-    }
-
-    private class Inventory_full extends UIComponent {
-       
-        public void loop() {
-            Engine.getInstance().getEngineAdapter().drawStroke(255, 255, 255, 100, 1);
-            Engine.getInstance().getEngineAdapter().drawBox(65, 75, 670, 450, 10, 66, 139, 202, 255);
-            Engine.getInstance().getEngineAdapter().drawBox(255, 155, 450, 352, 10, 66, 139, 202, 255);  
-
-            for(int x=0;x<3;x++){
-               Engine.getInstance().getEngineAdapter().line(255,155+88*(x+1),705,155+88*(x+1));
-            }
-            for(int x=0;x<5;x++){
-                Engine.getInstance().getEngineAdapter().line(255+75*(x+1),155,255+75*(x+1), 507);
-            }
-            Engine.getInstance().getEngineAdapter().fill(255, 255, 255, 255);
-            for(int x = 0 ; x<24; x++){
-            Engine.getInstance().drawText(String.valueOf(Inven.getInstance().getInventory(x)), 255+75*(x%6)+30, 155+88*(x/6)+30, 30, true);
-            }
-        }
-        
-        public boolean clickScreen(int x, int y) {
-            for(int a=0; a<24;a++){
-                if(x>=255+75*(a%6) && x<255+75*(a%6)+75 && y>=155+88*(a/6) && y<155+88*(a/6)+88){
-                    slot = a;
-                    this.callClick(x,y);
-                    return true;
-                }
-            }
-            return false;
-        }
-
     }
 
     private class KeyPressed extends UIComponent{
+        private boolean control_key = false;
         public KeyPressed() {
+        }
+
+        public void loop() {
+            if(control_key) {
+                TilePosition tilePosition = MapModel.getInstance().getAroundTilePosition(
+                    MapModel.getInstance().getMyObject(), MapModel.MapPosition.DOWN);
+                Map map = MapModel.getInstance().getMap(tilePosition.mapId);
+                map.getTile(tilePosition.x, tilePosition.y).breakTile();
+            }
+        }
+
+        public boolean keyReleasedHook() {
+            control_key = false;
+            return false;
         }
 
         public boolean keyPressedHook(char key, int keyCode) {
             if(MapModel.getInstance().getMyObject() == null) return false;
+
+            print(keyCode + "\n");
+            if(keyCode == CONTROL || keyCode == 17) {
+                control_key = true;
+                return true;
+            }
 
             //좌우 이동
             boolean isMove = false;
@@ -239,13 +193,11 @@ public static class MapScene implements Scene, UIOnClickListener {
             int destY = MapModel.getInstance().getMyObject().getDestY();
 
             if(keyCode==LEFT || keyCode == 37){
-                //if(destX>x) destX = MapModel.getInstance().getMyObject().getX();
                 isMove = true;
                 destX -= 2;
             }
 
             if(keyCode==RIGHT || keyCode == 39){
-                //if(destX<x) destX = MapModel.getInstance().getMyObject().getX();
                 isMove = true;
                 destX += 2;
             }
@@ -268,8 +220,6 @@ public static class MapScene implements Scene, UIOnClickListener {
             */
 
             if(!isMove) return false;
-
-            print(destMapId + " " + destX + "," + destY + "\n");
 
             MapModel.getInstance().getMyObject().move(mapId, x, y, destMapId, destX, destY);
             Engine.getInstance().getNetwork().write(

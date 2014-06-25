@@ -44,5 +44,5 @@ void keyPressed() {
 * 키 입력이 해지되면 호출되는 메소드입니다.
 */
 void keyReleased() {
-	//Engine.getInstance().keyReleased();
+	Engine.getInstance().keyReleased();
 }
