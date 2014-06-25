@@ -115,6 +115,15 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 		this.getProcessing().translate(x, y);
 		tileImages.get(tile.getResId()).draw();
+		//Tile hpBar
+		if(tile.isDrawHp()) {
+			this.drawStroke(0, 0, 0, 0, 1);
+			this.getProcessing().noFill();
+			this.getProcessing().rect(0, 0, MapModel.getTileSize(), MapModel.getTileSize()/5);
+			this.drawStroke(false);
+			this.drawBox(0, 0, tile.getHp()/((float)tile.getMaxHp())*MapModel.getTileSize(), MapModel.getTileSize()/5, PI/2, 255, 0, 0, 0);
+		}
+
 		this.getProcessing().translate(-x, -y);
 	}
 
