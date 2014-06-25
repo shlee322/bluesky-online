@@ -116,14 +116,12 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.getProcessing().translate(x, y);
 		tileImages.get(tile.getResId()).draw();
 		//Tile hpBar
-		if(tile.isDrawHp() == true) {
-			
+		if(tile.isDrawHp()) {
 			this.drawStroke(0, 0, 0, 255, 1);
 			this.getProcessing().noFill();
 			this.getProcessing().rect(7, 20, 20, 4);
 			this.drawStroke(false);
 			this.drawBox(8, 20, tile.getHp()/((float)tile.getMaxHp())*20, 4, PI/2, 255, 0, 0, 255);
-			
 		}
 
 		this.getProcessing().translate(-x, -y);
@@ -163,6 +161,25 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 	public EImage loadImage(String path) {
 		return new ProcessingEImage(this.getProcessing().loadImage(path));
+	}
+
+	public void drawDropItem(int x, int y, DropItem obj) {
+		if(!tileImages.containsKey(obj.getResId())) {
+			return;
+		}
+
+		EImage img = tileImages.get(obj.getResId());
+
+		this.getProcessing().translate(x, y);
+		img.setWidth(this.getWidth() / 48);
+		img.setHeight(this.getWidth() / 48);
+
+		//draw
+
+		img.setWidth(this.getWidth() / 24);
+		img.setHeight(this.getWidth() / 24);
+
+		this.getProcessing().translate(-x, -y);
 	}
 
 	public void drawGameObject(int x, int y, GameObject obj) {

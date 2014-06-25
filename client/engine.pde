@@ -155,6 +155,12 @@ public static class Engine implements EngineAdapter {
 		getEngineAdapter().drawGameObject(x, y, obj);
 	}
 
+	public void drawDropItem(int x, int y, DropItem obj) {
+		getEngineAdapter().drawDropItem(x, y, obj);
+	}
+
+	
+
 	public void inputEvent(String committedText, String composedText) {
 		try {
 			if(getUIManager().getFocusComponent() == null) {

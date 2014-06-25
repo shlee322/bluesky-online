@@ -179,10 +179,6 @@ public class Map implements IMap {
 
     public void createDropItem(DropItem item) {
         this.service.publishMQTT("/maps/" + this.getMapId() + "/drop_item", new byte[]{
-                (byte)((mapId & 0xFF000000) >> 24),
-                (byte)((mapId & 0xFF0000) >> 16),
-                (byte)((mapId & 0xFF00) >> 8),
-                (byte)(mapId & 0xFF),
                 (byte)(item.getUUID() >>> 56),
                 (byte)(item.getUUID() >>> 48),
                 (byte)(item.getUUID() >>> 40),
@@ -191,6 +187,10 @@ public class Map implements IMap {
                 (byte)(item.getUUID() >>> 16),
                 (byte)(item.getUUID() >>> 8),
                 (byte)(item.getUUID() >>> 0),
+                (byte)((mapId & 0xFF000000) >> 24),
+                (byte)((mapId & 0xFF0000) >> 16),
+                (byte)((mapId & 0xFF00) >> 8),
+                (byte)(mapId & 0xFF),
                 (byte)(item.getX() & 0xFF),
                 (byte)(item.getY() & 0xFF),
                 item.getResId()

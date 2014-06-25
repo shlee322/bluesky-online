@@ -27,6 +27,7 @@ public static class MapModel implements Model {
 	private GameObject myObject; //캐릭터를 의미
 	private HashMap<Integer, Map> cacheMaps = new HashMap<Integer, Map>();
 	private HashMap<Long, GameObject> cacheObject = new HashMap<Long, GameObject>();
+    private HashMap<Long, DropItem> cacheDropItem = new HashMap<Long, DropItem>();
     private Map centerMap;
 
 	public void init(Scene scene) {}
@@ -79,6 +80,11 @@ public static class MapModel implements Model {
         map.setTile(new Tile((byte)0, breakTile.map_id, breakTile.x, breakTile.y));
     }
 
+    public void dropItem(SC_DropItem dropItem) {
+        cacheDropItem.put(dropItem.uuid, new DropItem(dropItem.uuid, dropItem.mapId,
+            dropItem.x, dropItem.y, dropItem.resId));
+    }
+
     public Map getMap(int id) {
     	if(id == -1) return null;
     	if(!cacheMaps.containsKey(id)) { //캐싱되어있지 않음
@@ -116,6 +122,10 @@ public static class MapModel implements Model {
 
     public java.util.Set getGameObjects() {
         return this.cacheObject.entrySet();
+    }
+
+    public java.util.Set getDropItems() {
+        return this.cacheDropItem.entrySet();
     }
 
     private int getPositionX(int position) {
@@ -326,6 +336,52 @@ public static class Tile {
 
     public boolean isDrawHp() {
         return this.drawHp;
+    }
+}
+
+public static class DropItem implements Entity {
+    private long uuid;
+    private int mapId;
+    private int x;
+    private int y;
+    private byte resId;
+    private Object engineTag;
+
+    public DropItem(long uuid, int mapId, int x, int y, byte resId) {
+        this.uuid = uuid;
+        this.mapId = mapId;
+        this.x = x;
+        this.y = y;
+        this.resId = resId;
+    }
+
+    public void setEngineTag(Object o) {
+        this.engineTag = o;
+    }
+
+    public Object getEngineTag() {
+        return this.engineTag;
+    }
+
+
+    public long getUUID() {
+        return this.uuid;
+    }
+
+    public int getMapId() {
+        return this.mapId;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public byte getResId() {
+        return this.resId;
     }
 }
 

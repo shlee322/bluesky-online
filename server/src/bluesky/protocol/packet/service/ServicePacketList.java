@@ -5,7 +5,8 @@ public class ServicePacketList extends bluesky.protocol.packet.PacketList {
             null,
             ServiceInfo.class,
             GetMapInfo.class,
-            MapInfo.class
+            MapInfo.class,
+            ServiceBreakTile.class
     };
 
     @Override

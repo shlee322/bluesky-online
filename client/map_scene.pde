@@ -115,6 +115,17 @@ public static class MapScene implements Scene, UIOnClickListener {
                 obj.move(obj.getMapId(), obj.getX(), obj.getY(), obj.getMapId(), obj.getX(), obj.getY()+4);
             }
         }
+
+        for(Object entry : MapModel.getInstance().getDropItems()) {
+            DropItem item = (DropItem)((java.util.Map.Entry)entry).getValue();
+            Map map = MapModel.getInstance().getMap(item.getMapId());
+            if(map == null || !map.isDisplay(MapModel.getInstance().getMyObject())) continue;
+            int d_x = MapModel.getInstance().getDisplayX(map.getDisplayPosition()) + (item.getX()*MapModel.getTileSize());
+            int d_y = MapModel.getInstance().getDisplayY(map.getDisplayPosition()) + (item.getY()*MapModel.getTileSize());
+            if(d_x<-1*MapModel.getTileSize() || d_y<-1*MapModel.getTileSize() || d_x > 800 || d_y > 600) continue;
+
+            Engine.getInstance().drawDropItem(d_x, d_y, item);
+        }
         
         for(Object entry : MapModel.getInstance().getGameObjects()) {
             GameObject obj = (GameObject)((java.util.Map.Entry)entry).getValue();
@@ -159,7 +170,7 @@ public static class MapScene implements Scene, UIOnClickListener {
         }
 
         if(packet instanceof SC_DropItem) {
-            print("SC_DropItem!\n");
+            MapModel.getInstance().dropItem((SC_DropItem)packet);
         }
     }
 
