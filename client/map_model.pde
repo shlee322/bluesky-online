@@ -363,7 +363,6 @@ public static class DropItem implements Entity {
         return this.engineTag;
     }
 
-
     public long getUUID() {
         return this.uuid;
     }
@@ -382,6 +381,38 @@ public static class DropItem implements Entity {
 
     public byte getResId() {
         return this.resId;
+    }
+
+    public String getResName() {
+        switch (this.getResId()) {
+            case 0 : 
+                break;
+            case 1 :
+                return "water";
+            case 2 :
+                return "dirt";
+            case 3 :
+                return "grass";
+            case 4 :
+                return "sand";
+            case 5 :
+                return "stone";
+            case 6 :
+                return "iron_ore";
+            case 7 :
+                return "gold_ore";
+            case 8 :
+                return "lava";
+            case 9 :
+                return "coal_ore";
+            case 10 :
+                return "diamond_ore";
+            case 11 :
+                return "clay";
+            default :
+                break;  
+        }
+        return null;
     }
 }
 

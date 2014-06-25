@@ -7,6 +7,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private Minim minim;
 	private AudioPlayer bgmPlayer;
 	private HashMap<Byte, EImage> tileImages = new HashMap<Byte, EImage>();
+	private HashMap<Byte, EImage> dropitemImages = new HashMap<Byte, EImage>();
 	private HashMap<String, ProcessingGameObjectImage> characterImages = new HashMap<String, ProcessingGameObjectImage>();
 	private float nameLen;
 	private float chatLen;
@@ -164,20 +165,20 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	}
 
 	public void drawDropItem(int x, int y, DropItem obj) {
-		if(!tileImages.containsKey(obj.getResId())) {
+		if(!dropitemImages.containsKey(obj.getResId())) {
+			EImage img = loadImage("data/tiles/" + obj.getResName() + ".png");
+			img.setWidth(this.getWidth() / 48);
+			img.setHeight(this.getWidth() / 48);
+			dropitemImages.put(obj.getResId(), img);
 			return;
 		}
 
-		EImage img = tileImages.get(obj.getResId());
+		EImage img = dropitemImages.get(obj.getResId());
 
 		this.getProcessing().translate(x, y);
-		img.setWidth(this.getWidth() / 48);
-		img.setHeight(this.getWidth() / 48);
 
 		//draw
-
-		img.setWidth(this.getWidth() / 24);
-		img.setHeight(this.getWidth() / 24);
+		img.draw();
 
 		this.getProcessing().translate(-x, -y);
 	}
@@ -232,7 +233,6 @@ class ProcessingEngineAdapter implements EngineAdapter {
 			obj.getWeapon().draw();
 		}
 
-
 		this.getProcessing().rectMode(CENTER);
 
 		if(!"".equals(obj.getName())) {
@@ -240,7 +240,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 			this.getProcessing().fill(0, 0, 0, 160);
 			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, nameLen+10, 18, 7);
 			this.getProcessing().fill(255);
-			drawText(obj.getName() + obj.getUUID() , (img.getWidth() / 2), img.getHeight() + 10, 12, true);
+			drawText(obj.getName() , (img.getWidth() / 2), img.getHeight() + 10, 12, true);
 		}
 
 		if(obj.getHeadMessage() != null && !"".equals(obj.getHeadMessage())) {
