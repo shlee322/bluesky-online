@@ -104,6 +104,17 @@ public static class MapScene implements Scene, UIOnClickListener {
                 }
             }
         }
+
+        TilePosition tilePosition = MapModel.getInstance()
+            .getAroundTilePosition(MapModel.getInstance().getMyObject(), MapModel.MapPosition.DOWN);
+        Map downMap = MapModel.getInstance().getMap(tilePosition.mapId);
+        if(downMap != null) {
+            Tile downTile = downMap.getTile(tilePosition.x, tilePosition.y);
+            if(downTile == null || downTile.getResId() == 0) {
+                GameObject obj = MapModel.getInstance().getMyObject();
+                obj.move(obj.getMapId(), obj.getX(), obj.getY(), obj.getMapId(), obj.getX(), obj.getY()+4);
+            }
+        }
         
         for(Object entry : MapModel.getInstance().getGameObjects()) {
             GameObject obj = (GameObject)((java.util.Map.Entry)entry).getValue();

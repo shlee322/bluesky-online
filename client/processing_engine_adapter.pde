@@ -165,6 +165,11 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 		ProcessingGameObjectImage img = characterImages.get("1");
 
+		//점프나 중력
+		if(obj.getY() != obj.dest_y) {
+			obj.setY(obj.getY() + 1);
+		}
+
 		if(obj.getX() != obj.dest_x/* || obj.getY() != obj.dest_y*/) {
 			obj.moveTick += 1;
 			if(obj.moveTick >= 40) {
@@ -173,9 +178,8 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 			int dir = obj.getMoveDir();
 
-			obj.setX( obj.getX() + (dir == 1 ? 1 : dir == 0 ? -1 : 0));
+			obj.setX(obj.getX() + (dir == 1 ? 1 : dir == 0 ? -1 : 0));
 			if(obj.getX() < 0 || obj.getX() >= 80) {
-        		print(obj.getDestMapId() + " - test\n");
 				obj.move(obj.getDestMapId(), obj.getX() < 0 ? 79 : 0, obj.getY(),
 					obj.getDestMapId(), obj.getDestX(), obj.getDestX());
 			}
@@ -187,7 +191,6 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		obj.setHeight(img.getHeight() / 4);
 
 		img.setDirection(4*obj.getDir() + (obj.moveTick / 10));
-
 
 		int o_x = x + (img.getWidth() / 2);
 		int o_y = y - img.getHeight();
