@@ -8,6 +8,8 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private AudioPlayer bgmPlayer;
 	private HashMap<String, EImage> tileImages = new HashMap<String, EImage>();
 	private HashMap<String, ProcessingGameObjectImage> characterImages = new HashMap<String, ProcessingGameObjectImage>();
+	private float nameLen;
+	private float chatLen;
 
 	public ProcessingEngineAdapter(PApplet processing) {
 		this.processing = processing;
@@ -195,15 +197,17 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		this.getProcessing().rectMode(CENTER);
 
 		if(!"".equals(obj.getName())) {
+			nameLen = textWidth(obj.getName());
 			this.getProcessing().fill(0, 0, 0, 160);
-			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, 80, 18, 7);
+			this.getProcessing().rect((img.getWidth() / 2), img.getHeight() + 10, nameLen+10, 18, 7);
 			this.getProcessing().fill(255);
 			drawText(obj.getName(), (img.getWidth() / 2), img.getHeight() + 10, 12, true);
 		}
 
 		if(obj.getHeadMessage() != null && !"".equals(obj.getHeadMessage())) {
+			chatLen = textWidth(obj.getHeadMessage());
 			this.getProcessing().fill(0, 0, 0, 160);
-			this.getProcessing().rect((img.getWidth() / 2), -20, 160, 18, 7);
+			this.getProcessing().rect((img.getWidth() / 2), -20, chatLen+20, 18, 7);
 			this.getProcessing().fill(255);
 			drawText(obj.getHeadMessage(), (img.getWidth() / 2), -20, 12, true);
 		}
