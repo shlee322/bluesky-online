@@ -163,8 +163,10 @@ public static class MapModel implements Model {
     }
 
     public TilePosition getAroundTilePosition(GameObject obj, int position) {
-        int x = (obj.getX()/4) + this.getPositionX(position);
+        int x = ((obj.getX()+4)/4) + this.getPositionX(position);
         int y = ((obj.getY()-1)/4) + this.getPositionY(position);
+        if(x<0) return new TilePosition(this.getMap(obj.getMapId()).getAroundMapId(MapPosition.LEFT), 19, y);
+        if(x>19) return new TilePosition(this.getMap(obj.getMapId()).getAroundMapId(MapPosition.RIGHT), 0, y);
         return new TilePosition(obj.getMapId(), x, y);
     }
 }
@@ -246,6 +248,7 @@ public static class Tile {
     private int mapId;
     private int x;
     private int y;
+    private boolean drawHp;
 
     public Tile(byte resId, int mapId, int x, int y) {
         this.resId = resId;
@@ -302,7 +305,6 @@ public static class Tile {
 
     public void breakTile() {
         this.hp -= 1;
-        print(this.hp + "\n");
         if(hp < 1) {
             if(this.resId != 0) {
                 Engine.getInstance().getNetwork().write(new BreakTile(mapId, x, y));
@@ -310,6 +312,10 @@ public static class Tile {
             this.resId = 0;
             this.hp = 0;
         }
+    }
+
+    public void setDrawHp(boolean drawHp) {
+        this.drawHp = drawHp;
     }
 
     public boolean isDrawHp() {

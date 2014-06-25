@@ -160,30 +160,33 @@ public static class MapScene implements Scene, UIOnClickListener {
     }
 
     private class KeyPressed extends UIComponent{
-        private boolean control_key = false;
+        private Tile breakTile;
         public KeyPressed() {
         }
 
         public void loop() {
-            if(control_key) {
-                TilePosition tilePosition = MapModel.getInstance().getAroundTilePosition(
-                    MapModel.getInstance().getMyObject(), MapModel.MapPosition.DOWN);
-                Map map = MapModel.getInstance().getMap(tilePosition.mapId);
-                map.getTile(tilePosition.x, tilePosition.y).breakTile();
+            if(breakTile != null) {
+               breakTile.breakTile();
             }
         }
 
         public boolean keyReleasedHook() {
-            control_key = false;
+            if(breakTile != null) {
+                breakTile.setDrawHp(false);
+            }
+            breakTile = null;
             return false;
         }
 
         public boolean keyPressedHook(char key, int keyCode) {
             if(MapModel.getInstance().getMyObject() == null) return false;
 
-            print(keyCode + "\n");
             if(keyCode == CONTROL || keyCode == 17) {
-                control_key = true;
+                TilePosition tilePosition = MapModel.getInstance().getAroundTilePosition(
+                    MapModel.getInstance().getMyObject(), MapModel.MapPosition.DOWN);
+                Map map = MapModel.getInstance().getMap(tilePosition.mapId);
+                breakTile = map.getTile(tilePosition.x, tilePosition.y);
+                breakTile.setDrawHp(true);
                 return true;
             }
 
@@ -206,6 +209,20 @@ public static class MapScene implements Scene, UIOnClickListener {
                 destX += 2;
             }
 
+            if(isMove) {
+                TilePosition tilePosition = MapModel.getInstance().getAroundTilePosition(MapModel.getInstance().getMyObject(),
+                    (keyCode==LEFT || keyCode == 37) ? MapModel.MapPosition.LEFT
+                    : (keyCode==RIGHT || keyCode == 39) ? MapModel.MapPosition.RIGHT
+                    : 0);
+                Map map = MapModel.getInstance().getMap(tilePosition.mapId);
+                if(map == null) {
+                    Engine.getInstance().showNotify("비바람이 휘몰아 치고 있습니다", 120);
+                    return true;
+                }
+                Tile tile = map.getTile(tilePosition.x, tilePosition.y);
+                if(tile != null && tile.getResId() != 0) return true;
+            }
+
             if(destX<0 || destX>=80) {
                 destMapId = MapModel.getInstance().getMap(MapModel.getInstance().getMyObject().getMapId())
                     .getAroundMapId(destX<0 ? MapModel.MapPosition.LEFT : MapModel.MapPosition.RIGHT);
@@ -215,7 +232,7 @@ public static class MapScene implements Scene, UIOnClickListener {
                 }
                 mapId = destMapId;
                 x = destX<0 ? 79 : 0;
-                destX = destX<0 ? 78 : 2;
+                destX = destX<0 ? 78 : 1;
             }
 
             /*
@@ -224,6 +241,8 @@ public static class MapScene implements Scene, UIOnClickListener {
             */
 
             if(!isMove) return false;
+
+            print(x + ", " + y + "\n");
 
             MapModel.getInstance().getMyObject().move(mapId, x, y, destMapId, destX, destY);
             Engine.getInstance().getNetwork().write(
