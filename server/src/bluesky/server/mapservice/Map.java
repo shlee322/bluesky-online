@@ -140,6 +140,16 @@ public class Map implements IMap {
 
     public void setTile(int x, int y, byte code){
         this.tiles[y*20 + x] = code;
+
+        this.service.publishMQTT("/maps/" + this.getMapId() + "/set_tile", new byte[]{
+                (byte)((mapId & 0xFF000000) >> 24),
+                (byte)((mapId & 0xFF0000) >> 16),
+                (byte)((mapId & 0xFF00) >> 8),
+                (byte)(mapId & 0xFF),
+                (byte)(x & 0xFF),
+                (byte)(y & 0xFF),
+                (byte)(code & 0xFF)
+        });
     }
 
     @Override

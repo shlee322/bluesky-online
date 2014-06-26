@@ -4,6 +4,7 @@ import bluesky.protocol.packet.Packet;
 import bluesky.protocol.packet.service.GetMapInfo;
 import bluesky.protocol.packet.service.ServiceBreakTile;
 import bluesky.protocol.packet.service.ServicePickUpItem;
+import bluesky.protocol.packet.service.ServiceSetTile;
 import bluesky.server.mapservice.generator.IMapTilesGenerator;
 import bluesky.server.service.Service;
 import bluesky.server.service.ServiceImpl;
@@ -164,6 +165,21 @@ public class MapService extends Service {
                     }
                     Map map = localMaps.get(pickUpItem.map_id);
                     map.pickUpItem(pickUpItem.object_id);
+                }
+            });
+        }
+
+        if(packet instanceof ServiceSetTile) {
+            final ServiceSetTile serviceSetTile = (ServiceSetTile)packet;
+            this.addWork(serviceSetTile.map_id, new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<Integer, Map> localMaps = maps[getWorkerIndex(serviceSetTile.map_id)];
+                    if(!localMaps.containsKey(serviceSetTile.map_id)) {
+                        return;
+                    }
+                    Map map = localMaps.get(serviceSetTile.map_id);
+                    map.setTile(serviceSetTile.x, serviceSetTile.y, serviceSetTile.res_id);
                 }
             });
         }

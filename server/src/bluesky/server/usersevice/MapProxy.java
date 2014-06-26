@@ -1,10 +1,7 @@
 package bluesky.server.usersevice;
 
 import bluesky.protocol.packet.client.*;
-import bluesky.protocol.packet.service.GetMapInfo;
-import bluesky.protocol.packet.service.MapInfo;
-import bluesky.protocol.packet.service.ServiceBreakTile;
-import bluesky.protocol.packet.service.ServicePickUpItem;
+import bluesky.protocol.packet.service.*;
 import bluesky.server.mapservice.DropItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -169,6 +166,26 @@ public class MapProxy {
                 user.getChannel().write(removeDropItem);
             }
         }
+
+        if(subTopic.equals("/set_tile")) {
+            int mapId=0;
+            int x=0;
+            int y=0;
+            byte tile=0;
+
+            mapId |= data[0] << 24;
+            mapId |= data[1] << 16;
+            mapId |= data[2] << 8;
+            mapId |= data[3];
+            x |= data[4];
+            y |= data[5];
+            tile = data[6];
+
+            SetTile setTile = new SetTile(mapId, x, y, tile);
+            for(UserObject user : this.objects) {
+                user.getChannel().write(setTile);
+            }
+        }
     }
 
     public void moveObject(UserObject user, MoveObject packet) {
@@ -238,5 +255,9 @@ public class MapProxy {
 
     public void pickUpItem(UserObject user, long objectId) {
         this.service.sendServiceMessage(this.serviceId, new ServicePickUpItem(objectId, getMapId()));
+    }
+
+    public void setTile(UserObject user, int x, int y, byte resId) {
+        this.service.sendServiceMessage(this.serviceId, new ServiceSetTile(getMapId(), x, y, resId));
     }
 }

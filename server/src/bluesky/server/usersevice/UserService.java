@@ -238,4 +238,15 @@ public class UserService extends Service {
             }
         });
     }
+
+    public void setTile(final UserObject user, final int mapId, final int x, final int y, final byte resId) {
+        this.addWork(mapId, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
+                map.setTile(user, x, y, resId);
+            }
+        });
+    }
 }

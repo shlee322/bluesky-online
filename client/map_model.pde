@@ -80,6 +80,12 @@ public static class MapModel implements Model {
         map.setTile(new Tile((byte)0, breakTile.map_id, breakTile.x, breakTile.y));
     }
 
+    public void setTile(SetTile tile) {
+        Map map = this.getMap(tile.map_id);
+        if(map == null) return;
+        map.setTile(new Tile((byte)tile.res_id, tile.map_id, tile.x, tile.y));
+    }
+
     public void dropItem(SC_DropItem dropItem) {
         cacheDropItem.put(dropItem.uuid, new DropItem(dropItem.uuid, dropItem.mapId,
             dropItem.x, dropItem.y, dropItem.resId));

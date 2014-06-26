@@ -175,6 +175,10 @@ public static class MapScene implements Scene, UIOnClickListener {
             MapModel.getInstance().breakTile((BreakTile)packet);
         }
 
+        if(packet instanceof SetTile) {
+            MapModel.getInstance().setTile((SetTile)packet);
+        }
+
         if(packet instanceof SC_DropItem) {
             MapModel.getInstance().dropItem((SC_DropItem)packet);
         }
@@ -244,6 +248,20 @@ public static class MapScene implements Scene, UIOnClickListener {
                     invenImg.setHeight(30);
                     break;
                 }
+            }
+
+            print(keyCode + "\n");
+
+            if(keyCode == ALT || keyCode == 18) { //알트 설치
+                GameObject obj = MapModel.getInstance().getMyObject();
+
+                TilePosition tilePosition = MapModel.getInstance().getAroundTilePosition(
+                    MapModel.getInstance().getMyObject(), MapModel.MapPosition.CENTER);
+                obj.move(obj.getMapId(), obj.getX(), obj.getY(), obj.getMapId(), obj.getX(), obj.getY()-8);
+                if(inven == 0) return false;
+
+                Engine.getInstance().getNetwork().write(new SetTile(tilePosition.mapId, tilePosition.x, tilePosition.y, inven));
+                //아이템 두기
             }
 
             //좌우 이동

@@ -204,7 +204,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 
 		//점프나 중력
 		if(obj.getY() != obj.dest_y) {
-			obj.setY(obj.getY() + 1);
+			obj.setY(obj.getY() + ((obj.dest_y > obj.getY()) ? 1 : -1));
 		}
 
 		if(obj.getX() != obj.dest_x/* || obj.getY() != obj.dest_y*/) {
