@@ -12,6 +12,7 @@ class ProcessingEngineAdapter implements EngineAdapter {
 	private float nameLen;
 	private float chatLen;
 	private PShader gaussianBlurShader;
+	private int i = 0;
 
 	public ProcessingEngineAdapter(PApplet processing) {
 		this.processing = processing;
@@ -174,6 +175,13 @@ class ProcessingEngineAdapter implements EngineAdapter {
 		}
 
 		EImage img = dropitemImages.get(obj.getResId());
+
+		x += 7;
+		y += (5*(cos(i/50.0))) + 2.5;
+		i++;
+		if((i/50.0) >= 2*PI) {
+			i = 0;
+		}
 
 		this.getProcessing().translate(x, y);
 
