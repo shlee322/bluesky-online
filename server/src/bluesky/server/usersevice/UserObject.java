@@ -16,6 +16,8 @@ public class UserObject {
     private int x;
     private int y;
 
+    private Inventory inventory;
+
     public UserObject(UserService service, Channel channel, String name, int map_id, int x, int y) {
         this.service = service;
         this.channel = channel;
@@ -23,6 +25,7 @@ public class UserObject {
         this.loginMapId = map_id;
         this.x = x;
         this.y = y;
+        this.inventory = new Inventory();
     }
 
     public void moveMap(MapProxy map, int x, int y) {

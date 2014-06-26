@@ -14,6 +14,8 @@ public static class MapScene implements Scene, UIOnClickListener {
     MoveCharacter move = new MoveCharacter();
     private final int MAP_SIZE = 20;
     private final int MAP_PX_SIZE = MAP_SIZE*32;
+    private EImage invenImg;
+    private byte inven;
 
     private Tile nullTile = new Tile((byte)0, -1, -1, -1);
 
@@ -141,6 +143,10 @@ public static class MapScene implements Scene, UIOnClickListener {
         }
 
         joyStick.draw();
+
+        if(invenImg != null) {
+            invenImg.draw();
+        }
     }
 
     @Override
@@ -172,13 +178,17 @@ public static class MapScene implements Scene, UIOnClickListener {
         if(packet instanceof SC_DropItem) {
             MapModel.getInstance().dropItem((SC_DropItem)packet);
         }
+
+        if(packet instanceof SC_RemoveDropItem) {
+            MapModel.getInstance().removeDropItem((SC_RemoveDropItem)packet);
+        }
     }
 
     @Override
     public void onClick(UIComponent comp, int x, int y) {
         if(comp instanceof MenuBtnComponent){}
         if(comp instanceof Inventory){
-            initInven();
+            //initInven();
         }
         if(comp instanceof Inventory_full){
             //클릭?
@@ -214,6 +224,26 @@ public static class MapScene implements Scene, UIOnClickListener {
                 breakTile = map.getTile(tilePosition.x, tilePosition.y);
                 breakTile.setDrawHp(true);
                 return true;
+            }
+
+            if(keyCode == SHIFT || keyCode == 16) { //아이템 먹기
+                for(Object entry : MapModel.getInstance().getDropItems()) {
+                    DropItem item = (DropItem)((java.util.Map.Entry)entry).getValue();
+                    if(MapModel.getInstance().getMyObject().getMapId() != item.getMapId()) continue;
+                    int r_x = abs((MapModel.getInstance().getMyObject().getX()/4) - item.getX());
+                    int r_y = abs((MapModel.getInstance().getMyObject().getY()/4) - item.getY());
+                    
+                    if(r_x > 2 || r_y > 2) continue;
+
+                    Engine.getInstance().getNetwork().write(new CS_PickUpItem(item.getUUID(), item.getMapId()));
+                    inven = item.getResId();
+                    invenImg = Engine.getInstance().loadImage("tiles/" + item.getResName() + ".png");
+                    invenImg.setX(95);
+                    invenImg.setY(20);
+                    invenImg.setWidth(30);
+                    invenImg.setHeight(30);
+                    break;
+                }
             }
 
             //좌우 이동
@@ -270,8 +300,6 @@ public static class MapScene implements Scene, UIOnClickListener {
             */
 
             if(!isMove) return false;
-
-            print(x + ", " + y + "\n");
 
             MapModel.getInstance().getMyObject().move(mapId, x, y, destMapId, destX, destY);
             Engine.getInstance().getNetwork().write(

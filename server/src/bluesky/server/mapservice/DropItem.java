@@ -1,12 +1,17 @@
 package bluesky.server.mapservice;
 
+import org.msgpack.annotation.Message;
+
+@Message
 public class DropItem {
     private static long itemUUID = 0;
 
-    private long uuid = itemUUID++;
-    private int x;
-    private int y;
-    private byte resId;
+    public long uuid = itemUUID++;
+    public int x;
+    public int y;
+    public byte resId;
+
+    public DropItem() {}
 
     public DropItem(int x, int y, byte resId) {
         this.x = x;

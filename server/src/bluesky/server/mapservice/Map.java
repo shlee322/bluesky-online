@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 public class Map implements IMap {
     private MapService service;
@@ -18,6 +19,7 @@ public class Map implements IMap {
     private int mapY;
     private byte[] tiles;
     private int[] aroundMapId = new int[8];
+    private LinkedList<DropItem> dropItems = new LinkedList<DropItem>();
 
     public Map(MapService service, int mapId) {
         this.service = service;
@@ -102,7 +104,7 @@ public class Map implements IMap {
 
     public void getMapInfo(ServiceImpl sender, GetMapInfo getMapInfo) {
         sender.sendServiceMessage(null, new MapInfo(getMapInfo.request_id, getMapInfo.request_map_id,
-                this.getMapId(), this.aroundMapId, this.tiles));
+                this.getMapId(), this.aroundMapId, this.tiles, this.dropItems));
     }
 
     public static int getRelativeX(int position) {
@@ -178,6 +180,8 @@ public class Map implements IMap {
     }
 
     public void createDropItem(DropItem item) {
+        this.dropItems.add(item);
+
         this.service.publishMQTT("/maps/" + this.getMapId() + "/drop_item", new byte[]{
                 (byte)(item.getUUID() >>> 56),
                 (byte)(item.getUUID() >>> 48),
@@ -195,5 +199,34 @@ public class Map implements IMap {
                 (byte)(item.getY() & 0xFF),
                 item.getResId()
         });
+    }
+
+    public void pickUpItem(long object_id) {
+        DropItem data = null;
+        for(DropItem item : this.dropItems) {
+            if(item.getUUID() == object_id) {
+                data = item;
+                break;
+            }
+        }
+
+        if(data != null) {
+            this.dropItems.remove(data);
+
+            this.service.publishMQTT("/maps/" + this.getMapId() + "/pickup_item", new byte[]{
+                    (byte)(object_id >>> 56),
+                    (byte)(object_id >>> 48),
+                    (byte)(object_id >>> 40),
+                    (byte)(object_id >>> 32),
+                    (byte)(object_id >>> 24),
+                    (byte)(object_id >>> 16),
+                    (byte)(object_id >>> 8),
+                    (byte)(object_id >>> 0),
+                    (byte)((mapId & 0xFF000000) >> 24),
+                    (byte)((mapId & 0xFF0000) >> 16),
+                    (byte)((mapId & 0xFF00) >> 8),
+                    (byte)(mapId & 0xFF)
+            });
+        }
     }
 }

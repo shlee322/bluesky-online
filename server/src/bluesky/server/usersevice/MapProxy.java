@@ -4,6 +4,8 @@ import bluesky.protocol.packet.client.*;
 import bluesky.protocol.packet.service.GetMapInfo;
 import bluesky.protocol.packet.service.MapInfo;
 import bluesky.protocol.packet.service.ServiceBreakTile;
+import bluesky.protocol.packet.service.ServicePickUpItem;
+import bluesky.server.mapservice.DropItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -144,6 +146,29 @@ public class MapProxy {
                 user.getChannel().write(dropItem);
             }
         }
+
+        if(subTopic.equals("/pickup_item")) {
+            long uuid = 0;
+            int mapId=0;
+
+            uuid |= data[0] << 56;
+            uuid |= data[1] << 48;
+            uuid |= data[2] << 40;
+            uuid |= data[3] << 32;
+            uuid |= data[4] << 24;
+            uuid |= data[5] << 16;
+            uuid |= data[6] << 8;
+            uuid |= data[7];
+            mapId |= data[8] << 24;
+            mapId |= data[9] << 16;
+            mapId |= data[10] << 8;
+            mapId |= data[11];
+
+            SC_RemoveDropItem removeDropItem = new SC_RemoveDropItem(uuid, mapId);
+            for(UserObject user : this.objects) {
+                user.getChannel().write(removeDropItem);
+            }
+        }
     }
 
     public void moveObject(UserObject user, MoveObject packet) {
@@ -184,6 +209,11 @@ public class MapProxy {
             requestUser.getChannel().write(new MoveObject(user.getUUID(),
                     user.getMapId(), user.getX(), user.getY(), user.getMapId(), user.getX(), user.getY()));
         }
+
+        for(DropItem item : info.dropitems) {
+            requestUser.getChannel().write(new SC_DropItem(item.uuid, this.getMapId(),
+                    item.getX(), item.getY(), item.getResId()));
+        }
     }
 
     public void getObjectInfo(UserObject user, long object_id) {
@@ -204,15 +234,9 @@ public class MapProxy {
 
     public void breakTile(UserObject user, int x, int y) {
         this.service.sendServiceMessage(this.serviceId, new ServiceBreakTile(getMapId(), x, y));
-        /*
-        BreakTile breakTile = new BreakTile(this.getMapId(), x, y);
-        for(UserObject u : this.objects) {
-            if(u == user) continue;
-            u.getChannel().write(breakTile);
-            break;
-        }*/
+    }
 
-        //아이템 드랍
-
+    public void pickUpItem(UserObject user, long objectId) {
+        this.service.sendServiceMessage(this.serviceId, new ServicePickUpItem(objectId, getMapId()));
     }
 }

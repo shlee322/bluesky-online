@@ -227,4 +227,15 @@ public class UserService extends Service {
             }
         });
     }
+
+    public void pickUpItem(final UserObject user, final int mapId, final long objectId) {
+        this.addWork(mapId, new Runnable() {
+            @Override
+            public void run() {
+                MapProxy map = getMapProxy(mapId, false);
+                if(map == null) return;
+                map.pickUpItem(user, objectId);
+            }
+        });
+    }
 }

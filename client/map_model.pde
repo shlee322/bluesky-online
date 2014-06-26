@@ -85,6 +85,10 @@ public static class MapModel implements Model {
             dropItem.x, dropItem.y, dropItem.resId));
     }
 
+    public void removeDropItem(SC_RemoveDropItem item) {
+        cacheDropItem.remove(item.object_id);
+    }
+
     public Map getMap(int id) {
     	if(id == -1) return null;
     	if(!cacheMaps.containsKey(id)) { //캐싱되어있지 않음

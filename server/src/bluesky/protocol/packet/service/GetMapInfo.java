@@ -1,7 +1,10 @@
 package bluesky.protocol.packet.service;
 
 import bluesky.protocol.packet.Packet;
+import bluesky.server.mapservice.DropItem;
 import org.msgpack.annotation.Message;
+
+import java.util.List;
 
 @Message
 public class GetMapInfo implements Packet {

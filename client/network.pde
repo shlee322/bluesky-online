@@ -123,7 +123,10 @@ public static class ClientPacketList extends PacketList {
             MoveObject.class,
             Chat.class,
             BreakTile.class,
-            SC_DropItem.class
+            SC_DropItem.class,
+            SetTile.class,
+            CS_PickUpItem.class,
+            SC_RemoveDropItem.class
     };
 
     @Override
@@ -232,6 +235,21 @@ public static class CS_Login implements Packet {
 }
 
 @Message
+public static class CS_PickUpItem implements Packet {
+    public long object_id;
+    public int map_id;
+
+    @Override
+    public byte getPacketId() { return 14; }
+
+    public CS_PickUpItem() {}
+    public CS_PickUpItem(long object_id, int map_id) {
+        this.object_id = object_id;
+        this.map_id = map_id;
+    }
+}
+
+@Message
 public static class MoveObject implements Packet {
     public long object_id;
     public int src_map;
@@ -325,6 +343,42 @@ public static class SC_ObjectInfo implements Packet {
         this.name = name;
     }
 }
+
+@Message
+public static class SC_RemoveDropItem implements Packet {
+    public long object_id;
+    public int map_id;
+
+    @Override
+    public byte getPacketId() { return 15; }
+
+    public SC_RemoveDropItem(){}
+    public SC_RemoveDropItem(long object_id, int map_id) {
+        this.object_id = object_id;
+        this.map_id = map_id;
+    }
+}
+
+
+@Message
+public static class SetTile implements Packet {
+    public int map_id;
+    public int x;
+    public int y;
+    public byte res_id;
+
+    @Override
+    public byte getPacketId() { return 13; }
+
+    public SetTile() {}
+    public SetTile(int map_id, int x, int y, byte res_id) {
+        this.map_id = map_id;
+        this.x = x;
+        this.y = y;
+        this.res_id = res_id;
+    }
+}
+
 
 public interface Packet {
     public byte getPacketId();

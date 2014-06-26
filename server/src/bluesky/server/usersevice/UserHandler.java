@@ -112,6 +112,10 @@ public class UserHandler extends SimpleChannelUpstreamHandler {
                 this.service.breakTile(this.user,
                         ((BreakTile)packet).map_id, ((BreakTile)packet).x, ((BreakTile)packet).y);
             }
+
+            if(packet instanceof CS_PickUpItem) {
+                this.service.pickUpItem(this.user, ((CS_PickUpItem)packet).map_id, ((CS_PickUpItem)packet).object_id);
+            }
         }
     }
 
