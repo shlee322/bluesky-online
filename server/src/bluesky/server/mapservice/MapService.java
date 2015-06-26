@@ -53,6 +53,7 @@ public class MapService extends Service {
         if(topic.startsWith("/maps/")) {
             String subTopic = topic.substring(6);
             int mapIdEndIndex = subTopic.indexOf("/");
+            if (mapIdEndIndex < 0) return;
             final int mapId = Integer.valueOf(subTopic.substring(0, mapIdEndIndex));
             subTopic = subTopic.substring(mapIdEndIndex);
             final String finalSubTopic = subTopic;
